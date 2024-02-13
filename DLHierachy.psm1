@@ -192,89 +192,9 @@ Function get-DLHierachyFromGraph
 
     #Perform cleanup of any strings so that no spaces existin trailing or leading.
 
-    $groupSMTPAddress = remove-stringSpace -stringToFix $groupSMTPAddress
-    $globalCatalogServer = remove-stringSpace -stringToFix $globalCatalogServer
-    $logFolderPath = remove-stringSpace -stringToFix $logFolderPath 
-
-    if ($aadConnectServer -ne $NULL)
-    {
-        $aadConnectServer = remove-stringSpace -stringToFix $aadConnectServer
-    }
-
-    if ($exchangeServer -ne $NULL)
-    {
-        $exchangeServer=remove-stringSpace -stringToFix $exchangeServer
-    }
-    
-    if ($exchangeOnlineCertificateThumbPrint -ne "")
-    {
-        $exchangeOnlineCertificateThumbPrint=remove-stringSpace -stringToFix $exchangeOnlineCertificateThumbPrint
-    }
-
-    $exchangeOnlineEnvironmentName=remove-stringSpace -stringToFix $exchangeOnlineEnvironmentName
-
-    if ($exchangeOnlineOrganizationName -ne "")
-    {
-        $exchangeOnlineOrganizationName=remove-stringSpace -stringToFix $exchangeOnlineOrganizationName
-    }
-
-    if ($exchangeOnlineAppID -ne "")
-    {
-        $exchangeOnlineAppID=remove-stringSpace -stringToFix $exchangeOnlineAppID
-    }
-
-    $exchangeAuthenticationMethod=remove-StringSpace -stringToFix $exchangeAuthenticationMethod
-    
-    $dnNoSyncOU = remove-StringSpace -stringToFix $dnNoSyncOU
-    
-    $groupTypeOverride=remove-stringSpace -stringToFix $groupTypeOverride
-    
-    <#
-    if ($azureTenantID -ne $NULL)
-    {
-        $azureTenantID = remove-StringSpace -stringToFix $azureTenantID
-    }
-
-    if ($azureCertificateThumbprint -ne $NULL)
-    {
-        $azureCertificateThumbprint = remove-StringSpace -stringToFix $azureCertificateThumbPrint
-    }
-
-    if ($azureEnvironmentName -ne $NULL)
-    {
-        $azureEnvironmentName = remove-StringSpace -stringToFix $azureEnvironmentName
-    }
-
-    if ($azureApplicationID -ne $NULL)
-    {
-        $azureApplicationID = remove-stringSpace -stringToFix $azureApplicationID
-    }
-
-    #>
-
+    $groupObjectID = remove-stringSpace -stringToFix $groupObjectID
+    $logFolderPath = remove-stringSpace -stringToFix $logFolderPath     
     $msGraphTenantID = remove-stringSpace -stringToFix $msGraphTenantID
     $msGraphCertificateThumbprint = remove-stringSpace -stringToFix $msGraphCertificateThumbprint
     $msGraphApplicationID = remove-stringSpace -stringToFix $msGraphApplicationID
-
-    if ($aadConnectCredential -ne $null)
-    {
-        Out-LogFile -string ("AADConnectUserName = "+$aadConnectCredential.UserName.tostring())
-    }
-
-    if ($exchangecredential -ne $null)
-    {
-        Out-LogFile -string ("ExchangeUserName = "+$exchangeCredential.UserName.toString())
-    }
-
-    if ($exchangeOnlineCredential -ne $null)
-    {
-        Out-LogFile -string ("ExchangeOnlineUserName = "+ $exchangeOnlineCredential.UserName.toString())
-    }
-
-    <#
-    if ($azureADCreential -ne $NULL)
-    {
-        out-logfile -string ("AzureADUserName = "+$azureADCredential.userName.toString())
-    }
-    #>
 }
