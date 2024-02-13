@@ -2,6 +2,40 @@
     .SYNOPSIS
 
     This function validates the parameters within the script.  Paramter validation is shared across functions.
+
+    .PARAMETER EXCHANGEONLINECREDENTIAL
+
+    The Exchnage Online user name and password.
+
+    .PARAMETER EXCHANGEONLINECERTIFICATETHUMBPRINT
+
+    The certificate thumbprint for the exchange online app registration.
+
+    .PARAMETER EXCHANGEONLINEORGANIZATIONNAME
+
+    The organization name associated with the exchange online tenant for app registration.
+
+    .PARAMETER EXCHANGEONLINEAPPID
+
+    The application id of the associated app registration in Entra ID for Exchange permissions.
+
+    .PARAMETER ACTIVEDIRECTORYCREDENTIAL
+
+    The active directory connection credential provided.
+
+    .PARAMETER MSGRAPHCERTIFICATETHUMBPRINT
+
+    The certificate thumbprint associated with the MSGraph app registration.
+
+    .PARAMETER MSGRAPHTENANTID
+
+    The tenant ID where the app registration for MS Graph is created.
+
+    .PARAMETER MSGRAPHAPPLICATIONID
+
+    The app registration for MS Graph app id.
+
+    This function validates the parameters within the script.  Paramter validation is shared across functions.
     
     .DESCRIPTION
 

@@ -1,3 +1,34 @@
+
+<#
+    .SYNOPSIS
+
+    This function pulls the groups information and then starts recursively passing through all membership.
+
+    .DESCRIPTION
+
+    This function pulls the groups information and then starts recursively passing through all membership.
+
+    .PARAMETER GROUPID
+
+    This is the ID of the parent group.
+
+    .PARAMETER PROCESSEDGROUPIDS
+
+    This is a hash collection of all groups processed - this is what prevents circular references from reprocessing.
+
+    .PARAMETER OBJECTTYPE
+
+    Utilized to determine the type of query that is made.
+
+    .OUTPUTS
+
+    None
+
+    .EXAMPLE
+
+    Get-GroupWithChildren -groupID GROUPID -processedGroupIDs PROCESSEDGROUPIDs -objectType OBJECTTYPE
+
+    #>
 Function Get-GroupWithChildren($groupId,$processedGroupIds,$objectType)
 {
     Write-Host $groupId
