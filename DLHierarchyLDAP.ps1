@@ -50,7 +50,7 @@ Function Get-GroupWithChildren($groupId,$processedGroupIds)
     }
     else 
     {
-        $group.DisplayName = $group.DisplayName + " (Circular Membership)"
+        $group.name = $group.name + " (Circular Membership)"
     }
 
     $node = New-TreeNode -group $group -children $childNodes
