@@ -22,7 +22,7 @@ Function Get-GroupWithChildren($groupId,$processedGroupIds)
 
     Write-Host $group.distinguishedName
     write-host $group.objectClass
-    Write-Host $group.members
+    Write-Host $group.member
 
     exit
 
