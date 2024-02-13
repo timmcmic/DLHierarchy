@@ -33,7 +33,7 @@ Function Get-GroupWithChildren($groupId,$processedGroupIds)
 
         if ($group.objectClass -eq "Group")
         {
-            $children = Get-adGroupMember -Identity $group.distinguishedName 
+            $children = $group.Members
         }
         else {
             $children=@()
