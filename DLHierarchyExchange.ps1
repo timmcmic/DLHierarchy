@@ -157,8 +157,9 @@ Function Print-Tree($node, $indent)
 
 # Main script start
 
-$groupSMTPAddress = "e98a2ff3-4a95-449d-a183-d9f2159d5432"
+#$groupSMTPAddress = "e98a2ff3-4a95-449d-a183-d9f2159d5432"
 #$groupSMTPAddress = "0b420cb8-db98-44cf-9562-1dc25e5314e8"
+$groupSMTPAddress = "2e891f57-a81d-4c8a-8eb4-b68febe9dbc3"
 
 $processedGroupIds = New-Object System.Collections.Generic.HashSet[string]
 
