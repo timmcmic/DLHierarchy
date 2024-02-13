@@ -50,7 +50,12 @@ Function Get-GroupWithChildren($groupId,$processedGroupIds)
     }
     else 
     {
-        $group.name = $group.name + " (Circular Membership)"
+        $group.DisplayName = $group.DisplayName + " (Circular Membership)"
+    }
+
+    if ($group.displaynnme -eq "")
+    {
+        $group.displayName = $group.name
     }
 
     $node = New-TreeNode -group $group -children $childNodes
@@ -60,7 +65,7 @@ Function Get-GroupWithChildren($groupId,$processedGroupIds)
 
 Function Print-Tree($node, $indent)
 {
-    $string = $node.group.Name +" ("+$node.group.objectGUID+")"
+    $string = $node.group.DisplayName +" ("+$node.group.objectGUID+")"
     Write-Host ("-" * $indent) + $string
     foreach ($child in $node.Children)
     {
