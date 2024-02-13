@@ -112,4 +112,10 @@ Function get-DLHierachyFromGraph
     #Create the log file.
 
     new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
+
+    out-logfile -string "***********************************************************"
+    out-logfile -string "Starting get-DLHierarchyFromGraph"
+    out-logfile -string "***********************************************************"
+
+    
 }
