@@ -59,6 +59,11 @@ Function get-DLHierachyFromGraph
     *OPTIONAL*
     This value specifies the application ID associated with the app registration allowing non-interactive credentials.
 
+    .PARAMETER ALLOWTELEMETRYCOLLECTION
+
+    *OPTIONAL*
+    Specifies if telemetry collection is allowed.
+
 
     .OUTPUTS
 
@@ -102,12 +107,20 @@ Function get-DLHierachyFromGraph
         [string]$msGraphApplicationID="",
         #Define other mandatory parameters
         [Parameter(Mandatory = $true)]
-        [string]$logFolderPath
+        [string]$logFolderPath,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$allowTelemetryCollection=$TRUE
     )
 
     #Define script based variables.
 
     $logFileName = (Get-Date -Format FileDateTime) #Use random file date time for the log file name.
+    $msGraphScopesRequired = @("Directory.Read.All") #Define the grpah scopes required.
+
+    #Initialize telemetry collection.
+
+    $appInsightAPIKey = "63d673af-33f4-401c-931e-f0b64a218d89"
+    $traceModuleName = "DLHierarchy"
 
     #Create the log file.
 
@@ -116,6 +129,11 @@ Function get-DLHierachyFromGraph
     out-logfile -string "***********************************************************"
     out-logfile -string "Starting get-DLHierarchyFromGraph"
     out-logfile -string "***********************************************************"
+
+    if ($allowTelemetryCollection -eq $TRUE)
+    {
+        start-telemetryConfiguration -allowTelemetryCollection $allowTelemetryCollection -appInsightAPIKey $appInsightAPIKey -traceModuleName $traceModuleName
+    }
 
     
 }
