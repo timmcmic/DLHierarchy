@@ -14,36 +14,10 @@
 
         Param
         (
-            [Parameter(Mandatory = $true,ParameterSetName = 'AADConnect')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'AADConnectMulti')]
-            [AllowNull()]
-            $aadConnectServer,
-            [Parameter(Mandatory = $true,ParameterSetName = 'AADConnect')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'AADConnectMulti')]
-            [AllowNull()]
-            $aadConnectCredential,
-            [Parameter(Mandatory = $true,ParameterSetName = 'AADConnectMulti')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeMulti')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnlineMulti')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'AzureADMulti')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'MaxThreadCount')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'ActiveDirectory')]
-            [AllowNull()]
-            $serverNames,
-            [Parameter(Mandatory = $true,ParameterSetName = 'Exchange')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeMulti')]
-            [AllowNull()]
-            $exchangeServer,
-            [Parameter(Mandatory = $true,ParameterSetName = 'Exchange')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeMulti')]
-            [AllowNull()]
-            $exchangeCredential,
             [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnlineMulti')]
             [AllowNull()]
             $exchangeOnlineCredential,
             [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnlineMulti')]
             [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnlineCertAuth')]
             [AllowNull()]
             $exchangeOnlineCertificateThumbprint,
@@ -53,47 +27,9 @@
             [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnlineCertAuth')]
             [AllowNull()]
             $exchangeOnlineAppID,
-            [Parameter(Mandatory = $true,ParameterSetName = 'AzureAD')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'AzureADMulti')]
-            [AllowNull()]
-            $azureADCredential,
-            [Parameter(Mandatory = $true,ParameterSetName = 'AzureAD')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'AzureADMulti')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'AzureADCertAuth')]
-            [AllowNull()]
-            $azureCertificateThumbprint,
-            [Parameter(Mandatory = $true,ParameterSetName = 'AzureADCertAuth')]
-            [AllowNull()]
-            $azureTenantID,
-            [Parameter(Mandatory = $true,ParameterSetName = 'AzureADCertAuth')]
-            [AllowNull()]
-            $azureApplicationID,
-            [Parameter(Mandatory = $true,ParameterSetName = 'NoSyncOU')]
-            [AllowNull()]
-            $retainOriginalGroup,
-            [Parameter(Mandatory = $true,ParameterSetName = 'NoSyncOU')]
-            [AllowNull()]
-            $doNoSyncOU,
-            [Parameter(Mandatory = $true,ParameterSetName = 'HybridMailFlow')]
-            [AllowNull()]
-            $useOnPremisesExchange,
-            [Parameter(Mandatory = $true,ParameterSetName = 'HybridMailFlow')]
-            [AllowNull()]
-            $enableHybridMailFlow,
             [Parameter(Mandatory = $true,ParameterSetName = 'ActiveDirectory')]
             [AllowNull()]
             $activeDirectoryCredential,
-            [Parameter(Mandatory = $true,ParameterSetName = 'MaxThreadCount')]
-            [AllowNull()]
-            $maxThreadCount,
-            [Parameter(Mandatory = $true,ParameterSetName = 'RemoteDriveLetter')]
-            [AllowNull()]
-            $remoteDriveLetter,
-            [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnlineMulti')]
-            [Parameter(Mandatory = $true,ParameterSetName = 'AzureAD')]
-            [AllowNull()]
-            $threadCount=0,
             [Parameter(Mandatory = $true,ParameterSetName = 'msGraphCertAuth')]
             [AllowNull()]
             $msGraphCertificateThumbprint,

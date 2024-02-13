@@ -11,6 +11,14 @@
 
     Boolean to allow for basic telemetry collection.
 
+    .PARAMETER appInsightAPIKey
+
+    API key for telemetry collection.
+
+    .PARAMETER traceModuleName
+
+    Reserved for internal use.
+
     .OUTPUTS
 
     None

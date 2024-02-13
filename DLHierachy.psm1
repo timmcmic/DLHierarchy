@@ -254,4 +254,6 @@ Function get-DLHierachyFromGraph
              out-logfile -=string "Unable to create the msgraph connection using tenant ID and credentials."
          }
     }
+
+    
 }
