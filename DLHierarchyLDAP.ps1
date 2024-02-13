@@ -60,7 +60,7 @@ Function Get-GroupWithChildren($groupId,$processedGroupIds)
 
 Function Print-Tree($node, $indent)
 {
-    $string = $node.group.displayName +" ("+$node.group.ExchangeObjectID+")"
+    $string = $node.group.displayName +" ("+$node.group.objectGUID+")"
     Write-Host ("-" * $indent) + $string
     foreach ($child in $node.Children)
     {
