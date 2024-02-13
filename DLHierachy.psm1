@@ -228,4 +228,30 @@ Function get-DLHierachyFromGraph
     out-logfile -string "Calling Test-PowershellModule to validate the Microsoft Graph Director versions installed."
 
     $telemetryMSGraphDirectory = test-powershellModule -powershellmodulename $corevariables.msGraphIdentityDirectoryManagement.value -powershellVersionTest:$TRUE
+
+    Out-LogFile -string "Calling nea-msGraphPowershellSession to create new connection to msGraph active directory."
+
+    if ($msGraphCertificateThumbprint -ne "")
+    {
+       #User specified thumbprint authentication.
+ 
+         try {
+             new-msGraphPowershellSession -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphApplicationID $msGraphApplicationID -msGraphTenantID $msGraphTenantID -msGraphEnvironmentName $msGraphEnvironmentName -msGraphScopesRequired $msGraphScopesRequired
+         }
+         catch {
+             out-logfile -string "Unable to create the msgraph connection using certificate."
+             out-logfile -string $_ -isError:$TRUE
+         }
+    }
+    elseif ($msGraphTenantID -ne "")
+    {
+         try
+         {
+             new-msGraphPowershellSession -msGraphTenantID $msGraphTenantID -msGraphEnvironmentName $msGraphEnvironmentName -msGraphScopesRequired $msGraphScopesRequired
+         }
+         catch
+         {
+             out-logfile -=string "Unable to create the msgraph connection using tenant ID and credentials."
+         }
+    }
 }
