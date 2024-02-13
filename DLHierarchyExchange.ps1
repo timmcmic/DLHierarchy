@@ -103,9 +103,9 @@ Function Get-GroupWithChildren($groupId,$processedGroupIds,$objectType)
 
     $childNodes = @()
 
-    if (!$processedGroupIds.Contains($group.Id))
+    if (!$processedGroupIds.Contains($group.ExchangeObjectID))
     {
-        $NULL = $processedGroupIds.add($group.id)
+        $NULL = $processedGroupIds.add($group.ExchangeObjectID)
 
         #$children = Get-MgGroupMember -GroupId $group.Id | where {$_.AdditionalProperties["@odata.type"] -eq "#microsoft.graph.group"}
 

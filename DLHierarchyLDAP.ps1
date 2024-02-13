@@ -25,9 +25,9 @@ Function Get-GroupWithChildren($groupId,$processedGroupIds)
 
     $childNodes = @()
 
-    if (!$processedGroupIds.Contains($group.Id))
+    if (!$processedGroupIds.Contains($group.distinguishedName))
     {
-        $NULL = $processedGroupIds.add($group.id)
+        $NULL = $processedGroupIds.add($group.distinguishedName)
 
         #$children = Get-MgGroupMember -GroupId $group.Id | where {$_.AdditionalProperties["@odata.type"] -eq "#microsoft.graph.group"}
 
