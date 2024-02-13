@@ -197,4 +197,17 @@ Function get-DLHierachyFromGraph
     $msGraphTenantID = remove-stringSpace -stringToFix $msGraphTenantID
     $msGraphCertificateThumbprint = remove-stringSpace -stringToFix $msGraphCertificateThumbprint
     $msGraphApplicationID = remove-stringSpace -stringToFix $msGraphApplicationID
+
+    if ($msGraphCertificateThumbprint -eq "")
+    {
+        out-logfile -string "Validation all components available for MSGraph Cert Auth"
+
+        start-parameterValidation -msGraphCertificateThumbPrint $msGraphCertificateThumbprint -msGraphTenantID $msGraphTenantID -msGraphApplicationID $msGraphApplicationID
+    }
+    else
+    {
+        out-logfile -string "MS graph cert auth is not being utilized - assume interactive auth."
+    }
+
+    
 }
