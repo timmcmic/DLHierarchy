@@ -22,6 +22,9 @@ Function Get-GroupWithChildren($groupId,$processedGroupIds)
 
     Write-Host $group.distinguishedName
     write-host $group.objectClass
+    Write-Host $group.members
+
+    exit
 
     $childNodes = @()
 
@@ -33,7 +36,7 @@ Function Get-GroupWithChildren($groupId,$processedGroupIds)
 
         if ($group.objectClass -eq "Group")
         {
-            $children = (get-adGroup -identity $groupID -property members).members
+            $children = $group.members
         }
         else {
             $children=@()
