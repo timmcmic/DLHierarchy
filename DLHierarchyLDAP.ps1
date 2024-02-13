@@ -44,7 +44,7 @@ Function Get-GroupWithChildren($groupId,$processedGroupIds)
             write-host "ChildID"
             write-host $child.ExchangeObjectID 
             $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-            $childNode = Get-GroupWithChildren -groupId $child.distinguishedName -processedGroupIds $childGroupIDs
+            $childNode = Get-GroupWithChildren -groupId $child -processedGroupIds $childGroupIDs
             $childNodes += $childNode
         }
     }
