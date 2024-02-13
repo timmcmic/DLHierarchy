@@ -105,5 +105,11 @@ Function get-DLHierachyFromGraph
         [string]$logFolderPath
     )
 
-    
+    #Define script based variables.
+
+    $logFileName = (Get-Date -Format FileDateTime) #Use random file date time for the log file name.
+
+    #Create the log file.
+
+    new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
 }
