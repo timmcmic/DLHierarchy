@@ -12,7 +12,7 @@ Function Get-GroupWithChildren($groupId,$processedGroupIds)
     Write-Host $groupId
 
     try{
-        $group = get-adObject -identity $groupID -properties members -ErrorAction STOP
+        $group = get-adObject -identity $groupID -properties * -ErrorAction STOP
     }
     catch {
         write-host "Unable to obtain AD object by identity provided."
@@ -36,7 +36,7 @@ Function Get-GroupWithChildren($groupId,$processedGroupIds)
 
         if ($group.objectClass -eq "Group")
         {
-            $children = $group.members
+            $children = $group.member
         }
         else {
             $children=@()
