@@ -125,7 +125,7 @@ Function get-DLHierachyFromGraph
 
     #Create telemetry values.
 
-    $telemetryDLConversionV2Version = $NULL
+    $telemetryDLHierachyVersion = $NULL
     $telemetryExchangeOnlineVersion = $NULL
     $telemetryMSGraphAuthentication = $NULL
     $telemetryMSGraphUsers = $NULL
@@ -209,5 +209,31 @@ Function get-DLHierachyFromGraph
         out-logfile -string "MS graph cert auth is not being utilized - assume interactive auth."
     }
 
-    
+    Out-LogFile -string "Calling Test-PowerShellModule to validate the Exchange Module is installed."
+
+    $telemetryExchangeOnlineVersion = Test-PowershellModule -powershellModuleName $corevariables.exchangeOnlinePowershellModuleName.value -powershellVersionTest:$TRUE
+
+    Out-LogFile -string "Calling Test-PowerShellModule to validate the Active Directory is installed."
+
+    $telemetryActiveDirectoryVersion = Test-PowershellModule -powershellModuleName $corevariables.activeDirectoryPowershellModuleName.value
+
+    out-logfile -string "Calling Test-PowershellModule to validate the DL Conversion Module version installed."
+
+    $telemetryDLHierachyVersion = Test-PowershellModule -powershellModuleName $corevariables.dlHierachyPowershellModule.value -powershellVersionTest:$TRUE
+
+    out-logfile -string "Calling Test-PowershellModule to validate the Microsoft Graph Authentication versions installed."
+
+    $telemetryMSGraphAuthentication = test-powershellModule -powershellmodulename $corevariables.msgraphauthenticationpowershellmodulename.value -powershellVersionTest:$TRUE
+
+    out-logfile -string "Calling Test-PowershellModule to validate the Microsoft Graph Users versions installed."
+
+    $telemetryMSGraphUsers = test-powershellModule -powershellmodulename $corevariables.msgraphuserspowershellmodulename.value -powershellVersionTest:$TRUE
+
+    out-logfile -string "Calling Test-PowershellModule to validate the Microsoft Graph Users versions installed."
+
+    $telemetryMSGraphGroups = test-powershellModule -powershellmodulename $corevariables.msgraphgroupspowershellmodulename.value -powershellVersionTest:$TRUE
+
+    out-logfile -string "Calling Test-PowershellModule to validate the Microsoft Graph Director versions installed."
+
+    $telemetryMSGraphDirectory = test-powershellModule -powershellmodulename $corevariables.msGraphIdentityDirectoryManagement.value -powershellVersionTest:$TRUE
 }
