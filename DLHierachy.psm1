@@ -209,14 +209,6 @@ Function get-DLHierachyFromGraph
         out-logfile -string "MS graph cert auth is not being utilized - assume interactive auth."
     }
 
-    Out-LogFile -string "Calling Test-PowerShellModule to validate the Exchange Module is installed."
-
-    $telemetryExchangeOnlineVersion = Test-PowershellModule -powershellModuleName $corevariables.exchangeOnlinePowershellModuleName.value -powershellVersionTest:$TRUE
-
-    Out-LogFile -string "Calling Test-PowerShellModule to validate the Active Directory is installed."
-
-    $telemetryActiveDirectoryVersion = Test-PowershellModule -powershellModuleName $corevariables.activeDirectoryPowershellModuleName.value
-
     out-logfile -string "Calling Test-PowershellModule to validate the DL Conversion Module version installed."
 
     $telemetryDLHierachyVersion = Test-PowershellModule -powershellModuleName $corevariables.dlHierachyPowershellModule.value -powershellVersionTest:$TRUE
