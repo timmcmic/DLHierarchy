@@ -114,7 +114,8 @@ Function get-DLHierachyFromGraph
 
     #Define script based variables.
 
-    $logFileName = (Get-Date -Format FileDateTime) #Use random file date time for the log file name.
+    #$logFileName = (Get-Date -Format FileDateTime) #Use random file date time for the log file name.
+    $logFileName = $groupObjectID
     $msGraphScopesRequired = @("Directory.Read.All") #Define the grpah scopes required.
 
     #Initialize telemetry collection.
@@ -135,5 +136,5 @@ Function get-DLHierachyFromGraph
         start-telemetryConfiguration -allowTelemetryCollection $allowTelemetryCollection -appInsightAPIKey $appInsightAPIKey -traceModuleName $traceModuleName
     }
 
-    
+
 }
