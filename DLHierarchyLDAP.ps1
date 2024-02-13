@@ -7,99 +7,21 @@ Function New-TreeNode($group, $children) {
     return $node
 }
 
-Function Get-GroupWithChildren($groupId,$processedGroupIds,$objectType)
+Function Get-GroupWithChildren($groupId,$processedGroupIds)
 {
     Write-Host $groupId
-    write-host $objectType
 
-    switch ($objectType)
-    {
-        "Group"
-        {
-            try {
-                $group = get-group -identity $groupId -ErrorAction Stop
-            }
-            catch {
-                write-host $_
-                write-error "Object type is group - unable to obtain object."
-                exit
-            }    
-        }
-        "MailUniversalSecurityGroup" 
-        {
-            try {
-                $group = get-group -identity $groupId -ErrorAction Stop
-            }
-            catch {
-                write-host $_
-                write-error "Object type is group - unable to obtain object."
-                exit
-            }    
-        }
-        "MailUniversalDistributionGroup"
-        {
-            try {
-                $group = get-group -identity $groupId -ErrorAction Stop
-            }
-            catch {
-                write-host $_
-                write-error "Object type is group - unable to obtain object."
-                exit
-            }    
-        }   
-        "UserMailbox"
-        {
-            try {
-                $group = get-user -Identity $groupID -ErrorAction Stop
-            }
-            catch {
-                write-host $_
-                write-error "Object type is User - unable to obtain object."
-                exit
-            }
-        }
-        "Mailuser"
-        {
-            try {
-                $group = get-user -Identity $groupID -ErrorAction Stop
-            }
-            catch {
-                write-host $_
-                write-error "Object type is User - unable to obtain object."
-                exit
-            }
-        }
-        "GuestMailUser"
-        {
-            try {
-                $group = get-user -Identity $groupID -ErrorAction Stop
-            }
-            catch {
-                write-host $_
-                write-error "Object type is User - unable to obtain object."
-                exit
-            }
-        }
-        "MailContact"
-        {
-            try {
-                $group = get-contact -Identity $groupID -errorAction Stop
-            }
-            catch {
-                write-host $_
-                write-error "Object type is contact - unable to obtain object."
-                exit
-            }
-        }
-        Default
-        {
-            write-error "Invalid object type discovered - contact support."
-        }
+    try{
+        $group = get-adObject -identity $groupID -ErrorAction STOP
+    }
+    catch {
+        write-host "Unable to obtain AD object by identity provided."
+        write-error $_
+        exit
     }
 
-    Write-Host $group.ExchangeObjectID
-    write-host $group.displayName
-    write-host $objectType
+    Write-Host $group.distinguishedName
+    write-host $group.objectClass
 
     $childNodes = @()
 
@@ -109,18 +31,9 @@ Function Get-GroupWithChildren($groupId,$processedGroupIds,$objectType)
 
         #$children = Get-MgGroupMember -GroupId $group.Id | where {$_.AdditionalProperties["@odata.type"] -eq "#microsoft.graph.group"}
 
-        if (($objectType -eq "MailUniversalSecurityGroup") -or ($objectType -eq "MailUniversalDistributionGroup") -or ($objectType -eq "Group"))
+        if ($group.objectClass -eq "Group")
         {
-            if ($group.recipientTypeDetails -ne "GroupMailbox")
-            {
-                Write-Host "Group is not a unified group."
-                $children = Get-distributionGroupMember -Identity $group.ExchangeObjectID 
-            }
-            else 
-            {
-                write-host "Group is a unified group."
-                $children = get-UnifiedGroupLinks -identity $group.ExchangeObjectID -linkType Member
-            }
+            $children = Get-adGroupMember -Identity $group.distinguishedName
         }
         else {
             $children=@()
@@ -131,7 +44,7 @@ Function Get-GroupWithChildren($groupId,$processedGroupIds,$objectType)
             write-host "ChildID"
             write-host $child.ExchangeObjectID 
             $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-            $childNode = Get-GroupWithChildren -groupId $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.recipientTypeDetails
+            $childNode = Get-GroupWithChildren -groupId $child.distinguishedName -processedGroupIds $childGroupIDs
             $childNodes += $childNode
         }
     }
@@ -157,11 +70,11 @@ Function Print-Tree($node, $indent)
 
 # Main script start
 
-$groupSMTPAddress = "e98a2ff3-4a95-449d-a183-d9f2159d5432"
+$groupSMTPAddress = "CN=aTestGroup169,OU=MigrationTest,OU=DLConversion,DC=home,DC=e-mcmichael,DC=com"
 #$groupSMTPAddress = "0b420cb8-db98-44cf-9562-1dc25e5314e8"
 
 $processedGroupIds = New-Object System.Collections.Generic.HashSet[string]
 
-$tree = Get-GroupWithChildren -groupId $groupSMTPAddress -processedGroupIds $processedGroupIds -objectType "Group"
+$tree = Get-GroupWithChildren -groupId $groupSMTPAddress -processedGroupIds $processedGroupIds
 
 print-tree $tree,0
