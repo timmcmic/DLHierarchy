@@ -211,7 +211,7 @@ Function get-DLHierachyFromGraph
 
     out-logfile -string "Calling Test-PowershellModule to validate the DL Conversion Module version installed."
 
-    $telemetryDLHierachyVersion = Test-PowershellModule -powershellModuleName $corevariables.dlHierachyPowershellModule.value -powershellVersionTest:$TRUE
+    $telemetryDLHierachyVersion = Test-PowershellModule -powershellModuleName $corevariables.DLHierachy.value -powershellVersionTest:$TRUE
 
     out-logfile -string "Calling Test-PowershellModule to validate the Microsoft Graph Authentication versions installed."
 
