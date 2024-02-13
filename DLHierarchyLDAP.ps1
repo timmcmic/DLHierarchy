@@ -70,7 +70,7 @@ Function Print-Tree($node, $indent)
 
 # Main script start
 
-$groupSMTPAddress = "CN=aTestGroup169,OU=MigrationTest,OU=DLConversion,DC=home,DC=e-mcmichael,DC=com"
+$groupSMTPAddress = "CN=OnPremParent,OU=MigrationTest,OU=DLConversion,DC=home,DC=e-mcmichael,DC=com"
 #$groupSMTPAddress = "0b420cb8-db98-44cf-9562-1dc25e5314e8"
 
 $processedGroupIds = New-Object System.Collections.Generic.HashSet[string]
