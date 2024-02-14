@@ -145,9 +145,8 @@ Function get-DLHierachyFromExchangeOnline
 
     #Specify stub object types.
 
-    $msGraphType = "MSGraph"
+    $exchangeOnlineGroupType = "Group"
     $exchangeOnlineType = "ExchangeOnline"
-    $ldapType = "LDAP"
 
     [int]$defaultIndent = 0
 
@@ -256,7 +255,7 @@ Function get-DLHierachyFromExchangeOnline
 
     out-logfile -string "Start building tree from group..."
 
-    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $exchangeOnlineType -queryMethodExchangeOnline:$TRUE
+    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $exchangeOnlineGroupType -queryMethodExchangeOnline:$TRUE
 
     out-logfile -string "Set header in output file to group name."
 

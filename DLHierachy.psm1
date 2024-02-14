@@ -145,8 +145,6 @@ Function get-DLHierachyFromGraph
 
     $msGraphGroupType = "#microsoft.graph.group"
     $msGraphType = "MSGraph"
-    $exchangeOnlineType = "ExchangeOnline"
-    $ldapType = "LDAP"
 
     [int]$defaultIndent = 0
 

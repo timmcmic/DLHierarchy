@@ -70,6 +70,14 @@ Function Get-GroupWithChildren()
     $functiongraphUser = "#microsoft.graph.user"
     $functionGraphContact = "#microsoft.graph.orgContact"
 
+    $functionExchangeGroup = "Group"
+    $functionExchangeMailUniversalSecurityGroup = "MailUniversalSecurityGroup"
+    $functionExchangeMailUniversalDistributionGroup = "MailUniversalDistributionGroup"
+    $functionExchangeUserMailbox = "UserMailbox"
+    $functionExchangeMailUser = "Mailuser"
+    $functionExchangeGuestMailUser = "GuestMailUser"
+    $functionExchangeMailContact = "MailContact"
+
     out-logfile -string ("Parameter Set Name: "+$functionParamterSetName)
     out-logfile -string ("Processing group ID: "+$objectID)
     out-logfile -string ("Processing object type: "+$objectType)
@@ -78,6 +86,46 @@ Function Get-GroupWithChildren()
     out-logfile -string ("QueryMethodLDAP: "+$queryMethodLDAP)
 
     out-logfile -string "Determine the path utilized based on paramter set name."
+
+    function get-ExchangeGroup
+    {
+        Param
+        (
+            [Parameter(Mandatory = $true)]
+            $objectID
+        )
+
+        try {
+            $functionObject = get-group -identity $objectID -ErrorAction Stop
+        }
+        catch {
+            write-host $_
+            write-error "Object type is group - unable to obtain object."
+            exit
+        } 
+        
+        return $functionObject
+    }
+
+    function get-ExchangeUser
+    {
+        Param
+        (
+            [Parameter(Mandatory = $true)]
+            $objectID
+        )
+
+        try {
+            $functionObject = get-user -identity $objectID -ErrorAction Stop
+        }
+        catch {
+            write-host $_
+            write-error "Object type is user - unable to obtain object."
+            exit
+        } 
+        
+        return $functionObject
+    }
 
     if ($functionParamterSetName -eq $functionGraphName)
     {
@@ -167,7 +215,48 @@ Function Get-GroupWithChildren()
     {
         out-logfile -string "Entering exchange online processing..."
 
-        exit
+        switch ($objectType)
+        {
+            $functionExchangeGroup
+            {
+                $functionObject = get-ExchangeGroup -objectID $objectID 
+            }
+            $functionExchangeMailUniversalSecurityGroup
+            {
+                $functionObject = get-ExchangeGroup -objectID $objectID 
+            }
+            $functionExchangeMailUniversalDistributionGroup
+            {
+                $functionObject = get-ExchangeGroup -objectID $objectID 
+            }   
+            $functionExchangeUserMailbox
+            {
+                $functionObject = get-ExchangeUser -objectID $objectID
+            }
+            $functionExchangeMailUser
+            {
+                $functionObject = get-ExchangeUser -objectID $objectID
+            }
+            $functionExchangeGuestMailUser
+            {
+                $functionObject = get-ExchangeUser -objectID $objectID
+            }
+            $functionExchangeMailContact
+            {
+                try {
+                    $functionObject = get-contact -Identity $groupID -errorAction Stop
+                }
+                catch {
+                    write-host $_
+                    write-error "Object type is contact - unable to obtain object."
+                    exit
+                }
+            }
+            Default
+            {
+                write-error "Invalid object type discovered - contact support."
+            }
+        }
     }
 
     out-logfile -string "***********************************************************"
