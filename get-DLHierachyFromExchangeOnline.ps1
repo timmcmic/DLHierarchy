@@ -132,6 +132,17 @@ Function get-DLHierachyFromExchangeOnline
     $appInsightAPIKey = "63d673af-33f4-401c-931e-f0b64a218d89"
     $traceModuleName = "DLHierarchy"
 
+    #Create telemetry values.
+
+    $telemetryDLHierachyVersion = $NULL
+    $telemetryExchangeOnlineVersion = $NULL
+    $telemetryOSVersion = (Get-CimInstance Win32_OperatingSystem).version
+    $telemetryStartTime = get-universalDateTime
+    $telemetryEndTime = $NULL
+    [double]$telemetryElapsedSeconds = 0
+    $telemetryEventName = "get-DLHierarchyFromExchangeOnline"
+    [boolean]$telemetryError=$FALSE
+
     #Specify stub object types.
 
     $exchangeOnlineGroupType = "Group"
@@ -156,17 +167,6 @@ Function get-DLHierachyFromExchangeOnline
     #Create the log file.
 
     new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
-
-    #Create telemetry values.
-
-    $telemetryDLHierachyVersion = $NULL
-    $telemetryExchangeOnlineVersion = $NULL
-    $telemetryOSVersion = (Get-CimInstance Win32_OperatingSystem).version
-    $telemetryStartTime = get-universalDateTime
-    $telemetryEndTime = $NULL
-    [double]$telemetryElapsedSeconds = 0
-    $telemetryEventName = "get-DLHierarchyFromExchangeOnline"
-    [boolean]$telemetryError=$FALSE
 
     out-logfile -string "***********************************************************"
     out-logfile -string "Starting get-DLHierarchyFromExchangeOnline"
