@@ -50,7 +50,11 @@ Function Get-GroupWithChildren()
         [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
         [boolean]$queryMethodExchangeOnline=$false,
         [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
-        [boolean]$queryMethodLDAP=$false
+        [boolean]$queryMethodLDAP=$false,
+        [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
+        $globalCatalogServer,
+        [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
+        $activeDirectoryCredential
     )
     
     out-logfile -string "***********************************************************"
@@ -395,7 +399,7 @@ Function Get-GroupWithChildren()
             out-logfile -string "This is only utilized on the first call to ensure the object specified is a group."
 
             try {
-                $functionObject = get-ADGroup -identity $objectID -properties * -errorAction STOP
+                $functionObject = get-ADGroup -identity $objectID -properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -errorAction STOP
             }
             catch {
                 out-logfile -string $_
@@ -404,7 +408,7 @@ Function Get-GroupWithChildren()
         }
         else {
             try{
-                $functionObject = get-adObject -identity $objectID -properties * -ErrorAction STOP
+                $functionObject = get-adObject -identity $objectID -properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
             }
             catch {
                 out-logfile -string $_
@@ -423,7 +427,7 @@ Function Get-GroupWithChildren()
                 out-logfile -string "Object class is dynamic group - members determined via query."
 
                 try {
-                    $children = Get-ADObject -LDAPFilter $functionObject.msExchDynamicDLFilter -SearchBase $functionObject.msExchDynamicDLBaseDN -Properties * -ErrorAction STOP
+                    $children = Get-ADObject -LDAPFilter $functionObject.msExchDynamicDLFilter -SearchBase $functionObject.msExchDynamicDLBaseDN -Properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
                 }
                 catch {
                     out-logfile $_

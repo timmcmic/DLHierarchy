@@ -83,9 +83,6 @@ Function get-DLHierachyFromLDAP
         [string]$globalCatalogServer,
         [Parameter(Mandatory = $true)]
         [pscredential]$activeDirectoryCredential,
-        [Parameter(Mandatory = $false)]
-        [ValidateSet("Basic","Kerberos")]
-        $activeDirectoryAuthenticationMethod="Kerberos",
         #Define other mandatory parameters
         [Parameter(Mandatory = $true)]
         [string]$logFolderPath,
@@ -186,7 +183,7 @@ Function get-DLHierachyFromLDAP
 
     out-logfile -string "Start building tree from group..."
 
-    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $LDAPGroupType -queryMethodLDAP:$TRUE
+    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $LDAPGroupType -queryMethodLDAP:$TRUE -globalCatalogServer $coreVariables.globalCatalogWithPort.Value -activeDirectoryCredential $activeDirectoryCredential
 
     out-logfile -string "Set header in output file to group name."
 
