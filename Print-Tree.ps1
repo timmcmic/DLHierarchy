@@ -44,7 +44,10 @@ Function Print-Tree()
     {
         $string = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+")"
         
-        Write-Host ("-" * $indent) + $string
+        out-logfile -string  (("-" * $indent) + $string)
+
+        $global:outputFile += (("-" * $indent) + $string +"`n")
+
         foreach ($child in $node.Children)
         {
             Print-Tree -node $child -indent ($indent + 2) -outputType $functionLDAPType
