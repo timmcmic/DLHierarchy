@@ -456,12 +456,12 @@ Function Get-GroupWithChildren()
         }
         else 
         {
-            $group.DisplayName = $group.DisplayName + " (Circular Membership)"
-        }
+            if ($group.displaynnme -eq "")
+            {
+                $group.displayName = $group.name
+            }
 
-        if ($group.displaynnme -eq "")
-        {
-            $group.displayName = $group.name
+            $group.DisplayName = $group.DisplayName + " (Circular Membership)"
         }
 
         $node = New-TreeNode -object $functionObject -children $childNodes
