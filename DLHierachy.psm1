@@ -267,13 +267,21 @@ Function get-DLHierachyFromGraph
          }
     }
 
+    out-logfile -string "Start building tree from group..."
+
     $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $msGraphGroupType -queryMethodGraph:$TRUE
+
+    out-logfile -string "Set header in output file to group name."
 
     $global:outputFile += "Group Hierachy for Group ID: "+$groupObjectID+"`n"
 
+    out-logfile -string "Print hierarchy to log file."
+
     print-tree -node $tree -indent $defaultIndent -outputType $msGraphType
 
-    
+    out-logfile -string "Export hierarchy to file."
+
+    out-HierarchyFile -outputFileName = ("Hierarchy"+$logFileName) -logFolderPath $logFolderPath
 
     $telemetryEndTime = get-universalDateTime
     $telemetryElapsedSeconds = get-elapsedTime -startTime $telemetryStartTime -endTime $telemetryEndTime
