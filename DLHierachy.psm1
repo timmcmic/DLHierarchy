@@ -154,6 +154,7 @@ Function get-DLHierachyFromGraph
         DLHierachy = @{ "Value" = "DLHierachy" ; "Description" = "Static dlConversionv2 powershell module name" }
     }
 
+    $processedGroupIds = New-Object System.Collections.Generic.HashSet[string]
 
     #Create the log file.
 
@@ -255,5 +256,5 @@ Function get-DLHierachyFromGraph
          }
     }
 
-    
+
 }

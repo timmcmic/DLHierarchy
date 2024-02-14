@@ -29,106 +29,134 @@
     Get-GroupWithChildren -groupID GROUPID -processedGroupIDs PROCESSEDGROUPIDs -objectType OBJECTTYPE
 
     #>
-Function Get-GroupWithChildren($groupId,$processedGroupIds,$objectType)
+Function Get-GroupWithChildren()
 {
-    Write-Host $groupId
 
-    switch ($objectType)
-    {
-        "#microsoft.graph.group"
-        {
-            try {
-                $group = get-MGGroup -GroupId $groupId -ErrorAction Stop
-            }
-            catch {
-                write-host $_
-                write-error "Object type is group - unable to obtain object."
-            }    
-        }
-        "#microsoft.graph.user"
-        {
-            try {
-                $group = get-MGUser -userID $groupID -ErrorAction Stop
-            }
-            catch {
-                write-host $_
-                write-error "Object type is group - unable to obtain object."
-            }
-        }
-        "#microsoft.graph.orgContact"
-        {
-            try {
-                $group = get-MGContact -OrgContactId $groupID -errorAction Stop
-            }
-            catch {
-                write-host $_
-                write-error "Object type is contact - unable to obtain object."
-            }
-        }
-        Default
-        {
-            write-error "Invalid object type discovered - contact support."
-        }
-    }
-
-    <#
-    try {
-        $group = get-MGGroup -GroupId $groupId -ErrorAction Stop
-    }
-    catch {
-        write-host "Object is not a group."
-        try {
-            $group = get-MGUser -userID $groupID -ErrorAction Stop
-        }
-        catch {
-            write-host "Object is not a user."
-
-            try {
-                $group = get-MGContact -OrgContactId $groupID -errorAction Stop
-            }
-            catch {
-                write-host "Object is not a contact."
-            }
-        }
-    }
-
-    #>
+    Param
+    (
+        [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
+        [string]$groupID,
+        [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
+        $processedGroupIDs,
+        [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
+        [string]$objectType,
+        [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
+        [boolean]$queryMethodGraph=$false,
+        [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
+        [boolean]$queryMethodExchangeOnline=$false,
+        [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
+        [boolean]$queryMethodLDAP=$false
+    )
     
-    Write-Host $group.Id
-    write-host $group.displayName
-    write-host $objectType
+    out-logfile -string "***********************************************************"
+    out-logfile -string "Entering Get-GroupWithChildren"
+    out-logfile -string "***********************************************************"
 
+    $functionObject = $NULL
     $childNodes = @()
+    $children=@()
 
-    if (!$processedGroupIds.Contains($group.Id))
+    $functionParamterSetName = $PsCmdlet.ParameterSetName
+    $functionGraphName = "MSGraph"
+    $functionExchangeOnlineName = "ExchangeOnline"
+    $functionLDAPName = "LDAP"
+
+    $functionGraphGroup = "#microsoft.graph.group"
+    $functiongraphUser = "#microsoft.graph.user"
+    $functionGraphContact = "#microsoft.graph.orgContact"
+
+    out-logfile -string ("Parameter Set Name: "+$functionParamterSetName)
+    out-logfile -string ("Processing group ID: "+$groupID)
+    out-logfile -string ("Processing object type: "+$objectType)
+    out-logfile -string ("QueryMethodGraph: "+$queryMethodGraph)
+    out-logfile -string ("QueryMethodExchangeOnline: "+$queryMethodExchangeOnline)
+    out-logfile -string ("QueryMethodLDAP: "+$queryMethodLDAP)
+
+    out-logfile -string "Determine the path utilized based on paramter set name."
+
+    if ($functionParamterSetName -eq $functionGraphName)
     {
-        $NULL = $processedGroupIds.add($group.id)
+        out-logfile -string "Entering graph processing..."
 
-        #$children = Get-MgGroupMember -GroupId $group.Id | where {$_.AdditionalProperties["@odata.type"] -eq "#microsoft.graph.group"}
-
-        if ($objectType -eq "#microsoft.graph.group")
+        switch ($objectType)
         {
-            $children = Get-MgGroupMember -GroupId $group.Id 
+            $functionGraphGroup
+            {
+                try {
+                    $functionObject = get-MGGroup -GroupId $groupId -ErrorAction Stop
+                }
+                catch {
+                    out-logfile -string $_
+                    out-logfile -string "Error obtaining group." -isError:$TRUE
+                }    
+            }
+            $functiongraphUser
+            {
+                try {
+                    $functionObject = get-MGUser -userID $groupID -ErrorAction Stop
+                }
+                catch {
+                    out-logfile -string $_
+                    out-logfile -string "Error obtaining user." -isError:$TRUE
+                }
+            }
+            "#microsoft.graph.orgContact"
+            {
+                try {
+                    $functionObject = get-MGContact -OrgContactId $groupID -errorAction Stop
+                }
+                catch {
+                    out-logfile -string $_
+                    out-logfile -string "Error obtaining contact." -isError:$TRUE
+                }
+            }
+            Default
+            {
+                out-logfile -string "Invalid object type discovered - contact support." -isError:$TRUE
+            }
         }
-        else {
-            $children=@()
-        }
+        
+        out-logfile -string $functionObject
 
-        foreach ($child in $children)
+        if (!$processedGroupIds.Contains($functionObject.Id))
         {
-            write-host "ChildID"
-            write-host $child.id 
-            $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-            $childNode = Get-GroupWithChildren -groupId $child.id -processedGroupIds $childGroupIDs -objectType $child.additionalProperties["@odata.type"]
-            $childNodes += $childNode
+            out-logfile -string "Group has not already been processed."
+
+            $NULL = $processedGroupIds.add($functionObject.id)
+
+            if ($objectType -eq $functionGraphGroup)
+            {
+                out-logfile -string "Object is a group - determining children."
+
+                $children = Get-MgGroupMember -GroupId $group.Id 
+            }
+            else {
+                out-logfile -string "Object is not a group - no children."
+
+                $children=@()
+            }
+
+            foreach ($child in $children)
+            {
+                out-logfile -string "Processing child..."
+                out-logfile -string $child.id
+                $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
+                $childNode = Get-GroupWithChildren -groupId $child.id -processedGroupIds $childGroupIDs -objectType $child.additionalProperties["@odata.type"]
+                $childNodes += $childNode
+            }
         }
-    }
-    else 
-    {
-        $group.DisplayName = $group.DisplayName + " (Circular Membership)"
-    }
+        else 
+        {
+            $functionObject.DisplayName = $functionObject.DisplayName + " (Circular Membership)"
+        }
 
-    $node = New-TreeNode -group $group -children $childNodes
+        $node = New-TreeNode -group $group -children $childNodes
 
-    return $node
+        return $node
+    }
 }
