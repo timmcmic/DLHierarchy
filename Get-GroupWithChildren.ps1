@@ -136,6 +136,7 @@ Function Get-GroupWithChildren()
         {
             $functionGraphGroup
             {
+                out-logfile -string $functionGraphGroup
                 try {
                     $functionObject = get-MGGroup -GroupId $objectID -ErrorAction Stop
                 }
@@ -146,6 +147,7 @@ Function Get-GroupWithChildren()
             }
             $functiongraphUser
             {
+                out-logfile -string $functiongraphUser
                 try {
                     $functionObject = get-MGUser -userID $objectID -ErrorAction Stop
                 }
@@ -156,6 +158,7 @@ Function Get-GroupWithChildren()
             }
             $functionGraphContact
             {
+                out-logfile -string $functionGraphContact
                 try {
                     $functionObject = get-MGContact -OrgContactId $objectID -errorAction Stop
                 }
@@ -166,6 +169,7 @@ Function Get-GroupWithChildren()
             }
             Default
             {
+                out-logfile -string "Default"
                 out-logfile -string "Invalid object type discovered - contact support." -isError:$TRUE
             }
         }
@@ -220,30 +224,37 @@ Function Get-GroupWithChildren()
         {
             $functionExchangeGroup
             {
+                out-logfile -string $functionExchangeGroup
                 $functionObject = get-ExchangeGroup -objectID $objectID 
             }
             $functionExchangeMailUniversalSecurityGroup
             {
+                out-logfile -string $functionExchangeMailUniversalSecurityGroup
                 $functionObject = get-ExchangeGroup -objectID $objectID 
             }
             $functionExchangeMailUniversalDistributionGroup
             {
+                out-logfile -string $functionExchangeMailUniversalDistributionGroup
                 $functionObject = get-ExchangeGroup -objectID $objectID 
             }   
             $functionExchangeUserMailbox
             {
+                out-logfile -string $functionExchangeUserMailbox
                 $functionObject = get-ExchangeUser -objectID $objectID
             }
             $functionExchangeMailUser
             {
+                out-logfile -string $functionExchangeMailUser
                 $functionObject = get-ExchangeUser -objectID $objectID
             }
             $functionExchangeGuestMailUser
             {
+                out-logfile -string $functionExchangeGuestMailUser
                 $functionObject = get-ExchangeUser -objectID $objectID
             }
             $functionExchangeMailContact
             {
+                out-logfile -string $functionExchangeMailContact
                 try {
                     $functionObject = get-o365contact -Identity $groupID -errorAction Stop
                 }
@@ -255,7 +266,8 @@ Function Get-GroupWithChildren()
             }
             Default
             {
-                write-error "Invalid object type discovered - contact support."
+                out-logfile -string "Default"
+                out-logfile -string "Invalid object type discovered - contact support." -isError:$TRUE
             }
         }
 
