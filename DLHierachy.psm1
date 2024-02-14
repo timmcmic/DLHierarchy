@@ -270,4 +270,6 @@ Function get-DLHierachyFromGraph
     $tree = Get-GroupWithChildren -groupId $groupObjectID -processedGroupIds $processedGroupIds -objectType $msGraphGroupType -queryMethodGraph:$TRUE
 
     print-tree -node $tree -indent $defaultIndent -outputType $msGraphType
+
+    $global:outputFile | out-file c:\temp\test.txt
 }
