@@ -281,7 +281,7 @@ Function get-DLHierachyFromGraph
 
     out-logfile -string "Export hierarchy to file."
 
-    out-HierarchyFile -outputFileName  ("Hierarchy-"+$logFileName) -logFolderPath $logFolderPath
+    out-HierarchyFile -outputFileName  ("Hierarchy-"+$logFileName) -logFolderPath $global:logFolderPath
 
     $telemetryEndTime = get-universalDateTime
     $telemetryElapsedSeconds = get-elapsedTime -startTime $telemetryStartTime -endTime $telemetryEndTime

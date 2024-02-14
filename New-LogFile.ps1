@@ -55,15 +55,15 @@ n   new-logfile -logFileName NAME -logFolderPath PATH
 
     # Get our log file path
 
-    $logFolderPath = $logFolderPath+"\"+$logFileName+"\"
+    $Global:logFolderPath = $logFolderPath+"\"+$logFileName+"\"
     
     #Since $logFile is defined in the calling function - this sets the log file name for the entire script
     
-    $global:LogFile = Join-path $logFolderPath $fileName
+    $global:LogFile = Join-path $global:logFolderPath $fileName
 
     #Test the path to see if this exists if not create.
 
-    [boolean]$pathExists = Test-Path -Path $logFolderPath
+    [boolean]$pathExists = Test-Path -Path $global:logFolderPath
 
     if ($pathExists -eq $false)
     {
@@ -71,7 +71,7 @@ n   new-logfile -logFileName NAME -logFolderPath PATH
         {
             #Path did not exist - Creating
 
-            New-Item -Path $logFolderPath -Type Directory
+            New-Item -Path $global:logFolderPath -Type Directory
         }
         catch 
         {
