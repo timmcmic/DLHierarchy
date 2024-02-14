@@ -105,7 +105,7 @@ Function Get-GroupWithChildren()
                     out-logfile -string "Error obtaining user." -isError:$TRUE
                 }
             }
-            "#microsoft.graph.orgContact"
+            $functionGraphContact
             {
                 try {
                     $functionObject = get-MGContact -OrgContactId $groupID -errorAction Stop
@@ -133,7 +133,7 @@ Function Get-GroupWithChildren()
             {
                 out-logfile -string "Object is a group - determining children."
 
-                $children = Get-MgGroupMember -GroupId $group.Id 
+                $children = Get-MgGroupMember -GroupId $functionObject.Id 
             }
             else {
                 out-logfile -string "Object is not a group - no children."
