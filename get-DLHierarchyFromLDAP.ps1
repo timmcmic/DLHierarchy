@@ -131,6 +131,7 @@ Function get-DLHierachyFromLDAP
     $coreVariables = @{ 
         globalCatalogPort = @{ "Value" = ":3268" ; "Description" = "Global catalog port definition" }
         globalCatalogWithPort = @{ "Value" = ($globalCatalogServer+($corevariables.globalCatalogPort.value)) ; "Description" = "Global catalog server with port" }
+        activeDirectoryPowershellModuleName = @{ "Value" = "ActiveDirectory" ; "Description" = "Static active directory powershell module name" }
         DLHierachy = @{ "Value" = "DLHierachy" ; "Description" = "Static dlConversionv2 powershell module name" }
     }
 
@@ -141,7 +142,7 @@ Function get-DLHierachyFromLDAP
     new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
 
     out-logfile -string "***********************************************************"
-    out-logfile -string "Starting get-DLHierarchyFromExchangeOnline"
+    out-logfile -string "Starting get-DLHierarchyFromLDAP"
     out-logfile -string "***********************************************************"
 
     if ($allowTelemetryCollection -eq $TRUE)
