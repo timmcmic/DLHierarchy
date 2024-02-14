@@ -133,7 +133,13 @@ Function Get-GroupWithChildren()
             {
                 out-logfile -string "Object is a group - determining children."
 
-                $children = Get-MgGroupMember -GroupId $functionObject.Id 
+                try {
+                    $children = Get-MgGroupMember -GroupId $functionObject.Id 
+                }
+                catch {
+                    out-logfile -string $_
+                    out-logfile -string "Error obtaining group membership." -isError:$TRUE
+                }
             }
             else {
                 out-logfile -string "Object is not a group - no children."
