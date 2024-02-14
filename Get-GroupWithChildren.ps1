@@ -155,7 +155,7 @@ Function Get-GroupWithChildren()
             $functionObject.DisplayName = $functionObject.DisplayName + " (Circular Membership)"
         }
 
-        $node = New-TreeNode -group $group -children $childNodes
+        $node = New-TreeNode -group $functionObject -children $childNodes
     }
 
     out-logfile -string "***********************************************************"
