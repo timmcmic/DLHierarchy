@@ -286,4 +286,31 @@ Function get-DLHierachyFromGraph
     $telemetryEndTime = get-universalDateTime
     $telemetryElapsedSeconds = get-elapsedTime -startTime $telemetryStartTime -endTime $telemetryEndTime
 
+    $telemetryEventProperties = @{
+        DLConversionV2Command = $telemetryEventName
+        DLHierarchyVersion = $telemetryDLHierachyVersion
+        MSGraphAuthentication = $telemetryMSGraphAuthentication
+        MSGraphUsers = $telemetryMSGraphUsers
+        MSGraphGroups = $telemetryMSGraphGroups
+        MSGraphDirectory = $telemetryMSGraphDirectory
+        OSVersion = $telemetryOSVersion
+        MigrationStartTimeUTC = $telemetryStartTime
+        MigrationEndTimeUTC = $telemetryEndTime
+        HierachyElapsedSeconds = $telemetryElapsedSeconds
+        MigrationErrors = $telemetryError
+    }
+
+    if ($allowTelemetryCollection -eq $TRUE)
+    {
+        out-logfile -string "Telemetry1"
+        out-logfile -string $traceModuleName
+        out-logfile -string "Telemetry2"
+        out-logfile -string $telemetryEventName
+        out-logfile -string "Telemetry3"
+        out-logfile -string $telemetryEventMetrics
+        out-logfile -string "Telemetry4"
+        out-logfile -string $telemetryEventProperties
+        send-TelemetryEvent -traceModuleName $traceModuleName -eventName $telemetryEventName -eventMetrics $telemetryEventMetrics -eventProperties $telemetryEventProperties
+    }
+
 }
