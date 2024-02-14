@@ -79,6 +79,7 @@ Function Get-GroupWithChildren()
     $functionExchangeMailContact = "MailContact"
     $functionExchangeGroupMailbox = "GroupMailbox"
     $functionExchangeDynamicGroup = "DynamicDistributionGroup"
+    $isExchangeGroupType = $false
 
     out-logfile -string ("Parameter Set Name: "+$functionParamterSetName)
     out-logfile -string ("Processing group ID: "+$objectID)
@@ -241,17 +242,20 @@ Function Get-GroupWithChildren()
             $functionExchangeGroup
             {
                 out-logfile -string $functionExchangeGroup
-                $functionObject = get-ExchangeGroup -objectID $objectID 
+                $functionObject = get-ExchangeGroup -objectID $objectID
+                $isExchangeGroupType=$TRUE 
             }
             $functionExchangeMailUniversalSecurityGroup
             {
                 out-logfile -string $functionExchangeMailUniversalSecurityGroup
-                $functionObject = get-ExchangeGroup -objectID $objectID 
+                $functionObject = get-ExchangeGroup -objectID $objectID
+                $isExchangeGroupType=$TRUE  
             }
             $functionExchangeMailUniversalDistributionGroup
             {
                 out-logfile -string $functionExchangeMailUniversalDistributionGroup
-                $functionObject = get-ExchangeGroup -objectID $objectID 
+                $functionObject = get-ExchangeGroup -objectID $objectID
+                $isExchangeGroupType=$TRUE  
             }   
             $functionExchangeUserMailbox
             {
@@ -291,6 +295,7 @@ Function Get-GroupWithChildren()
                     write-error "Object type is contact - unable to obtain object."
                     exit
                 }
+                $isExchangeGroupType=$TRUE 
             }
             Default
             {
@@ -307,17 +312,45 @@ Function Get-GroupWithChildren()
 
             $NULL = $processedGroupIds.add($functionObject.ExchangeObjectID)
 
-            if (($objectType -eq $functionExchangeMailUniversalSecurityGroup) -or ($objectType -eq $functionExchangeMailUniversalDistributionGroup) -or ($objectType -eq $functionExchangeGroup))
+            out-logfile -string "Determine if object is an Exchange Group type and if so enumerate membership."
+            out-logfile -string ("Exchange Group Type: "+$isExchangeGroupType)
+
+            if ($isExchangeGroupType -eq $TRUE)
             {
-                if ($functionObject.recipientTypeDetails -ne $functionExchangeGroupMailbox)
+                if ($functionObject.recipientTypeDetails -eq $functionExchangeDynamicGroup)
                 {
-                    Write-Host "Group is not a unified group."
-                    $children = Get-o365distributionGroupMember -Identity $functionObject.ExchangeObjectID 
+                    out-logfile -string "Group is a dynamic group - children determined by recipient filter."
+
+                    try {
+                        $children = get-o365Recipient -RecipientPreviewFilter $functionObject.RecipientFilter -resultsize unlimited -errorAction STOP
+                    }
+                    catch {
+                        out-logfile $_
+                        out-logfile -string "Unable to obtain dynamic DL members by recipient filter preview." -isError:$TRUE
+                    }
+                }
+                elseif ($functionObject.recipientTypeDetails -ne $functionExchangeGroupMailbox)
+                {
+                    out-logfile -string "Group is not a unified group or dynamic group - get standard membership."
+                    try {
+                        $children = Get-o365distributionGroupMember -Identity $functionObject.ExchangeObjectID -resultSize unlimited -errorAction STOP
+                    }
+                    catch {
+                        out-logfile $_
+                        out-logfile -string "Unable to obtain distribution group membership." -isError:$TRUE
+                    }
                 }
                 else 
                 {
-                    write-host "Group is a unified group."
-                    $children = get-o365UnifiedGroupLinks -identity $functionObject.ExchangeObjectID -linkType Member
+                    out-logfile -string "Group is a unified group - perform link member query."
+                    
+                    try {
+                        $children = get-o365UnifiedGroupLinks -identity $functionObject.ExchangeObjectID -linkType Member
+                    }
+                    catch {
+                        out-logfile $_
+                        out-logfile -string "Unable to obtain unified group membership." -isError:$TRUE
+                    }
                 }
             }
             else {
