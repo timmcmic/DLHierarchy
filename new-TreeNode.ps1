@@ -21,7 +21,7 @@ Function New-TreeNode()
     Param
     (
         [Parameter(Mandatory = $true)]
-        $group,
+        $object,
         [Parameter(Mandatory = $true)]
         $children
     )
