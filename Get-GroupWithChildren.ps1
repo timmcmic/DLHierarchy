@@ -408,6 +408,8 @@ Function Get-GroupWithChildren()
             }
         }
         else {
+            out-logfile -string "Obtaining group getting adobject."
+            
             try{
                 $functionObject = get-adObject -identity $objectID -properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
             }
