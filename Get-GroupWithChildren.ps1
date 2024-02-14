@@ -313,6 +313,8 @@ Function Get-GroupWithChildren()
 
         out-logfile -string $functionObject
 
+        out-logfile -string "Beginning object processing..."
+
         if (!$processedGroupIds.Contains($functionObject.ExchangeObjectID))
         {
             out-logfile -string "Group has not already been processed."
@@ -409,7 +411,7 @@ Function Get-GroupWithChildren()
         }
         else {
             out-logfile -string "Obtaining group getting adobject."
-            
+
             try{
                 $functionObject = get-adObject -identity $objectID -properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
             }
@@ -421,8 +423,14 @@ Function Get-GroupWithChildren()
 
         $childNodes = @()
 
+        out-logfile -string $functionObject
+
+        out-logfile -string "Beginning object processing..."
+
         if (!$processedGroupIds.Contains($functionObject.distinguishedName))
         {
+            out-logfile -string "Object has not been previously processed..."
+            
             $NULL = $processedGroupIds.add($functionObject.distinguishedName)
 
             if ($functionObject.objectClass -eq $functionLDAPDynamicGroup)
