@@ -208,6 +208,18 @@ Function get-DLHierachyFromGraph
     $msGraphCertificateThumbprint = remove-stringSpace -stringToFix $msGraphCertificateThumbprint
     $msGraphApplicationID = remove-stringSpace -stringToFix $msGraphApplicationID
 
+    out-logfile -string "Testing to ensure group ID passed is a GUID format."
+
+    if (test-isGUID -stringGUID $groupObjectID)
+    {
+        out-logfile -string "Group is vaild string format."
+    }
+    else 
+    {
+        Out-logfile -string "Identifier should be an acceptable GUID format.  This incldues objectGUID, externalDirectoryObjectID, ExchangeObjectID"
+    }
+
+
     if ($msGraphCertificateThumbprint -eq "")
     {
         out-logfile -string "Validation all components available for MSGraph Cert Auth"

@@ -179,6 +179,17 @@ Function get-DLHierachyFromLDAP
     $logFolderPath = remove-stringSpace -stringToFix $logFolderPath
     $globalCatalogServer=remove-stringSpace -stringToFix $globalCatalogServer 
 
+    out-logfile -string "Testing to ensure group ID passed is a GUID format."
+
+    if (test-isGUID -stringGUID $groupObjectID)
+    {
+        out-logfile -string "Group is vaild string format."
+    }
+    else 
+    {
+        Out-logfile -string "Identifier should be an acceptable GUID format.  This incldues objectGUID, externalDirectoryObjectID, ExchangeObjectID"
+    }
+
     Out-LogFile -string "Calling Test-PowerShellModule to validate the Active Directory is installed."
 
     $telemetryActiveDirectoryVersion = Test-PowershellModule -powershellModuleName $corevariables.activeDirectoryPowershellModuleName.value
