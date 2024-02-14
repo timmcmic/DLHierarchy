@@ -464,7 +464,7 @@ Function Get-GroupWithChildren()
             $group.displayName = $group.name
         }
 
-        $node = New-TreeNode -group $group -children $childNodes
+        $node = New-TreeNode -object $functionObject -children $childNodes
     }
 
 
