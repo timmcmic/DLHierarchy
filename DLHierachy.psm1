@@ -118,6 +118,10 @@ Function get-DLHierachyFromGraph
     $logFileName = $groupObjectID
     $msGraphScopesRequired = @("Directory.Read.All") #Define the grpah scopes required.
 
+    #Define the output file.
+
+    [string]$global:outputFile=""
+
     #Initialize telemetry collection.
 
     $appInsightAPIKey = "63d673af-33f4-401c-931e-f0b64a218d89"
@@ -142,6 +146,11 @@ Function get-DLHierachyFromGraph
     #Specify stub object types.
 
     $msGraphGroupType = "#microsoft.graph.group"
+    $msGraphType = "MSGraph"
+    $exchangeOnlineType = "ExchangeOnline"
+    $ldapType = "LDAP"
+
+    [int]$defaultIndent = 0
 
     #Define windows title.
 
@@ -262,5 +271,5 @@ Function get-DLHierachyFromGraph
 
     $tree = Get-GroupWithChildren -groupId $groupObjectID -processedGroupIds $processedGroupIds -objectType $msGraphGroupType -queryMethodGraph:$TRUE
 
-    print-tree $tree,0
+    print-tree -node $tree -indent $defaultIndent -outputType $msGraphType
 }
