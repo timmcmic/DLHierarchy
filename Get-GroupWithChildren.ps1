@@ -272,12 +272,12 @@ Function Get-GroupWithChildren()
                 if ($functionObject.recipientTypeDetails -ne $functionExchangeGroupMailbox)
                 {
                     Write-Host "Group is not a unified group."
-                    $children = Get-distributionGroupMember -Identity $functionObject.ExchangeObjectID 
+                    $children = Get-o365distributionGroupMember -Identity $functionObject.ExchangeObjectID 
                 }
                 else 
                 {
                     write-host "Group is a unified group."
-                    $children = get-UnifiedGroupLinks -identity $functionObject.ExchangeObjectID -linkType Member
+                    $children = get-o365UnifiedGroupLinks -identity $functionObject.ExchangeObjectID -linkType Member
                 }
             }
             else {
