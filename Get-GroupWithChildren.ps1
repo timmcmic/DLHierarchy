@@ -345,7 +345,7 @@ Function Get-GroupWithChildren()
                     out-logfile -string "Group is a unified group - perform link member query."
                     
                     try {
-                        $children = get-o365UnifiedGroupLinks -identity $functionObject.ExchangeObjectID -linkType Member
+                        $children = get-o365UnifiedGroupLinks -identity $functionObject.ExchangeObjectID -linkType Member -resultSize unlimited -errorAction STOP
                     }
                     catch {
                         out-logfile $_
@@ -362,7 +362,7 @@ Function Get-GroupWithChildren()
                 write-host "ChildID"
                 write-host $child.ExchangeObjectID 
                 $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-                $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.recipientTypeDetails -queryMethodExchangeOnline:$TRUE
+                $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.recipientType -queryMethodExchangeOnline:$TRUE
                 $childNodes += $childNode
             }
         }
