@@ -275,14 +275,12 @@ Function get-DLHierachyFromExchangeOnline
     $telemetryEventProperties = @{
         DLConversionV2Command = $telemetryEventName
         DLHierarchyVersion = $telemetryDLHierachyVersion
-        MSGraphAuthentication = $telemetryMSGraphAuthentication
-        MSGraphUsers = $telemetryMSGraphUsers
-        MSGraphGroups = $telemetryMSGraphGroups
-        MSGraphDirectory = $telemetryMSGraphDirectory
+        ExchangeOnline = $telemetryExchangeOnlineVersion
         OSVersion = $telemetryOSVersion
         MigrationStartTimeUTC = $telemetryStartTime
         MigrationEndTimeUTC = $telemetryEndTime
         MigrationErrors = $telemetryError
+
     }
 
     $telemetryEventMetrics = @{
