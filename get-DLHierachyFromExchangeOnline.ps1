@@ -220,7 +220,7 @@ Function get-DLHierachyFromExchangeOnline
 
     out-logfile -string "Calling Test-PowershellModule to validate the DL Conversion Module version installed."
 
-    #$telemetryDLHierachyVersion = Test-PowershellModule -powershellModuleName $corevariables.DLHierachy.value -powershellVersionTest:$TRUE
+    $telemetryDLHierachyVersion = Test-PowershellModule -powershellModuleName $corevariables.DLHierachy.value -powershellVersionTest:$TRUE
 
     Out-LogFile -string "Calling Test-PowerShellModule to validate the Exchange Module is installed."
 

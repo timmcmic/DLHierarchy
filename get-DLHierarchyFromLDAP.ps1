@@ -183,6 +183,10 @@ Function get-DLHierachyFromLDAP
 
     $telemetryActiveDirectoryVersion = Test-PowershellModule -powershellModuleName $corevariables.activeDirectoryPowershellModuleName.value
 
+    out-logfile -string "Calling Test-PowershellModule to validate the DL Conversion Module version installed."
+
+    $telemetryDLHierachyVersion = Test-PowershellModule -powershellModuleName $corevariables.DLHierachy.value -powershellVersionTest:$TRUE
+
     out-logfile -string "Start building tree from group..."
 
     $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $LDAPGroupType -queryMethodLDAP:$TRUE -globalCatalogServer $coreVariables.globalCatalogWithPort.Value -activeDirectoryCredential $activeDirectoryCredential
