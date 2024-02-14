@@ -260,5 +260,5 @@ Function get-DLHierachyFromGraph
          }
     }
 
-    $tree = Get-GroupWithChildren -groupId $groupObjectID -processedGroupIds $processedGroupIds -objectType $msGraphGroupType -queryGraph:$TRUE
+    $tree = Get-GroupWithChildren -groupId $groupObjectID -processedGroupIds $processedGroupIds -objectType $msGraphGroupType -queryMethodGraph:$TRUE
 }
