@@ -81,6 +81,9 @@ Function Get-GroupWithChildren()
     $functionExchangeDynamicGroup = "DynamicDistributionGroup"
     $isExchangeGroupType = $false
 
+    $functionLDAPGroup = "Group"
+    $functionLDAPDynamicGroup = "msExchDynamicDistributionList"
+
     out-logfile -string ("Parameter Set Name: "+$functionParamterSetName)
     out-logfile -string ("Processing group ID: "+$objectID)
     out-logfile -string ("Processing object type: "+$objectType)
@@ -232,7 +235,6 @@ Function Get-GroupWithChildren()
     #Exchange Online Code
     #===============================================================================
 
-
     elseif ($functionParamterSetName -eq $functionExchangeOnlineName)
     {
         out-logfile -string "Entering exchange online processing..."
@@ -359,8 +361,8 @@ Function Get-GroupWithChildren()
 
             foreach ($child in $children)
             {
-                write-host "ChildID"
-                write-host $child.ExchangeObjectID 
+                out-logfile -string "Processing child..."
+                out-logfile -string $child.distinguishedName 
                 $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
                 $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.recipientType -queryMethodExchangeOnline:$TRUE
                 $childNodes += $childNode
@@ -371,8 +373,95 @@ Function Get-GroupWithChildren()
             $functionObject.DisplayName = $functionObject.DisplayName + " (Circular Membership)"
         }
 
+        if ($group.displaynnme -eq "")
+        {
+            $group.displayName = $group.name
+        }
+    
         $node = New-TreeNode -object $functionObject -children $childNodes
     }
+
+    #===============================================================================
+    #LDAP Code
+    #===============================================================================
+
+    elseif ($functionParamterSetName -eq $functionLDAPName)
+    {
+        out-logfile -string "Entering LDAP processing..."
+
+        if ($objectType -eq $functionLDAPGroup)
+        {
+            out-logfile -string "This call specifies an object type as group."
+            out-logfile -string "This is only utilized on the first call to ensure the object specified is a group."
+
+            try {
+                $functionObject = get-ADGroup -identity $objectID -properties * -errorAction STOP
+            }
+            catch {
+                out-logfile -string $_
+                out-logfile -string "Unable to obtain the group by object ID provided.  This is the initial group properties call."
+            }
+        }
+        else {
+            try{
+                $functionObject = get-adObject -identity $objectID -properties * -ErrorAction STOP
+            }
+            catch {
+                out-logfile -string $_
+                out-logfile -string "Unablet obtain the ad object by ID." -isError:$TRUE
+            }
+        }
+
+        $childNodes = @()
+
+        if (!$processedGroupIds.Contains($functionObject.distinguishedName))
+        {
+            $NULL = $processedGroupIds.add($functionObject.distinguishedName)
+
+            if ($functionObject.objectClass -eq $functionLDAPDynamicGroup)
+            {
+                out-logfile -string "Object class is dynamic group - members determined via query."
+
+                try {
+                    $children = Get-ADObject -LDAPFilter $functionObject.msExchDynamicDLFilter -SearchBase $functionObject.msExchDynamicDLBaseDN -Properties * -ErrorAction STOP
+                }
+                catch {
+                    out-logfile $_
+                    out-logfile -string "Unable to obtain dynamic group membership via LDAP call."
+                }
+            }
+            elseif ($functionObject.objectClass -eq $functionLDAPGroup )
+            {
+                out-logfile -string "Object class id group - members determiend by member attribute on group."
+                $children = $functionObject.member
+            }
+            else {
+                out-logfile -string "Object is not a dynamic group or group."
+                $children=@()
+            }
+
+            foreach ($child in $children)
+            {
+                write-host "ChildID"
+                write-host $child.distinguishedName 
+                $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
+                $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs
+                $childNodes += $childNode
+            }
+        }
+        else 
+        {
+            $group.DisplayName = $group.DisplayName + " (Circular Membership)"
+        }
+
+        if ($group.displaynnme -eq "")
+        {
+            $group.displayName = $group.name
+        }
+
+        $node = New-TreeNode -group $group -children $childNodes
+    }
+
 
     out-logfile -string "***********************************************************"
     out-logfile -string "Exiting Get-GroupWithChildren"
