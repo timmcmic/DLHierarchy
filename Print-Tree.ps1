@@ -16,7 +16,7 @@ Function Print-Tree()
 
     if ($outputType -eq $functionMSGraphType)
     {
-        $string = $node.group.getType().name+": "+$node.group.displayName +" ("+$node.group.id+")"
+        $string = $node.group.displayName +" ("+$node.group.id+") ("+$node.group.getType().name+")"
 
         out-logfile -string  (("-" * $indent) + $string)
 
