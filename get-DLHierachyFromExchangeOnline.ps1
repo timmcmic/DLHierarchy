@@ -85,11 +85,11 @@ Function get-DLHierachyFromExchangeOnline
     
     .EXAMPLE
 
-    get-DLHierarchyFromGraph -groupObjectID XXXXX-XXX-XXXX-XXXXXXX -logFolderPath c:\temp -msGraphTenantID ID (triggers interactive auth.)
+    get-DLHierarchyFromExchangeOnline -groupObjectID XXXXX-XXX-XXXX-XXXXXXX -logFolderPath c:\temp -exchangeCredential $cred
 
     .EXAMPLE
 
-    get-DLHierarchyFromGraph -groupObjectID XXXXX-XXX-XXXX-XXXXXXX -logFolderPath c:\temp -msGraphTenantID ID -msGraphCertificateThumbprint Thumprinter -msGraphApplicationID AppID
+    get-DLHierarchyFromExchangeOnline -groupObjectID XXXXX-XXX-XXXX-XXXXXXX -logFolderPath c:\temp -exchangeOrganizationName sometihng.onmicrosoft.com -exchangeCertificateThumbPrint ThumbPrint -ExchangeOnlineAppID APPID
 
     #>
 
@@ -273,13 +273,52 @@ Function get-DLHierachyFromExchangeOnline
          }
     }
 
+    out-logfile -string "Start building tree from group..."
+
     $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $msGraphGroupType -queryMethodGraph:$TRUE
+
+    out-logfile -string "Set header in output file to group name."
 
     $global:outputFile += "Group Hierachy for Group ID: "+$groupObjectID+"`n"
 
+    out-logfile -string "Print hierarchy to log file."
+
     print-tree -node $tree -indent $defaultIndent -outputType $msGraphType
 
-    $global:outputFile | out-file c:\temp\test.txt
+    out-logfile -string "Export hierarchy to file."
 
-    out-logfile -string $global:outputFile
+    out-HierarchyFile -outputFileName  ("Hierarchy-"+$logFileName) -logFolderPath $global:logFolderPath
+
+    $telemetryEndTime = get-universalDateTime
+    $telemetryElapsedSeconds = get-elapsedTime -startTime $telemetryStartTime -endTime $telemetryEndTime
+
+    $telemetryEventProperties = @{
+        DLConversionV2Command = $telemetryEventName
+        DLHierarchyVersion = $telemetryDLHierachyVersion
+        MSGraphAuthentication = $telemetryMSGraphAuthentication
+        MSGraphUsers = $telemetryMSGraphUsers
+        MSGraphGroups = $telemetryMSGraphGroups
+        MSGraphDirectory = $telemetryMSGraphDirectory
+        OSVersion = $telemetryOSVersion
+        MigrationStartTimeUTC = $telemetryStartTime
+        MigrationEndTimeUTC = $telemetryEndTime
+        MigrationErrors = $telemetryError
+    }
+
+    $telemetryEventMetrics = @{
+        MigrationElapsedSeconds = $telemetryElapsedSeconds
+    }
+
+    if ($allowTelemetryCollection -eq $TRUE)
+    {
+        out-logfile -string "Telemetry1"
+        out-logfile -string $traceModuleName
+        out-logfile -string "Telemetry2"
+        out-logfile -string $telemetryEventName
+        out-logfile -string "Telemetry3"
+        out-logfile -string $telemetryEventMetrics
+        out-logfile -string "Telemetry4"
+        out-logfile -string $telemetryEventProperties
+        send-TelemetryEvent -traceModuleName $traceModuleName -eventName $telemetryEventName -eventMetrics $telemetryEventMetrics -eventProperties $telemetryEventProperties
+    }
 }

@@ -315,5 +315,4 @@ Function get-DLHierachyFromGraph
         out-logfile -string $telemetryEventProperties
         send-TelemetryEvent -traceModuleName $traceModuleName -eventName $telemetryEventName -eventMetrics $telemetryEventMetrics -eventProperties $telemetryEventProperties
     }
-
 }
