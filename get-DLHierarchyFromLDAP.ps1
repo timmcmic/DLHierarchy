@@ -118,6 +118,7 @@ Function get-DLHierachyFromLDAP
     #Specify stub object types.
 
     $LDAPGroupType = "Group"
+    $LDAPType = "LDAP"
 
     [int]$defaultIndent = 0
 
@@ -192,7 +193,7 @@ Function get-DLHierachyFromLDAP
 
     out-logfile -string "Print hierarchy to log file."
 
-    print-tree -node $tree -indent $defaultIndent -outputType $exchangeOnlineType
+    print-tree -node $tree -indent $defaultIndent -outputType $LDAPType
 
     out-logfile -string "Export hierarchy to file."
 
@@ -204,10 +205,7 @@ Function get-DLHierachyFromLDAP
     $telemetryEventProperties = @{
         DLConversionV2Command = $telemetryEventName
         DLHierarchyVersion = $telemetryDLHierachyVersion
-        MSGraphAuthentication = $telemetryMSGraphAuthentication
-        MSGraphUsers = $telemetryMSGraphUsers
-        MSGraphGroups = $telemetryMSGraphGroups
-        MSGraphDirectory = $telemetryMSGraphDirectory
+        ActiveDirectoryVersion = $telemetryActiveDirectoryVersion
         OSVersion = $telemetryOSVersion
         MigrationStartTimeUTC = $telemetryStartTime
         MigrationEndTimeUTC = $telemetryEndTime

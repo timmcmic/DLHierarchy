@@ -40,4 +40,13 @@ Function Print-Tree()
             Print-Tree -node $child -indent ($indent + 2) -outputType $functionExchangeOnlineType
         }
     }
+    elseif ($outputType -eq $functionLDAPType)
+    {
+        $string = $node.group.objectClass+": "+$node.group.DisplayName +" (ObjectGUID:"+$node.group.objectGUID+")"
+        Write-Host ("-" * $indent) + $string
+        foreach ($child in $node.Children)
+        {
+            Print-Tree $child ($indent + 2)
+        }
+    }
 }
