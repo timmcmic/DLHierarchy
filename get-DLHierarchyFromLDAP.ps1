@@ -190,6 +190,8 @@ Function get-DLHierachyFromLDAP
         Out-logfile -string "Identifier should be an acceptable GUID format.  This incldues objectGUID, externalDirectoryObjectID, ExchangeObjectID"
     }
 
+    exit
+
     Out-LogFile -string "Calling Test-PowerShellModule to validate the Active Directory is installed."
 
     $telemetryActiveDirectoryVersion = Test-PowershellModule -powershellModuleName $corevariables.activeDirectoryPowershellModuleName.value
