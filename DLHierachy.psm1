@@ -139,6 +139,10 @@ Function get-DLHierachyFromGraph
     $telemetryEventName = "get-DLHierarchyFromGraph"
     [boolean]$telemetryError=$FALSE
 
+    #Specify stub object types.
+
+    $msGraphGroupType = "#microsoft.graph.group"
+
     #Define windows title.
 
     $windowTitle = ("Start-DistributionListMigration "+$groupSMTPAddress)
@@ -256,6 +260,5 @@ Function get-DLHierachyFromGraph
          }
     }
 
-    $tree = Get-GroupWithChildren -groupId $groupSMTPAddress -processedGroupIds $processedGroupIds -objectType "#microsoft.graph.group"
-
+    $tree = Get-GroupWithChildren -groupId $groupObjectID -processedGroupIds $processedGroupIds -objectType $msGraphGroupType -queryGraph:$TRUE
 }
