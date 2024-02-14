@@ -97,7 +97,7 @@ Function Get-GroupWithChildren()
         )
 
         try {
-            $functionObject = get-o365group -identity $objectID -ErrorAction Stop
+            $returnObject = get-o365group -identity $objectID -ErrorAction Stop
         }
         catch {
             write-host $_
@@ -105,7 +105,7 @@ Function Get-GroupWithChildren()
             exit
         } 
         
-        return $functionObject
+        return $returnObject
     }
 
     function get-ExchangeUser
@@ -117,7 +117,7 @@ Function Get-GroupWithChildren()
         )
 
         try {
-            $functionObject = get-o365user -identity $objectID -ErrorAction Stop
+            $returnObject = get-o365user -identity $objectID -ErrorAction Stop
         }
         catch {
             write-host $_
@@ -125,7 +125,7 @@ Function Get-GroupWithChildren()
             exit
         } 
         
-        return $functionObject
+        return $returnObject
     }
 
     if ($functionParamterSetName -eq $functionGraphName)
