@@ -156,7 +156,11 @@ Function Get-GroupWithChildren()
         }
 
         $node = New-TreeNode -group $group -children $childNodes
-
-        return $node
     }
+
+    out-logfile -string "***********************************************************"
+    out-logfile -string "Entering Get-GroupWithChildren"
+    out-logfile -string "***********************************************************"
+
+    return $node
 }
