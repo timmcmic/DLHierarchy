@@ -46,7 +46,7 @@ Function Print-Tree()
         Write-Host ("-" * $indent) + $string
         foreach ($child in $node.Children)
         {
-            Print-Tree $child ($indent + 2)
+            Print-Tree -node $child -indent ($indent + 2) -outputType $functionLDAPType
         }
     }
 }
