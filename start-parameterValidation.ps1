@@ -92,7 +92,7 @@
         out-logfile -string "Entering start-ParameterValidation"
         out-logfile -string "***********************************************************"
 
-        out-logfile -string ("The parameter set name for validation: "+$functionParameterSetName
+        out-logfile -string ("The parameter set name for validation: "+$functionParameterSetName)
 
         if ($functionParameterSetName -eq $activeDirectoryParameterSetName)
         {
