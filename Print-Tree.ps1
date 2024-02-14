@@ -16,7 +16,7 @@ Function Print-Tree()
 
     if ($outputType -eq $functionMSGraphType)
     {
-        $string = $node.object.displayName +" ("+$node.object.id+") ("+$node.object.getType().name+")"
+        $string = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
 
         out-logfile -string  (("-" * $indent) + $string)
 
@@ -42,7 +42,8 @@ Function Print-Tree()
     }
     elseif ($outputType -eq $functionLDAPType)
     {
-        $string = $node.group.objectClass+": "+$node.group.DisplayName +" (ObjectGUID:"+$node.group.objectGUID+")"
+        $string = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+")"
+        
         Write-Host ("-" * $indent) + $string
         foreach ($child in $node.Children)
         {
