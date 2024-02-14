@@ -256,7 +256,7 @@ Function Get-GroupWithChildren()
             {
                 out-logfile -string $functionExchangeMailContact
                 try {
-                    $functionObject = get-o365contact -Identity $groupID -errorAction Stop
+                    $functionObject = get-o365contact -Identity $objectID -errorAction Stop
                 }
                 catch {
                     write-host $_
