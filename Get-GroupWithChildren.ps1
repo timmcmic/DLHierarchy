@@ -377,6 +377,13 @@ Function Get-GroupWithChildren()
         }
         else 
         {
+            out-logfile -string "Group has already been processed."
+
+            if ($group.displaynnme -eq "")
+            {
+                $group.displayName = $group.name
+            }
+            
             $functionObject.DisplayName = $functionObject.DisplayName + " (Circular Membership)"
         }
 
@@ -430,7 +437,7 @@ Function Get-GroupWithChildren()
         if (!$processedGroupIds.Contains($functionObject.distinguishedName))
         {
             out-logfile -string "Object has not been previously processed..."
-            
+
             $NULL = $processedGroupIds.add($functionObject.distinguishedName)
 
             if ($functionObject.objectClass -eq $functionLDAPDynamicGroup)
@@ -466,12 +473,19 @@ Function Get-GroupWithChildren()
         }
         else 
         {
+            out-logfile -string "Group has already been processed."
+
             if ($group.displaynnme -eq "")
             {
                 $group.displayName = $group.name
             }
 
             $group.DisplayName = $group.DisplayName + " (Circular Membership)"
+        }
+
+        if ($group.displaynnme -eq "")
+        {
+            $group.displayName = $group.name
         }
 
         $node = New-TreeNode -object $functionObject -children $childNodes
