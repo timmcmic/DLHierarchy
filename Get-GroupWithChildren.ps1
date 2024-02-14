@@ -78,6 +78,7 @@ Function Get-GroupWithChildren()
     $functionExchangeGuestMailUser = "GuestMailUser"
     $functionExchangeMailContact = "MailContact"
     $functionExchangeGroupMailbox = "GroupMailbox"
+    $functionExchangeDynamicGroup = "DynamicDistributionGroup"
 
     out-logfile -string ("Parameter Set Name: "+$functionParamterSetName)
     out-logfile -string ("Processing group ID: "+$objectID)
@@ -87,6 +88,10 @@ Function Get-GroupWithChildren()
     out-logfile -string ("QueryMethodLDAP: "+$queryMethodLDAP)
 
     out-logfile -string "Determine the path utilized based on paramter set name."
+
+    #===============================================================================
+    #Exchange Functions
+    #===============================================================================
 
     function get-ExchangeGroup
     {
@@ -127,6 +132,11 @@ Function Get-GroupWithChildren()
         
         return $returnObject
     }
+
+    #===============================================================================
+    #Graph Code
+    #===============================================================================
+
 
     if ($functionParamterSetName -eq $functionGraphName)
     {
@@ -216,6 +226,12 @@ Function Get-GroupWithChildren()
 
         $node = New-TreeNode -object $functionObject -children $childNodes
     }
+
+    #===============================================================================
+    #Exchange Online Code
+    #===============================================================================
+
+
     elseif ($functionParamterSetName -eq $functionExchangeOnlineName)
     {
         out-logfile -string "Entering exchange online processing..."
@@ -257,6 +273,18 @@ Function Get-GroupWithChildren()
                 out-logfile -string $functionExchangeMailContact
                 try {
                     $functionObject = get-o365contact -Identity $objectID -errorAction Stop
+                }
+                catch {
+                    write-host $_
+                    write-error "Object type is contact - unable to obtain object."
+                    exit
+                }
+            }
+            $functionExchangeDynamicGroup
+            {
+                out-logfile -string $functionExchangeMailContact
+                try {
+                    $functionObject = get-o365DynamicDistributionGroup -Identity $objectID -errorAction Stop
                 }
                 catch {
                     write-host $_
