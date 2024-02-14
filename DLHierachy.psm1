@@ -296,8 +296,11 @@ Function get-DLHierachyFromGraph
         OSVersion = $telemetryOSVersion
         MigrationStartTimeUTC = $telemetryStartTime
         MigrationEndTimeUTC = $telemetryEndTime
-        HierachyElapsedSeconds = $telemetryElapsedSeconds
         MigrationErrors = $telemetryError
+    }
+
+    $telemetryEventMetrics = @{
+        MigrationElapsedSeconds = $telemetryElapsedSeconds
     }
 
     if ($allowTelemetryCollection -eq $TRUE)
