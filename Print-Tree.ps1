@@ -18,7 +18,9 @@ Function Print-Tree()
     {
         $string = $node.group.displayName +" ("+$node.group.id+")"
 
-        out-logfile -string  (("-" * $indent) + $string)
+        $string += (("-" * $indent) + $string)
+
+        out-logfile -string  $string
 
         foreach ($child in $node.Children)
         {
