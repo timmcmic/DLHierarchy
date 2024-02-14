@@ -122,7 +122,6 @@ Function get-DLHierachyFromExchangeOnline
 
     #$logFileName = (Get-Date -Format FileDateTime) #Use random file date time for the log file name.
     $logFileName = $groupObjectID
-    $msGraphScopesRequired = @("Directory.Read.All") #Define the grpah scopes required.
 
     #Define the output file.
 
@@ -136,20 +135,16 @@ Function get-DLHierachyFromExchangeOnline
     #Create telemetry values.
 
     $telemetryDLHierachyVersion = $NULL
-    $telemetryMSGraphAuthentication = $NULL
-    $telemetryMSGraphUsers = $NULL
-    $telemetryMSGraphGroups = $NULL
-    $telemetryMSGraphDirectory = $NULL
+    $telemetryExchangeOnlineVersion = $NULL
     $telemetryOSVersion = (Get-CimInstance Win32_OperatingSystem).version
     $telemetryStartTime = get-universalDateTime
     $telemetryEndTime = $NULL
     [double]$telemetryElapsedSeconds = 0
-    $telemetryEventName = "get-DLHierarchyFromGraph"
+    $telemetryEventName = "get-DLHierarchyFromExchangeOnline"
     [boolean]$telemetryError=$FALSE
 
     #Specify stub object types.
 
-    $msGraphGroupType = "#microsoft.graph.group"
     $msGraphType = "MSGraph"
     $exchangeOnlineType = "ExchangeOnline"
     $ldapType = "LDAP"
@@ -158,16 +153,13 @@ Function get-DLHierachyFromExchangeOnline
 
     #Define windows title.
 
-    $windowTitle = ("Start-DistributionListMigration "+$groupSMTPAddress)
+    $windowTitle = ("Get-DLHierarchyFromExchangeOnline "+$groupObjectID)
     $host.ui.RawUI.WindowTitle = $windowTitle
 
     #Define variables utilized in the core function that are not defined by parameters.
 
     $coreVariables = @{ 
-        msGraphAuthenticationPowershellModuleName = @{ "Value" = "Microsoft.Graph.Authentication" ; "Description" = "Static ms graph powershell name authentication" }
-        msGraphUsersPowershellModuleName = @{ "Value" = "Microsoft.Graph.Users" ; "Description" = "Static ms graph powershell name users" }
-        msGraphGroupsPowershellModuleName = @{ "Value" = "Microsoft.Graph.Groups" ; "Description" = "Static ms graph powershell name groups" }
-        msGraphIdentityDirectoryManagement = @{ "Value" = "Microsoft.Graph.Identity.DirectoryManagement" ; "Description" = "Static ms graph powershell name groups" }
+        exchangeOnlinePowershellModuleName = @{ "Value" = "ExchangeOnlineManagement" ; "Description" = "Static Exchange Online powershell module name" }
         DLHierachy = @{ "Value" = "DLHierachy" ; "Description" = "Static dlConversionv2 powershell module name" }
     }
 
@@ -178,7 +170,7 @@ Function get-DLHierachyFromExchangeOnline
     new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
 
     out-logfile -string "***********************************************************"
-    out-logfile -string "Starting get-DLHierarchyFromGraph"
+    out-logfile -string "Starting get-DLHierarchyFromExchangeOnline"
     out-logfile -string "***********************************************************"
 
     if ($allowTelemetryCollection -eq $TRUE)
@@ -211,66 +203,55 @@ Function get-DLHierachyFromExchangeOnline
     #Perform cleanup of any strings so that no spaces existin trailing or leading.
 
     $groupObjectID = remove-stringSpace -stringToFix $groupObjectID
-    $logFolderPath = remove-stringSpace -stringToFix $logFolderPath     
-    $msGraphTenantID = remove-stringSpace -stringToFix $msGraphTenantID
-    $msGraphCertificateThumbprint = remove-stringSpace -stringToFix $msGraphCertificateThumbprint
-    $msGraphApplicationID = remove-stringSpace -stringToFix $msGraphApplicationID
+    $logFolderPath = remove-stringSpace -stringToFix $logFolderPath
+    $exchangeOnlineCertificateThumbPrint=remove-stringSpace -stringToFix $exchangeOnlineCertificateThumbPrint  
+    $exchangeOnlineEnvironmentName=remove-stringSpace -stringToFix $exchangeOnlineEnvironmentName
+    $exchangeOnlineOrganizationName=remove-stringSpace -stringToFix $exchangeOnlineOrganizationName
+    $exchangeOnlineAppID=remove-stringSpace -stringToFix $exchangeOnlineAppID   
 
-    if ($msGraphCertificateThumbprint -eq "")
-    {
-        out-logfile -string "Validation all components available for MSGraph Cert Auth"
+    Out-LogFile -string "Validating Exchange Online Credentials."
 
-        start-parameterValidation -msGraphCertificateThumbPrint $msGraphCertificateThumbprint -msGraphTenantID $msGraphTenantID -msGraphApplicationID $msGraphApplicationID
-    }
-    else
-    {
-        out-logfile -string "MS graph cert auth is not being utilized - assume interactive auth."
-    }
+    start-parameterValidation -exchangeOnlineCredential $exchangeOnlineCredential -exchangeOnlineCertificateThumbprint $exchangeOnlineCertificateThumbprint -threadCount $totalThreadCount
+
+    #Validating that all portions for exchange certificate auth are present.
+
+    out-logfile -string "Validating parameters for Exchange Online Certificate Authentication"
+
+    start-parametervalidation -exchangeOnlineCertificateThumbPrint $exchangeOnlineCertificateThumbprint -exchangeOnlineOrganizationName $exchangeOnlineOrganizationName -exchangeOnlineAppID $exchangeOnlineAppID
 
     out-logfile -string "Calling Test-PowershellModule to validate the DL Conversion Module version installed."
 
     #$telemetryDLHierachyVersion = Test-PowershellModule -powershellModuleName $corevariables.DLHierachy.value -powershellVersionTest:$TRUE
 
-    out-logfile -string "Calling Test-PowershellModule to validate the Microsoft Graph Authentication versions installed."
+    Out-LogFile -string "Calling Test-PowerShellModule to validate the Exchange Module is installed."
 
-    $telemetryMSGraphAuthentication = test-powershellModule -powershellmodulename $corevariables.msgraphauthenticationpowershellmodulename.value -powershellVersionTest:$TRUE
+    $telemetryExchangeOnlineVersion = Test-PowershellModule -powershellModuleName $corevariables.exchangeOnlinePowershellModuleName.value -powershellVersionTest:$TRUE
 
-    out-logfile -string "Calling Test-PowershellModule to validate the Microsoft Graph Users versions installed."
+    Out-LogFile -string "Calling New-ExchangeOnlinePowershellSession to create session to office 365."
 
-    $telemetryMSGraphUsers = test-powershellModule -powershellmodulename $corevariables.msgraphuserspowershellmodulename.value -powershellVersionTest:$TRUE
-
-    out-logfile -string "Calling Test-PowershellModule to validate the Microsoft Graph Users versions installed."
-
-    $telemetryMSGraphGroups = test-powershellModule -powershellmodulename $corevariables.msgraphgroupspowershellmodulename.value -powershellVersionTest:$TRUE
-
-    out-logfile -string "Calling Test-PowershellModule to validate the Microsoft Graph Director versions installed."
-
-    $telemetryMSGraphDirectory = test-powershellModule -powershellmodulename $corevariables.msGraphIdentityDirectoryManagement.value -powershellVersionTest:$TRUE
-
-    Out-LogFile -string "Calling nea-msGraphPowershellSession to create new connection to msGraph active directory."
-
-    if ($msGraphCertificateThumbprint -ne "")
+    if ($exchangeOnlineCertificateThumbPrint -eq "")
     {
-       #User specified thumbprint authentication.
- 
-         try {
-             new-msGraphPowershellSession -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphApplicationID $msGraphApplicationID -msGraphTenantID $msGraphTenantID -msGraphEnvironmentName $msGraphEnvironmentName -msGraphScopesRequired $msGraphScopesRequired
-         }
-         catch {
-             out-logfile -string "Unable to create the msgraph connection using certificate."
-             out-logfile -string $_ -isError:$TRUE
-         }
+        #User specified non-certifate authentication credentials.
+
+            try {
+                New-ExchangeOnlinePowershellSession -exchangeOnlineCredentials $exchangeOnlineCredential -exchangeOnlineEnvironmentName $exchangeOnlineEnvironmentName -debugLogPath $logFolderPath
+            }
+            catch {
+                out-logfile -string "Unable to create the exchange online connection using credentials."
+                out-logfile -string $_ -isError:$TRUE
+            }
     }
-    elseif ($msGraphTenantID -ne "")
+    elseif ($exchangeOnlineCertificateThumbPrint -ne "")
     {
-         try
-         {
-             new-msGraphPowershellSession -msGraphTenantID $msGraphTenantID -msGraphEnvironmentName $msGraphEnvironmentName -msGraphScopesRequired $msGraphScopesRequired
-         }
-         catch
-         {
-             out-logfile -=string "Unable to create the msgraph connection using tenant ID and credentials."
-         }
+        #User specified thumbprint authentication.
+
+            try {
+                new-ExchangeOnlinePowershellSession -exchangeOnlineCertificateThumbPrint $exchangeOnlineCertificateThumbPrint -exchangeOnlineAppId $exchangeOnlineAppID -exchangeOnlineOrganizationName $exchangeOnlineOrganizationName -exchangeOnlineEnvironmentName $exchangeOnlineEnvironmentName -debugLogPath $logFolderPath
+            }
+            catch {
+                out-logfile -string "Unable to create the exchange online connection using certificate."
+                out-logfile -string $_ -isError:$TRUE
+            }
     }
 
     out-logfile -string "Start building tree from group..."
