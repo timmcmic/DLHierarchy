@@ -256,5 +256,6 @@ Function get-DLHierachyFromGraph
          }
     }
 
+    $tree = Get-GroupWithChildren -groupId $groupSMTPAddress -processedGroupIds $processedGroupIds -objectType "#microsoft.graph.group"
 
 }
