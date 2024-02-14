@@ -275,6 +275,8 @@ Function get-DLHierachyFromGraph
 
     out-logfile -string "Print hierarchy to log file."
 
+    out-logfile -string $global:outputFile
+
     print-tree -node $tree -indent $defaultIndent -outputType $msGraphType
 
     out-logfile -string "Export hierarchy to file."
