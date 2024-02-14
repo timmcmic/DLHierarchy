@@ -77,6 +77,7 @@ Function Get-GroupWithChildren()
     $functionExchangeMailUser = "Mailuser"
     $functionExchangeGuestMailUser = "GuestMailUser"
     $functionExchangeMailContact = "MailContact"
+    $functionExchangeGroupMailbox = "GroupMailbox"
 
     out-logfile -string ("Parameter Set Name: "+$functionParamterSetName)
     out-logfile -string ("Processing group ID: "+$objectID)
@@ -256,6 +257,45 @@ Function Get-GroupWithChildren()
             {
                 write-error "Invalid object type discovered - contact support."
             }
+        }
+
+        out-logfile -string $functionObject
+
+        if (!$processedGroupIds.Contains($functionObject.ExchangeObjectID))
+        {
+            out-logfile -string "Group has not already been processed."
+
+            $NULL = $processedGroupIds.add($functionObject.ExchangeObjectID)
+
+            if (($objectType -eq $functionExchangeMailUniversalSecurityGroup) -or ($objectType -eq $functionExchangeMailUniversalDistributionGroup) -or ($objectType -eq $functionExchangeGroup))
+            {
+                if ($functionObject.recipientTypeDetails -ne $functionExchangeGroupMailbox)
+                {
+                    Write-Host "Group is not a unified group."
+                    $children = Get-distributionGroupMember -Identity $functionObject.ExchangeObjectID 
+                }
+                else 
+                {
+                    write-host "Group is a unified group."
+                    $children = get-UnifiedGroupLinks -identity $functionObject.ExchangeObjectID -linkType Member
+                }
+            }
+            else {
+                $children=@()
+            }
+
+            foreach ($child in $children)
+            {
+                write-host "ChildID"
+                write-host $child.ExchangeObjectID 
+                $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
+                $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.recipientTypeDetails -queryMethodExchangeOnline:$TRUE
+                $childNodes += $childNode
+            }
+        }
+        else 
+        {
+            $functionObject.DisplayName = $functionObject.DisplayName + " (Circular Membership)"
         }
     }
 
