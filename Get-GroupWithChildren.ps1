@@ -44,6 +44,7 @@ Function Get-GroupWithChildren()
         $processedGroupIDs,
         [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
         [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
         [string]$objectType,
         [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
         [boolean]$queryMethodGraph=$false,
