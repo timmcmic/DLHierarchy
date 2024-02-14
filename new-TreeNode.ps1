@@ -26,10 +26,18 @@ Function New-TreeNode()
         $children
     )
 
+    out-logfile -string "***********************************************************"
+    out-logfile -string "Entering new-TreeNode"
+    out-logfile -string "***********************************************************"
+
     $node = New-Object PSObject -Property @{
         Object = $object
         Children = $children
     }
+
+    out-logfile -string "***********************************************************"
+    out-logfile -string "Exiting new-TreeNode"
+    out-logfile -string "***********************************************************"
     
     return $node
 }

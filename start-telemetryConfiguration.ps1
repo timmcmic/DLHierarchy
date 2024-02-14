@@ -42,6 +42,10 @@
             [string]$traceModuleName
         )
 
+        out-logfile -string "***********************************************************"
+        out-logfile -string "Entering start-TelemetryConfiguration"
+        out-logfile -string "***********************************************************"
+
         $functionInstrumentationKey = $traceModuleName+".ApplicationInsights.InstrumentationKey"
         $functionConnectionStringKey = $traceModuleName+".ApplicationInsights.ConnectionString"
         $functionOptIn = $traceModuleName+".OptIn"
@@ -56,4 +60,8 @@
         Set-PSFConfig -Module $functionModuleName -Name $functionOptIn -Value $allowTelemetryCollection -Initialize -Validation bool -Description 'Whether user opts into telemetry or not'
         Set-PSFConfig -Module $functionModuleName -Name $functionIgnoreGDPR -Value $false -Initialize -Validation bool -Description 'Whether telemetry client should ignore user settings, e.g. if you are not bound by GDPR or other regulations'
         Set-PSFConfig -Module $functionModuleName -Name $functionRemovePII -VAlue $true -Initialize -Validation bool -Description "Whether information like the computer name should be stripped from the data that is sent"
+
+        out-logfile -string "***********************************************************"
+        out-logfile -string "Exiting start-TelemetryConfiguration"
+        out-logfile -string "***********************************************************"
      }

@@ -35,9 +35,10 @@
         write-functionParameters -keyArray $MyInvocation.MyCommand.Parameters.Keys -parameterArray $PSBoundParameters -variableArray (Get-Variable -Scope Local -ErrorAction Ignore)
 
         
-        Out-LogFile -string "********************************************************************************"
-        Out-LogFile -string "BEGIN remove-StringSpace"
-        Out-LogFile -string "********************************************************************************"
+
+        out-logfile -string "***********************************************************"
+        out-logfile -string "Entering remove-StringSpace"
+        out-logfile -string "***********************************************************"
 
         out-logfile -string ("String to remove spaces: "+$stringToFix)
         out-logfile -string ("String Length "+$stringToFix.length.toString())
@@ -47,9 +48,9 @@
         out-logfile -string ("String with spaces removed: "+$workingString)
         out-logfile -string ("String Length "+$workingString.length.toString())
 
-        return $workingString
+        out-logfile -string "***********************************************************"
+        out-logfile -string "Exiting remove-StringSpace"
+        out-logfile -string "***********************************************************"
 
-        Out-LogFile -string "********************************************************************************"
-        Out-LogFile -string "END remove-StringSpace"
-        Out-LogFile -string "********************************************************************************"
+        return $workingString
     }

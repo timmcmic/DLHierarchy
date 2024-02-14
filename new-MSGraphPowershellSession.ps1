@@ -70,9 +70,9 @@
         #$exchangeOnlineCommands=@('get-ExoRecipient','new-distributionGroup','get-recipient','set-distributionGroup','get-distributionGroupMember','get-mailbox','get-unifiedGroup','set-UnifiedGroup')
         #Initiate the session.
         
-        Out-LogFile -string "********************************************************************************"
-        Out-LogFile -string "BEGIN NEW-msGraphADPowershellSession"
-        Out-LogFile -string "********************************************************************************"
+        out-logfile -string "***********************************************************"
+        out-logfile -string "Entering new-MSGraphPowershellSession"
+        out-logfile -string "***********************************************************"
 
         if ($msGraphCertificateThumbPrint -ne "")
         {
@@ -113,6 +113,7 @@
 
         out-logfile -string (Get-MgContext)
 
-        Out-LogFile -string "END NEW-msGraphADPOWERSHELL SESSION"
-        Out-LogFile -string "********************************************************************************"
+        out-logfile -string "***********************************************************"
+        out-logfile -string "Exiting new-MSGraphPowershellSession"
+        out-logfile -string "***********************************************************"
     }

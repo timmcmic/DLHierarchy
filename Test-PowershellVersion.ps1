@@ -18,9 +18,9 @@
 
         $functionPowerShellVersion = $NULL
 
-        Out-LogFile -string "********************************************************************************"
-        Out-LogFile -string "BEGIN TEST-POWERSHELLVERSION"
-        Out-LogFile -string "********************************************************************************"
+        out-logfile -string "***********************************************************"
+        out-logfile -string "Entering Test-PowerShellVersion"
+        out-logfile -string "***********************************************************"
 
         #Write function parameter information and variables to a log file.
 
@@ -43,8 +43,8 @@
             out-logfile -string "Powershell version is not powershell 7.1 proceed."
         }
 
-        Out-LogFile -string "********************************************************************************"
-        Out-LogFile -string "END TEST-POWERSHELLVERSION"
-        Out-LogFile -string "********************************************************************************"
+        out-logfile -string "***********************************************************"
+        out-logfile -string "Exiting Test-PowerShellVersion"
+        out-logfile -string "***********************************************************"
 
     }

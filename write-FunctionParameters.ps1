@@ -22,7 +22,9 @@
             $variableArray
         )
 
-        Out-LogFile -string "********************************************************************************"
+        out-logfile -string "***********************************************************"
+        out-logfile -string "Entering Write-FunctionParameters"
+        out-logfile -string "***********************************************************"
     
         $parameteroutput = @()
     
@@ -42,5 +44,7 @@
     
         out-logfile -string $parameterOutput
 
-        Out-LogFile -string "********************************************************************************"
+        out-logfile -string "***********************************************************"
+        out-logfile -string "Exiting Write-FunctionParameters"
+        out-logfile -string "***********************************************************"
     }

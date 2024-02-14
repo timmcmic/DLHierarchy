@@ -100,9 +100,9 @@
 
         #Start function processing.
 
-        Out-LogFile -string "********************************************************************************"
-        Out-LogFile -string "BEGIN start-parameterValidation"
-        Out-LogFile -string "********************************************************************************"
+        out-logfile -string "***********************************************************"
+        out-logfile -string "Entering start-ParameterValidation"
+        out-logfile -string "***********************************************************"
 
         out-logfile -string ("The parameter set name for validation: "+$functionParameterSetName)
 
@@ -365,9 +365,10 @@
             }
         }
         
-        Out-LogFile -string "********************************************************************************"
-        Out-LogFile -string "END start-parameterValidation"
-        Out-LogFile -string "********************************************************************************"
+
+        out-logfile -string "***********************************************************"
+        out-logfile -string "Exiting start-ParameterValidation"
+        out-logfile -string "***********************************************************"
 
         return $functionTrueFalse
     }

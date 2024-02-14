@@ -273,7 +273,9 @@ Function get-DLHierachyFromGraph
 
     print-tree -node $tree -indent $defaultIndent -outputType $msGraphType
 
-    $global:outputFile | out-file c:\temp\test.txt
+    
 
-    out-logfile -string $global:outputFile
+    $telemetryEndTime = get-universalDateTime
+    $telemetryElapsedSeconds = get-elapsedTime -startTime $telemetryStartTime -endTime $telemetryEndTime
+
 }

@@ -45,9 +45,9 @@
 
         #Initiate the test.
         
-        Out-LogFile -string "********************************************************************************"
-        Out-LogFile -string "BEGIN TEST-POWERSHELLMODULE"
-        Out-LogFile -string "********************************************************************************"
+        out-logfile -string "***********************************************************"
+        out-logfile -string "Entering Test-PowershellModule"
+        out-logfile -string "***********************************************************"
 
         #Write function parameter information and variables to a log file.
 
@@ -138,8 +138,9 @@
             }
         }
 
-        Out-LogFile -string "END TEST-POWERSHELLMODULE"
-        Out-LogFile -string "********************************************************************************"
+        out-logfile -string "***********************************************************"
+        out-logfile -string "Exiting Test-PowershellModule"
+        out-logfile -string "***********************************************************"
 
         return $commandsArray[0].version
     }
