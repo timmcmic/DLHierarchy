@@ -168,6 +168,8 @@ Function get-DLHierachyFromExchangeOnline
 
     new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
 
+    exit
+
     out-logfile -string "***********************************************************"
     out-logfile -string "Starting get-DLHierarchyFromExchangeOnline"
     out-logfile -string "***********************************************************"
