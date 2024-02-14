@@ -160,7 +160,7 @@ Function get-DLHierachyFromGraph
         msGraphUsersPowershellModuleName = @{ "Value" = "Microsoft.Graph.Users" ; "Description" = "Static ms graph powershell name users" }
         msGraphGroupsPowershellModuleName = @{ "Value" = "Microsoft.Graph.Groups" ; "Description" = "Static ms graph powershell name groups" }
         msGraphIdentityDirectoryManagement = @{ "Value" = "Microsoft.Graph.Identity.DirectoryManagement" ; "Description" = "Static ms graph powershell name groups" }
-        DLHierachy = @{ "Value" = "DLHierachy" ; "Description" = "Static dlConversionv2 powershell module name" }
+        DLHierarchy = @{ "Value" = "DLHierarchy" ; "Description" = "Static dlConversionv2 powershell module name" }
     }
 
     $processedGroupIds = New-Object System.Collections.Generic.HashSet[string]
@@ -221,7 +221,7 @@ Function get-DLHierachyFromGraph
 
     out-logfile -string "Calling Test-PowershellModule to validate the DL Conversion Module version installed."
 
-    $telemetryDLHierachyVersion = Test-PowershellModule -powershellModuleName $corevariables.DLHierachy.value -powershellVersionTest:$TRUE
+    $telemetryDLHierachyVersion = Test-PowershellModule -powershellModuleName $corevariables.DLHierarchy.value -powershellVersionTest:$TRUE
 
     out-logfile -string "Calling Test-PowershellModule to validate the Microsoft Graph Authentication versions installed."
 
