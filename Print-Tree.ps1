@@ -10,10 +10,19 @@ Function Print-Tree()
         $outputType
     )
 
-    $string = $node.group.displayName +" ("+$node.group.id+")"
-    out-logfile -string  (("-" * $indent) + $string)
-    foreach ($child in $node.Children)
+    $functionMSGraphType = "MSGraph"
+    $functionExchangeOnlineType = "ExchangeOnline"
+    $functionLDAPType = "LDAP"
+
+    if ($outputType -eq $functionMSGraphType)
     {
-        Print-Tree $child ($indent + 2)
+        $string = $node.group.displayName +" ("+$node.group.id+")"
+
+        out-logfile -string  (("-" * $indent) + $string)
+        
+        foreach ($child in $node.Children)
+        {
+            Print-Tree $child ($indent + 2)
+        }
     }
 }

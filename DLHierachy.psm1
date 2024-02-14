@@ -130,12 +130,10 @@ Function get-DLHierachyFromGraph
     #Create telemetry values.
 
     $telemetryDLHierachyVersion = $NULL
-    $telemetryExchangeOnlineVersion = $NULL
     $telemetryMSGraphAuthentication = $NULL
     $telemetryMSGraphUsers = $NULL
     $telemetryMSGraphGroups = $NULL
     $telemetryMSGraphDirectory = $NULL
-    $telemetryActiveDirectoryVersion = $NULL
     $telemetryOSVersion = (Get-CimInstance Win32_OperatingSystem).version
     $telemetryStartTime = get-universalDateTime
     $telemetryEndTime = $NULL
