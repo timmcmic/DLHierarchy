@@ -263,7 +263,7 @@ Function get-DLHierachyFromExchangeOnline
 
     out-logfile -string "Print hierarchy to log file."
 
-    print-tree -node $tree -indent $defaultIndent -outputType $msGraphType
+    print-tree -node $tree -indent $defaultIndent -outputType $exchangeOnlineType
 
     out-logfile -string "Export hierarchy to file."
 

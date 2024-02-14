@@ -27,4 +27,17 @@ Function Print-Tree()
             Print-Tree -node $child -indent ($indent + 2) -outputType $functionMSGraphType
         }
     }
+    elseif ($outputType -eq $functionExchangeOnlineType)
+    {
+        $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientTypeDetails+")"
+
+        out-logfile -string  (("-" * $indent) + $string)
+
+        $global:outputFile += (("-" * $indent) + $string +"`n")
+
+        foreach ($child in $node.Children)
+        {
+            Print-Tree -node $child -indent ($indent + 2) -outputType $functionExchangeOnlineType
+        }
+    }
 }
