@@ -27,7 +27,7 @@ Function New-TreeNode()
     )
 
     $node = New-Object PSObject -Property @{
-        Group = $object
+        Object = $object
         Children = $children
     }
     

@@ -37,7 +37,7 @@ Function Get-GroupWithChildren()
         [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
         [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
         [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
-        [string]$groupID,
+        [string]$objectID,
         [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
         [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
         [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
@@ -71,7 +71,7 @@ Function Get-GroupWithChildren()
     $functionGraphContact = "#microsoft.graph.orgContact"
 
     out-logfile -string ("Parameter Set Name: "+$functionParamterSetName)
-    out-logfile -string ("Processing group ID: "+$groupID)
+    out-logfile -string ("Processing group ID: "+$objectID)
     out-logfile -string ("Processing object type: "+$objectType)
     out-logfile -string ("QueryMethodGraph: "+$queryMethodGraph)
     out-logfile -string ("QueryMethodExchangeOnline: "+$queryMethodExchangeOnline)
@@ -88,7 +88,7 @@ Function Get-GroupWithChildren()
             $functionGraphGroup
             {
                 try {
-                    $functionObject = get-MGGroup -GroupId $groupId -ErrorAction Stop
+                    $functionObject = get-MGGroup -GroupId $objectID -ErrorAction Stop
                 }
                 catch {
                     out-logfile -string $_
@@ -98,7 +98,7 @@ Function Get-GroupWithChildren()
             $functiongraphUser
             {
                 try {
-                    $functionObject = get-MGUser -userID $groupID -ErrorAction Stop
+                    $functionObject = get-MGUser -userID $objectID -ErrorAction Stop
                 }
                 catch {
                     out-logfile -string $_
@@ -108,7 +108,7 @@ Function Get-GroupWithChildren()
             $functionGraphContact
             {
                 try {
-                    $functionObject = get-MGContact -OrgContactId $groupID -errorAction Stop
+                    $functionObject = get-MGContact -OrgContactId $objectID -errorAction Stop
                 }
                 catch {
                     out-logfile -string $_

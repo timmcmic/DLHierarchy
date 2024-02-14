@@ -267,7 +267,7 @@ Function get-DLHierachyFromGraph
          }
     }
 
-    $tree = Get-GroupWithChildren -groupId $groupObjectID -processedGroupIds $processedGroupIds -objectType $msGraphGroupType -queryMethodGraph:$TRUE
+    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $msGraphGroupType -queryMethodGraph:$TRUE
 
     $global:outputFile += "Group Hierachy for Group ID: "+$groupObjectID+"`n"
 
