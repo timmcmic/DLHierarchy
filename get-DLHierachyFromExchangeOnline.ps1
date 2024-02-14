@@ -256,7 +256,7 @@ Function get-DLHierachyFromExchangeOnline
 
     out-logfile -string "Start building tree from group..."
 
-    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $msGraphGroupType -queryMethodGraph:$TRUE
+    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $exchangeOnlineType -queryMethodExchangeOnline:$TRUE
 
     out-logfile -string "Set header in output file to group name."
 

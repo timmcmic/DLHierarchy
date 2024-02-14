@@ -163,6 +163,12 @@ Function Get-GroupWithChildren()
 
         $node = New-TreeNode -object $functionObject -children $childNodes
     }
+    elseif ($functionParamterSetName -eq $functionExchangeOnlineName)
+    {
+        out-logfile -string "Entering exchange online processing..."
+
+        exit
+    }
 
     out-logfile -string "***********************************************************"
     out-logfile -string "Exiting Get-GroupWithChildren"
