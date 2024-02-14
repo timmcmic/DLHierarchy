@@ -97,7 +97,7 @@ Function Get-GroupWithChildren()
         )
 
         try {
-            $functionObject = get-group -identity $objectID -ErrorAction Stop
+            $functionObject = get-o365group -identity $objectID -ErrorAction Stop
         }
         catch {
             write-host $_
@@ -117,7 +117,7 @@ Function Get-GroupWithChildren()
         )
 
         try {
-            $functionObject = get-user -identity $objectID -ErrorAction Stop
+            $functionObject = get-o365user -identity $objectID -ErrorAction Stop
         }
         catch {
             write-host $_
@@ -245,7 +245,7 @@ Function Get-GroupWithChildren()
             $functionExchangeMailContact
             {
                 try {
-                    $functionObject = get-contact -Identity $groupID -errorAction Stop
+                    $functionObject = get-o365contact -Identity $groupID -errorAction Stop
                 }
                 catch {
                     write-host $_
