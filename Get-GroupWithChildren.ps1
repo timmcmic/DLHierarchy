@@ -165,7 +165,7 @@ Function Get-GroupWithChildren()
     }
 
     out-logfile -string "***********************************************************"
-    out-logfile -string "Entering Get-GroupWithChildren"
+    out-logfile -string "Exiting Get-GroupWithChildren"
     out-logfile -string "***********************************************************"
 
     return $node
