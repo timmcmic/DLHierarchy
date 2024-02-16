@@ -430,7 +430,7 @@ Function Get-GroupWithChildren()
             foreach ($child in $children)
             {
                 out-logfile -string "Processing child..."
-                out-logfile -string $child.distinguishedName 
+                out-logfile -string $child.ExchangeObjectID
                 $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
                 $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.recipientType -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
                 $childNodes += $childNode
@@ -505,18 +505,40 @@ Function Get-GroupWithChildren()
             {
                 out-logfile -string "Object class is dynamic group - members determined via query."
 
-                try {
-                    $children = Get-ADObject -LDAPFilter $functionObject.msExchDynamicDLFilter -SearchBase $functionObject.msExchDynamicDLBaseDN -Properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+                if ($expandDynamicGroupMembership -eq $TRUE)
+                {
+                    out-logfile -string "Dynamic group membership expansion enabled."
+
+                    try {
+                        $children = Get-ADObject -LDAPFilter $functionObject.msExchDynamicDLFilter -SearchBase $functionObject.msExchDynamicDLBaseDN -Properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+                    }
+                    catch {
+                        out-logfile $_
+                        out-logfile -string "Unable to obtain dynamic group membership via LDAP call."
+                    }
                 }
-                catch {
-                    out-logfile $_
-                    out-logfile -string "Unable to obtain dynamic group membership via LDAP call."
+                else 
+                {
+                    out-logfile -string "Dynamic group membership expansion disabled."
+                    $children = @()
                 }
             }
             elseif ($functionObject.objectClass -eq $functionLDAPGroup )
             {
                 out-logfile -string "Object class id group - members determiend by member attribute on group."
-                $children = $functionObject.member
+
+                if ($expandGroupMembership -eq $TRUE)
+                {
+                    out-logfile -string "Expand full group membership eanbled."
+
+                    $children = $functionObject.member
+                }
+                else
+                {
+                    out-logfile -string "Expand full group membership disabled."
+
+                    $children = get-adGroupMember -identity $functionObject.distinguishedName | where {$_.objectClass -eq $functionLDAPGroup}
+                }
             }
             else {
                 out-logfile -string "Object is not a dynamic group or group."
