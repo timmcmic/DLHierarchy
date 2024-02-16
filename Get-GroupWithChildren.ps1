@@ -170,24 +170,42 @@ Function Get-GroupWithChildren()
             }
             $functiongraphUser
             {
-                out-logfile -string $functiongraphUser
-                try {
-                    $functionObject = get-MGUser -userID $objectID -ErrorAction Stop
+                if ($expandGroupMembership -eq $TRUE)
+                {
+                    out-logfile -string $functiongraphUser
+
+                    try {
+                        $functionObject = get-MGUser -userID $objectID -ErrorAction Stop
+                    }
+                    catch {
+                        out-logfile -string $_
+                        out-logfile -string "Error obtaining user." -isError:$TRUE
+                    }
                 }
-                catch {
-                    out-logfile -string $_
-                    out-logfile -string "Error obtaining user." -isError:$TRUE
+                else 
+                {
+                    out-logfile -string "Group membership expansion disabled"
+                    $functionObject = $NULL
                 }
+       
             }
             $functionGraphContact
             {
-                out-logfile -string $functionGraphContact
-                try {
-                    $functionObject = get-MGContact -OrgContactId $objectID -errorAction Stop
+                if ($expandGroupMembership -eq $TRUE)
+                {
+                    out-logfile -string $functionGraphContact
+                    try {
+                        $functionObject = get-MGContact -OrgContactId $objectID -errorAction Stop
+                    }
+                    catch {
+                        out-logfile -string $_
+                        out-logfile -string "Error obtaining contact." -isError:$TRUE
+                    }
                 }
-                catch {
-                    out-logfile -string $_
-                    out-logfile -string "Error obtaining contact." -isError:$TRUE
+                else 
+                {
+                    out-logfile -string "Group membership expansion disabled."
+                    $functionObject = $NULL
                 }
             }
             Default
@@ -197,8 +215,11 @@ Function Get-GroupWithChildren()
             }
         }
         
-        out-logfile -string $functionObject
-
+        if ($functionObject -ne $NULL)
+        {
+            out-logfile -string $functionObject
+        }
+        
         if (!$processedGroupIds.Contains($functionObject.Id))
         {
             out-logfile -string "Group has not already been processed."
@@ -215,7 +236,7 @@ Function Get-GroupWithChildren()
                 catch {
                     out-logfile -string $_
                     out-logfile -string "Error obtaining group membership." -isError:$TRUE
-                }    
+                }
             }
             else {
                 out-logfile -string "Object is not a group - no children."
@@ -239,7 +260,10 @@ Function Get-GroupWithChildren()
             $functionObject.DisplayName = $functionObject.DisplayName + " (Circular Membership)"
         }
 
-        $node = New-TreeNode -object $functionObject -children $childNodes
+        if ($functionObject -ne $NULL)
+        {
+            $node = New-TreeNode -object $functionObject -children $childNodes
+        }   
     }
 
     #===============================================================================
