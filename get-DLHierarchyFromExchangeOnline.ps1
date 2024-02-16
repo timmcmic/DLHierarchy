@@ -115,7 +115,12 @@ Function get-DLHierarchyFromExchangeOnline
         [Parameter(Mandatory = $true)]
         [string]$logFolderPath,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$allowTelemetryCollection=$TRUE
+        [boolean]$allowTelemetryCollection=$TRUE,
+        #Define other non-mandatory parameters.
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$expandGroupMembership=$TRUE,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$expandDynamicGroupMembership=$TRUE
     )
 
     #Define script based variables.
@@ -267,7 +272,7 @@ Function get-DLHierarchyFromExchangeOnline
 
     out-logfile -string "Start building tree from group..."
 
-    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $exchangeOnlineGroupType -queryMethodExchangeOnline:$TRUE
+    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $exchangeOnlineGroupType -queryMethodExchangeOnline:$TRUE -enableGroupMembership $enableGroupMembership -enableDynamicGroupMembership $enableDynamicGroupMembership
 
     out-logfile -string "Set header in output file to group name."
 
