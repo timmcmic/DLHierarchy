@@ -15,7 +15,7 @@
 #############################################################################################
 
 
-Function get-DLHierachyFromExchangeOnline
+Function get-DLHierarchyFromExchangeOnline
 {
     <#
     .SYNOPSIS
