@@ -209,12 +209,29 @@ Function Get-GroupWithChildren()
             {
                 out-logfile -string "Object is a group - determining children."
 
-                try {
-                    $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP
+                if ($expandGroupMembership -eq $TRUE)
+                {
+                    out-logfile -string "Full group membership expansion is enabled."
+
+                    try {
+                        $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP
+                    }
+                    catch {
+                        out-logfile -string $_
+                        out-logfile -string "Error obtaining group membership." -isError:$TRUE
+                    }
                 }
-                catch {
-                    out-logfile -string $_
-                    out-logfile -string "Error obtaining group membership." -isError:$TRUE
+                else 
+                {
+                    out-logfile -string "Full group membership expansion disabled."
+
+                    try {
+                        $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP | where {$_.AdditionalProperties.'@odata.type' -eq $functionGraphGroup}
+                    }
+                    catch {
+                        out-logfile -string $_
+                        out-logfile -string "Error obtaining group membership." -isError:$TRUE
+                    }
                 }
             }
             else {
