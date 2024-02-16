@@ -514,7 +514,6 @@ Function Get-GroupWithChildren()
                     out-logfile -string $children.Count.tostring()
                     $children = $children | where {($_.objectClass -eq $functionLDAPuser) -or ($_.objectClass -eq $functionLDAPGroup) -or ($_.objectClass -eq $functionLDAPContact) -or ($_.objectClass -eq $functionLDAPDynamicGroup)}
                     out-logfile -string $children.Count.tostring()
-                    exit
                 }
                 else 
                 {
