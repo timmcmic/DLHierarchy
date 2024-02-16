@@ -55,7 +55,16 @@ Function Get-GroupWithChildren()
         [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
         $globalCatalogServer,
         [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
-        $activeDirectoryCredential
+        $activeDirectoryCredential,
+        [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$expandGroupMembership=$TRUE,
+        [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$expandDynamicGroupMembership=$TRUE
     )
     
     out-logfile -string "***********************************************************"
@@ -205,13 +214,23 @@ Function Get-GroupWithChildren()
             {
                 out-logfile -string "Object is a group - determining children."
 
-                try {
-                    $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP
+                if ($expandGroupmembership -eq $TRUE)
+                {
+                    out-logfile -string "Group membership expansion is enabled - get membership."
+
+                    try {
+                        $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP
+                    }
+                    catch {
+                        out-logfile -string $_
+                        out-logfile -string "Error obtaining group membership." -isError:$TRUE
+                    }
                 }
-                catch {
-                    out-logfile -string $_
-                    out-logfile -string "Error obtaining group membership." -isError:$TRUE
+                else 
+                {
+                    out-logfile -string "Group membership expansion is disabled."
                 }
+    
             }
             else {
                 out-logfile -string "Object is not a group - no children."
