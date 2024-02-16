@@ -58,7 +58,7 @@ Function Get-GroupWithChildren()
         $activeDirectoryCredential,
         [Parameter(Mandatory = $false,ParameterSetName = 'MSGraph')]
         [Parameter(Mandatory = $false,ParameterSetName = 'ExchangeOnline')]
-        [Parameter(Mandatory = $false,ParameterSetName = 'MSGraph')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
         [boolean]$expandGroupMembership=$TRUE,
         [Parameter(Mandatory = $false,ParameterSetName = 'LDAP')]
         [Parameter(Mandatory = $false,ParameterSetName = 'ExchangeOnline')]
