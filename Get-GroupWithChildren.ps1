@@ -464,6 +464,24 @@ Function Get-GroupWithChildren()
     {
         out-logfile -string "Entering LDAP processing..."
 
+        out-logfile -string "Obtaining group getting adobject."
+
+        try{
+            $functionObject = get-adObject -identity $objectID -properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+        }
+        catch {
+            out-logfile -string $_
+            out-logfile -string "Unablet obtain the ad object by ID." -isError:$TRUE
+        }
+
+        if (($functionObject.objectClass -ne $functionLDAPDynamicGroup) -or ($functionObject.objectClass -ne $functionLDAPGroup))
+        {
+            out-logfile -string $functionObject.objectClass
+            out-logfile -string "Object specified is not a group or dynamic group." -isError:$TRUE
+        }
+
+        <#
+
         if ($objectType -eq $functionLDAPGroup)
         {
             out-logfile -string "This call specifies an object type as group."
@@ -488,6 +506,8 @@ Function Get-GroupWithChildren()
                 out-logfile -string "Unablet obtain the ad object by ID." -isError:$TRUE
             }
         }
+
+        #>
 
         $childNodes = @()
 
