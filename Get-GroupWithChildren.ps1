@@ -550,7 +550,7 @@ Function Get-GroupWithChildren()
                 write-host "ChildID"
                 write-host $child.distinguishedName 
                 $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-                $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true
+                $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
                 $childNodes += $childNode
             }
         }
