@@ -474,7 +474,7 @@ Function Get-GroupWithChildren()
             out-logfile -string "Unablet obtain the ad object by ID." -isError:$TRUE
         }
 
-        if (($functionObject.objectClass -ne $functionLDAPDynamicGroup) -or ($functionObject.objectClass -ne $functionLDAPGroup))
+        if (($functionObject.objectClass -ne $functionLDAPDynamicGroup) -and ($functionObject.objectClass -ne $functionLDAPGroup))
         {
             out-logfile -string $functionObject.objectClass
             out-logfile -string "Object specified is not a group or dynamic group." -isError:$TRUE
