@@ -272,7 +272,7 @@ Function get-DLHierarchyFromExchangeOnline
 
     out-logfile -string "Start building tree from group..."
 
-    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $exchangeOnlineGroupType -queryMethodExchangeOnline:$TRUE -enableGroupMembership $enableGroupMembership -enableDynamicGroupMembership $enableDynamicGroupMembership
+    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $exchangeOnlineGroupType -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
 
     out-logfile -string "Set header in output file to group name."
 
