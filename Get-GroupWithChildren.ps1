@@ -206,7 +206,7 @@ Function Get-GroupWithChildren()
                 out-logfile -string "Object is a group - determining children."
 
                 try {
-                    $children = Get-MgGroupMember -GroupId $functionObject.Id 
+                    $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP
                 }
                 catch {
                     out-logfile -string $_
