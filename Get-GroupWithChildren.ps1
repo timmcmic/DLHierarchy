@@ -209,23 +209,13 @@ Function Get-GroupWithChildren()
             {
                 out-logfile -string "Object is a group - determining children."
 
-                if ($expandGroupmembership -eq $TRUE)
-                {
-                    out-logfile -string "Group membership expansion is enabled - get membership."
-
-                    try {
-                        $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP
-                    }
-                    catch {
-                        out-logfile -string $_
-                        out-logfile -string "Error obtaining group membership." -isError:$TRUE
-                    }
+                try {
+                    $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP
                 }
-                else 
-                {
-                    out-logfile -string "Group membership expansion is disabled."
-                }
-    
+                catch {
+                    out-logfile -string $_
+                    out-logfile -string "Error obtaining group membership." -isError:$TRUE
+                }    
             }
             else {
                 out-logfile -string "Object is not a group - no children."
