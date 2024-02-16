@@ -545,7 +545,7 @@ Function Get-GroupWithChildren()
 
                     try 
                     {
-                        $children = get-adGroupMember -ldapFilter $groupLDAPFilter -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+                        $children = get-adGroup -ldapFilter $groupLDAPFilter -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
                     }
                     catch 
                     {
