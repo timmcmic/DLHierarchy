@@ -91,6 +91,8 @@ Function Get-GroupWithChildren()
     $isExchangeGroupType = $false
 
     $functionLDAPGroup = "Group"
+    $functionLDAPUser = "User"
+    $functionLDAPContact = "Contact"
     $functionLDAPDynamicGroup = "msExchDynamicDistributionList"
 
     out-logfile -string ("Parameter Set Name: "+$functionParamterSetName)
@@ -480,35 +482,6 @@ Function Get-GroupWithChildren()
             out-logfile -string "Object specified is not a group or dynamic group." -isError:$TRUE
         }
 
-        <#
-
-        if ($objectType -eq $functionLDAPGroup)
-        {
-            out-logfile -string "This call specifies an object type as group."
-            out-logfile -string "This is only utilized on the first call to ensure the object specified is a group."
-
-            try {
-                $functionObject = get-ADGroup -identity $objectID -properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -errorAction STOP
-            }
-            catch {
-                out-logfile -string $_
-                out-logfile -string "Unable to obtain the group by object ID provided.  This is the initial group properties call."
-            }
-        }
-        else {
-            out-logfile -string "Obtaining group getting adobject."
-
-            try{
-                $functionObject = get-adObject -identity $objectID -properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
-            }
-            catch {
-                out-logfile -string $_
-                out-logfile -string "Unablet obtain the ad object by ID." -isError:$TRUE
-            }
-        }
-
-        #>
-
         $childNodes = @()
 
         out-logfile -string $functionObject
@@ -536,6 +509,12 @@ Function Get-GroupWithChildren()
                         out-logfile $_
                         out-logfile -string "Unable to obtain dynamic group membership via LDAP call."
                     }
+
+                    out-logfile -string "Filter children to only contain users, groups, or contacts since LDAP query inclues all object classes."
+                    out-logfile -string $children.Count
+                    $children = $children | where {($_.objectClass -eq $functionLDAPuser) -or ($_.objectClass -eq $functionLDAPGroup) -or ($_.objectClass -eq $functionLDAPContact) -or ($_.objectClass -eq $functionLDAPDynamicGroup)}
+                    out-logfile -string $children.Count
+                    exit
                 }
                 else 
                 {
