@@ -537,10 +537,18 @@ Function Get-GroupWithChildren()
                 {
                     out-logfile -string "Expand full group membership disabled."
 
-                    try {
-                        $children = get-adGroupMember -identity $functionObject.distinguishedName -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP | where {$_.objectClass -eq $functionLDAPGroup}
+                    out-logfile -string "Construct LDAP Filter"
+
+                        $groupLdapFilter = "(&(objectCategory=Group)(memberof="+$functionObject.distinguishedName+"))"
+                        
+                        out-logfile -string $groupLDAPFilter
+
+                    try 
+                    {
+                        $children = get-adGroupMember -ldapFilter $groupLDAPFilter -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
                     }
-                    catch {
+                    catch 
+                    {
                         out-logfile -string $_
                         out-logfile "Unable to obtain group membership filtered by groups only." -isError:$TRUE
                     }
