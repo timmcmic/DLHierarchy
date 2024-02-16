@@ -56,12 +56,9 @@ Function Get-GroupWithChildren()
         $globalCatalogServer,
         [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
         $activeDirectoryCredential,
-        [Parameter(Mandatory = $false,ParameterSetName = 'MSGraph')]
-        [Parameter(Mandatory = $false,ParameterSetName = 'ExchangeOnline')]
-        [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
+        [Parameter(Mandatory =$FALSE)]
         [boolean]$expandGroupMembership=$TRUE,
-        [Parameter(Mandatory = $false,ParameterSetName = 'LDAP')]
-        [Parameter(Mandatory = $false,ParameterSetName = 'ExchangeOnline')]
+        [Parameter(Mandatory =$FALSE)]
         [boolean]$expandDynamicGroupMembership=$TRUE
     )
     
