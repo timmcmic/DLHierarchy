@@ -87,7 +87,12 @@ Function get-DLHierachyFromLDAP
         [Parameter(Mandatory = $true)]
         [string]$logFolderPath,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$allowTelemetryCollection=$TRUE
+        [boolean]$allowTelemetryCollection=$TRUE,
+        #Define other non-mandatory parameters.
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$expandGroupMembership=$TRUE,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$expandDynamicGroupMembership=$TRUE
     )
 
     #Define script based variables.
@@ -200,7 +205,7 @@ Function get-DLHierachyFromLDAP
 
     out-logfile -string "Start building tree from group..."
 
-    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $LDAPGroupType -queryMethodLDAP:$TRUE -globalCatalogServer $coreVariables.globalCatalogWithPort.Value -activeDirectoryCredential $activeDirectoryCredential
+    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $LDAPGroupType -queryMethodLDAP:$TRUE -globalCatalogServer $coreVariables.globalCatalogWithPort.Value -activeDirectoryCredential $activeDirectoryCredential -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
 
     out-logfile -string "Set header in output file to group name."
 
