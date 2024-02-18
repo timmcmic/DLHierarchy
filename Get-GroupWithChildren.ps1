@@ -477,7 +477,7 @@ Function Get-GroupWithChildren()
         out-logfile -string "Obtaining group getting adobject."
 
         $global:childCounter++
-        out-logfile -string $global:childCounter.tostring()
+        out-logfile -string (("Recursion Counter: "+$global:childCounter.tostring())
 
         try{
             $functionObject = get-adObject -identity $objectID -properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
