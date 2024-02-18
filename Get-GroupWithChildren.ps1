@@ -478,6 +478,9 @@ Function Get-GroupWithChildren()
 
         out-logfile -string "Obtaining group getting adobject."
 
+        $global:childCounter++
+        out-logfile -string $global:childCounter.tostring()
+
         try{
             $functionObject = get-adObject -identity $objectID -properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
         }
@@ -572,12 +575,8 @@ Function Get-GroupWithChildren()
                 write-host "ChildID"
                 write-host $child.distinguishedName 
                 $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-                $global:childCounter++
-                out-logfile -string $global:childCounter.tostring()
                 $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
                 $childNodes += $childNode
-                $global:childCounter--
-                out-logfile -string $global:childCounter.tostring()
             }
         }
         else 
@@ -598,6 +597,9 @@ Function Get-GroupWithChildren()
         }
 
         $node = New-TreeNode -object $functionObject -children $childNodes
+
+        $global:childCounter--
+        out-logfile -string $global:childCounter.tostring()
     }
 
 
