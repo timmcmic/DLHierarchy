@@ -95,6 +95,8 @@ Function Get-GroupWithChildren()
     $functionLDAPContact = "Contact"
     $functionLDAPDynamicGroup = "msExchDynamicDistributionList"
 
+    $global:$childCounter = 0
+
     out-logfile -string ("Parameter Set Name: "+$functionParamterSetName)
     out-logfile -string ("Processing group ID: "+$objectID)
     out-logfile -string ("Processing object type: "+$objectType)
@@ -246,9 +248,13 @@ Function Get-GroupWithChildren()
             {
                 out-logfile -string "Processing child..."
                 out-logfile -string $child.id
-                $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
+                $global:childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
+                $global:childCounter++
+                out-logfile -string $childCounter.tostring()
                 $childNode = Get-GroupWithChildren -objectID $child.id -processedGroupIds $childGroupIDs -objectType $child.additionalProperties["@odata.type"] -queryMethodGraph:$true -expandGroupMembership $expandGroupMembership
                 $childNodes += $childNode
+                $global:childCounter--
+                out-logfile -string $global:childCounter.tostring()
             }
         }
         else 
@@ -434,8 +440,12 @@ Function Get-GroupWithChildren()
                 out-logfile -string "Processing child..."
                 out-logfile -string $child.ExchangeObjectID
                 $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
+                $global:childCounter++
+                out-logfile -string $global:childCounter.tostring()
                 $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.recipientType -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
                 $childNodes += $childNode
+                $global:childCounter--
+                out-logfile -string $global:childCounter.tostring()
             }
         }
         else 
@@ -562,8 +572,12 @@ Function Get-GroupWithChildren()
                 write-host "ChildID"
                 write-host $child.distinguishedName 
                 $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
+                $global:childCounter++
+                out-logfile -string $global:childCounter.tostring()
                 $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
                 $childNodes += $childNode
+                $global:childCounter--
+                out-logfile -string $global:childCounter.tostring()
             }
         }
         else 
