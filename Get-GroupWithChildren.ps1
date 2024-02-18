@@ -68,6 +68,9 @@ Function Get-GroupWithChildren()
     out-logfile -string "Entering Get-GroupWithChildren"
     out-logfile -string "***********************************************************"
 
+    $global:childCounter++
+    out-logfile -string ("Recursion Counter: "+$global:childCounter.tostring())
+
     $functionObject = $NULL
     $childNodes = @()
     $children=@()
@@ -478,9 +481,6 @@ Function Get-GroupWithChildren()
 
         out-logfile -string "Obtaining group getting adobject."
 
-        $global:childCounter++
-        out-logfile -string ("Recursion Counter: "+$global:childCounter.tostring())
-
         try{
             $functionObject = get-adObject -identity $objectID -properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
         }
@@ -597,11 +597,10 @@ Function Get-GroupWithChildren()
         }
 
         $node = New-TreeNode -object $functionObject -children $childNodes
-
-        $global:childCounter--
-        out-logfile -string $global:childCounter.tostring()
     }
 
+    $global:childCounter--
+    out-logfile -string $global:childCounter.tostring()
 
     out-logfile -string "***********************************************************"
     out-logfile -string "Exiting Get-GroupWithChildren"
