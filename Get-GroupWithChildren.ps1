@@ -95,7 +95,7 @@ Function Get-GroupWithChildren()
     $functionLDAPContact = "Contact"
     $functionLDAPDynamicGroup = "msExchDynamicDistributionList"
 
-    $global:$childCounter = 0
+    $global:childCounter = 0
 
     out-logfile -string ("Parameter Set Name: "+$functionParamterSetName)
     out-logfile -string ("Processing group ID: "+$objectID)
