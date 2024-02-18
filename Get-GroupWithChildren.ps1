@@ -56,6 +56,8 @@ Function Get-GroupWithChildren()
         $globalCatalogServer,
         [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
         $activeDirectoryCredential,
+        [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
+        [boolean]$firstLDAPQuery,
         [Parameter(Mandatory =$FALSE)]
         [boolean]$expandGroupMembership=$TRUE,
         [Parameter(Mandatory =$FALSE)]
