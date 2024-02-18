@@ -516,7 +516,7 @@ Function Get-GroupWithChildren()
                     out-logfile -string "Dynamic group membership expansion enabled."
 
                     try {
-                        $children = Get-ADObject -LDAPFilter $functionObject.msExchDynamicDLFilter -SearchBase $functionObject.msExchDynamicDLBaseDN -Properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP -firstLDAPQuery $false
+                        $children = Get-ADObject -LDAPFilter $functionObject.msExchDynamicDLFilter -SearchBase $functionObject.msExchDynamicDLBaseDN -Properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
                     }
                     catch {
                         out-logfile $_
@@ -556,7 +556,7 @@ Function Get-GroupWithChildren()
 
                     try 
                     {
-                        $children = get-adGroup -ldapFilter $groupLDAPFilter -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP -firstLDAPQuery $false
+                        $children = get-adGroup -ldapFilter $groupLDAPFilter -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
                     }
                     catch 
                     {
@@ -575,7 +575,7 @@ Function Get-GroupWithChildren()
                 write-host "ChildID"
                 write-host $child.distinguishedName 
                 $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-                $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
+                $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false
                 $childNodes += $childNode
             }
         }
