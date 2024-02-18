@@ -127,6 +127,8 @@ Function get-DLHierachyFromLDAP
 
     [int]$defaultIndent = 0
 
+    $global:childCounter = 0
+
     #Define windows title.
 
     $windowTitle = ("Get-DLHierarchyFromLDAP "+$groupObjectID)
