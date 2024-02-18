@@ -516,7 +516,7 @@ Function Get-GroupWithChildren()
                     out-logfile -string "Dynamic group membership expansion enabled."
 
                     try {
-                        $children = Get-ADObject -LDAPFilter $functionObject.msExchDynamicDLFilter -SearchBase $functionObject.msExchDynamicDLBaseDN -Properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+                        $children = Get-ADObject -LDAPFilter $functionObject.msExchDynamicDLFilter -SearchBase $functionObject.msExchDynamicDLBaseDN -Properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP -firstLDAPQuery $false
                     }
                     catch {
                         out-logfile $_
