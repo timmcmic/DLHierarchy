@@ -155,6 +155,10 @@ Function get-DLHierarchyFromExchangeOnline
 
     [int]$defaultIndent = 0
 
+    #Preare items for HTML Export.
+
+    $global:HTMLSections = @()
+
     #Define windows title.
 
     $windowTitle = ("Get-DLHierarchyFromExchangeOnline "+$groupObjectID)

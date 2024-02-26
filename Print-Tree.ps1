@@ -13,6 +13,7 @@ Function Print-Tree()
     $functionMSGraphType = "MSGraph"
     $functionExchangeOnlineType = "ExchangeOnline"
     $functionLDAPType = "LDAP"
+    $functionHTMLSection = $null
 
     if ($outputType -eq $functionMSGraphType)
     {
@@ -21,6 +22,7 @@ Function Print-Tree()
         out-logfile -string  (("-" * $indent) + $string)
 
         $global:outputFile += (("-" * $indent) + $string +"`n")
+
 
         foreach ($child in $node.Children)
         {
@@ -34,6 +36,23 @@ Function Print-Tree()
         out-logfile -string  (("-" * $indent) + $string)
 
         $global:outputFile += (("-" * $indent) + $string +"`n")
+
+        #Prepare HTML information.
+
+        $params = @{'As'='Table';
+            'EvenRowCssClass'='even';
+            'OddRowCssClass'='odd';
+            'MakeTableDynamic'=$true;
+            'TableCssClass'='grid';
+            'MakeHiddenSection'=$true;
+            'Properties'=   @{n='DisplayName';e={$_.object.displayName}},
+                            @{n='ExchangeObjectID';e={$_.object.ExchangeObjectID}},
+                            @{n='RecipientType';e={$_.object.RecipientType}}
+            }
+
+        $functionHTMLSection = ConvertTo-EnhancedHTMLFragment -InputObject $node.Children @params
+
+        $htmlSections += $functionHTMLSection   
 
         foreach ($child in $node.Children)
         {
