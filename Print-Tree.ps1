@@ -52,6 +52,8 @@ Function Print-Tree()
 
         $functionHTMLSection = ConvertTo-EnhancedHTMLFragment -InputObject $node.Children @params
 
+        out-logfile -string $functionHTMLSection
+
         $htmlSections += $functionHTMLSection   
 
         foreach ($child in $node.Children)
