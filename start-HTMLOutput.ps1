@@ -37,7 +37,9 @@ function start-HTMLOutput
         }
         elseif ($outputType -eq $functionExchangeOnlineType)
         {
-            New-HTMLTreeNode -Title 'Power comes on' {
+            $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
+
+            New-HTMLTreeNode -Title $string {
                 New-HTMLTreeNode -Title 'Live screen' {
                     New-HTMLTreeNode -Title 'New build'
                     New-HTMLTreeNode -Title '<b>No</b> new build' {
