@@ -37,6 +37,7 @@ function start-HTMLOutput
         }
         elseif ($outputType -eq $functionExchangeOnlineType)
         {
+            out-logfile -string $node
             $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
 
             foreach ($child in $node.Children)
