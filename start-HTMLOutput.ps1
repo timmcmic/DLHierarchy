@@ -84,12 +84,11 @@ function start-HTMLOutput
     out-logfile -string $functionHTMLFile
 
     New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
-
         New-HTMLTree -Checkbox none {
             New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-            New-HTMLTree $string $node  
-        }-EnableChildCounter -AutoScroll -MinimumExpandLevel 1
-    }-Online -ShowHTML
+            New-HTMLTreeNode -Children $node
+        } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
+    } -Online -ShowHTML
 
     <#
 
@@ -99,6 +98,9 @@ function start-HTMLOutput
             New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType
         } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
     } -Online -ShowHTML
+
+    #>
+    <#
 
     New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
         New-HTMLTree -Checkbox none {
