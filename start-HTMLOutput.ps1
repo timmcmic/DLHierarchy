@@ -14,6 +14,7 @@ function start-HTMLOutput
     $functionHTMLFile = $global:LogFile.replace("log","$functionHTMLSuffix")
 
     out-logfile -string $functionHTMLFile
+    out-logfile -string $outputType
 
     if ($outputType -eq $functionMSGraphType)
     {
