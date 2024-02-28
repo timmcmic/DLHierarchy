@@ -40,7 +40,7 @@ function start-HTMLOutput
             out-logfile -string $node
             out-logfile -string $node.object.displayName
             $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
-            out-logfile -string
+            out-logfile -string $string
 
             foreach ($child in $node.Children)
             {
