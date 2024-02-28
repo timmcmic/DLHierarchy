@@ -38,7 +38,7 @@ function start-HTMLOutput
         elseif ($outputType -eq $functionExchangeOnlineType)
         {
             $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
-            
+
             New-HTMLTreeNode -Title $string
 
             foreach ($child in $node.Children)
@@ -76,57 +76,4 @@ function start-HTMLOutput
             }
         } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
     } -Online -ShowHTML
-
-    if ($outputType -eq $functionMSGraphType)
-    {
-        <#
-        $string = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
-
-        out-logfile -string  (("-" * $indent) + $string)
-
-        $global:outputFile += (("-" * $indent) + $string +"`n")
-
-        foreach ($child in $node.Children)
-        {
-            Print-Tree -node $child -indent ($indent + 2) -outputType $functionMSGraphType
-        }
-        #>
-    }
-    elseif ($outputType -eq $functionExchangeOnlineType)
-    {
-        
-    }
-    elseif ($outputType -eq $functionLDAPType)
-    {
-        <#
-        $string = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+")"
-        
-        out-logfile -string  (("-" * $indent) + $string)
-
-        $global:outputFile += (("-" * $indent) + $string +"`n")
-
-        foreach ($child in $node.Children)
-        {
-            Print-Tree -node $child -indent ($indent + 2) -outputType $functionLDAPType
-        }
-        #>
-    }
-
-    <#
-
-    New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
-        New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-        New-HTMLSection -Invisible {
-            New-HTMLSection {
-                New-HTMLTree -Checkbox none {
-                    New-HTMLTreeFileNodes -Path 'C:\Support\GitHub\PSWriteHTML\Examples' -Filter *.html -IsExpanded
-                } -EnableChildCounter -AutoScroll
-                New-HTMLSection -Invisible {
-                    New-HTMLFrame -Name 'contentFrame' -Scrolling Auto -Height 1500px
-                }
-            }
-        }
-    } -Online -ShowHTML
-
-    #>
 }
