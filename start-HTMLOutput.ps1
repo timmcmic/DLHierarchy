@@ -45,7 +45,7 @@ function start-HTMLOutput
 
             foreach ($child in $node.children)
             {
-                New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType}
             }
 
             <#
