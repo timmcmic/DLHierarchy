@@ -32,6 +32,7 @@ function start-HTMLOutput
     }
     elseif ($outputType -eq $functionExchangeOnlineType)
     {
+        out-logfile -string "here"
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
             New-HTMLTree -Checkbox none {
                 New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
