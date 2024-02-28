@@ -39,16 +39,12 @@ function start-HTMLOutput
         {
             $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
 
-            if ($node.chilren.count -gt 0)
+            foreach ($child in $node.Children)
             {
-                foreach ($child in $node.Children)
-                {
-                    New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType
-                }
+                New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType
             }
-            else {
-                New-HTMLTreeNode -Title $string
-            }
+   
+            New-HTMLTreeNode -Title $string
         }
         elseif ($outputType -eq $functionLDAPType)
         {
