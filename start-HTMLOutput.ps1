@@ -97,26 +97,24 @@ function start-HTMLOutput
     if ($outputType -eq $functionExchangeOnlineType)
     {
         $string = get-nodeString -node $node -outputType $functionExchangeOnlineType
-        $string = "<b>"+$string+"</b>"
         out-logfile -string ("Prcessing HTML: "+$string)
 
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
             New-HTMLTree -Checkbox none {
                 New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-                New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType}
+                New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType} -icon "https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css"
             } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
         } -Online -ShowHTML
     }
     elseif ($outputType -eq $functionMSGraphType)
     {
         $string = get-nodeString -node $node -outputType $functionMSGraphType
-        $string = "<b>"+$string+"</b>"
         out-logfile -string ("Prcessing HTML: "+$string)
 
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
             New-HTMLTree -Checkbox none {
                 New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-                New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType}
+                New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType} -icon "https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css"
             } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
         } -Online -ShowHTML
     }
