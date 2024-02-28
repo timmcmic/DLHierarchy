@@ -1,11 +1,14 @@
 function start-HTMLOutput
 {
-    [Parameter(Mandatory = $true)]
-    $node,
-    [Parameter(Mandatory = $true)]
-    $outputType,
-    [Parameter(Mandatory = $true)]
-    $groupObjectID
+    params(
+        [Parameter(Mandatory = $true)]
+        $node,
+        [Parameter(Mandatory = $true)]
+        $outputType,
+        [Parameter(Mandatory = $true)]
+        $groupObjectID
+    )
+
 
     $functionMSGraphType = "MSGraph"
     $functionExchangeOnlineType = "ExchangeOnline"
