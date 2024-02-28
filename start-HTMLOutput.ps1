@@ -11,7 +11,6 @@ function start-HTMLOutput
 
     function New-HTMLTreeFileNodes 
     {
-
         param(
         $node,
         $outputType
@@ -44,7 +43,7 @@ function start-HTMLOutput
 
             foreach ($child in $node.Children)
             {
-                New-HTMLTreeNode -node $child -outputType $functionExchangeOnlineType
+                New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType
             }
         }
         elseif ($outputType -eq $functionLDAPType)
