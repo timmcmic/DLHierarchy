@@ -43,7 +43,7 @@ function start-HTMLOutput
                 {
                     New-HTMLTreeNode -Title {
                         New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType
-                    }-IsExpanded:$IsExpanded.IsPresent
+                    }
                 }
             }   
             else 
