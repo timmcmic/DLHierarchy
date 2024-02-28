@@ -290,6 +290,10 @@ Function get-DLHierarchyFromExchangeOnline
 
     out-HierarchyFile -outputFileName  ("Hierarchy-"+$logFileName) -logFolderPath $global:logFolderPath
 
+    out-logfile -string "Generate HTML File..."
+
+    start-HTMLOutput -node $tree -outputType $exchangeOnlineType
+
     $telemetryEndTime = get-universalDateTime
     $telemetryElapsedSeconds = get-elapsedTime -startTime $telemetryStartTime -endTime $telemetryEndTime
 
