@@ -44,7 +44,7 @@ function start-HTMLOutput
             foreach ($child in $node.children)
             {
                 New-HTMLTreeNode -Title $string {
-                        New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType
+                        New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType
                     }
             }
 
@@ -85,7 +85,7 @@ function start-HTMLOutput
 
     out-logfile -string $functionHTMLFile
 
-    New-HTML -TitleText 'This is a test' -FilePath $functionHTMLFile {
+    New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
         New-HTMLTree -Checkbox none {
             New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
             New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType
