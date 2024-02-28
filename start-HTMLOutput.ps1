@@ -114,7 +114,7 @@ function start-HTMLOutput
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
             New-HTMLTree -Checkbox none {
                 New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-                New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType} -icon "https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css"
+                New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType} -IsExpanded:$TRUE
             } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
         } -Online -ShowHTML
     }
