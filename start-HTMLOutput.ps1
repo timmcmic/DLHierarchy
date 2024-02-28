@@ -40,6 +40,12 @@ function start-HTMLOutput
             $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
 
             New-HTMLTreeNode -Title $string {
+
+                foreach ($child in $node.Children)
+                {
+                    New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType
+                }
+                <#
                 New-HTMLTreeNode -Title 'Live screen' {
                     New-HTMLTreeNode -Title 'New build'
                     New-HTMLTreeNode -Title '<b>No</b> new build' {
@@ -52,6 +58,7 @@ function start-HTMLOutput
                 New-HTMLTreeNode -Title "<b>No</b> live screen" {
                     New-HTMLTreeNode -Title "Proceed to video failure chart" -Icon 'https://cdn-icons-png.flaticon.com/512/1294/1294758.png'
                 }
+                #>
             }
             <#
             out-logfile -string $node
