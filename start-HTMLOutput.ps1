@@ -86,7 +86,8 @@ function start-HTMLOutput
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
         New-HTMLTree -Checkbox none {
             New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-            New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType
+            $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
+            new-treeNode -title $string -chilren {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType}
         } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
     } -Online -ShowHTML
 
