@@ -9,7 +9,7 @@ function start-HTMLOutput
     $functionExchangeOnlineType = "ExchangeOnline"
     $functionLDAPType = "LDAP"
     $functionHTMLSuffix = "html"
-    $functionHTMLFile = $global:LogFile.replace("Log","$functionHTMLSuffix")
+    $functionHTMLFile = $global:LogFile.replace("log","$functionHTMLSuffix")
 
     out-logfile -string $functionHTMLFile
 }
