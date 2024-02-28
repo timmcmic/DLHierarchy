@@ -1,6 +1,6 @@
 function start-HTMLOutput
 {
-    params(
+    param(
         [Parameter(Mandatory = $true)]
         $node,
         [Parameter(Mandatory = $true)]
