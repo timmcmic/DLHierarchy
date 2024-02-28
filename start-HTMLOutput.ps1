@@ -41,10 +41,8 @@ function start-HTMLOutput
 
             foreach ($child in $node.Children)
             {
-                New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType
+                New-HTMLTreeNode -Title $string {New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType}
             }
-   
-            New-HTMLTreeNode -Title $string
         }
         elseif ($outputType -eq $functionLDAPType)
         {
