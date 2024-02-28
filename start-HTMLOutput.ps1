@@ -110,7 +110,7 @@ function start-HTMLOutput
     elseif ($outputType -eq $functionMSGraphType)
     {
         $string = get-nodeString -node $node -outputType $functionMSGraphType
-        $string = "<b>"+$string+</b>
+        $string = "<b>"+$string+"</b>"
         out-logfile -string ("Prcessing HTML: "+$string)
 
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
