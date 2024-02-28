@@ -62,6 +62,8 @@ function start-HTMLOutput
             }
             #>
         }
+
+        return $string
     }
 
     $functionHTMLSuffix = "html"
