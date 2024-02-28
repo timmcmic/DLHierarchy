@@ -87,7 +87,7 @@ function start-HTMLOutput
         New-HTMLTree -Checkbox none {
             New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
             New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType
-        } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
+        } -EnableChildCounter -AutoScroll 
     } -Online -ShowHTML
 
     <#
