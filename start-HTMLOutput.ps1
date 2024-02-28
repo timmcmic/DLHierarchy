@@ -99,6 +99,7 @@ function start-HTMLOutput
 
     $functionHTMLSuffix = "html"
     $functionHTMLFile = $global:LogFile.replace("log","$functionHTMLSuffix")
+
     $functionMSGraphType = "MSGraph"
     $functionExchangeOnlineType = "ExchangeOnline"
     $functionLDAPType = "LDAP"
@@ -116,25 +117,4 @@ function start-HTMLOutput
             } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
         } -Online -ShowHTML
     }
-
-    <#
-
-    New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
-        New-HTMLTree -Checkbox none {
-            New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-            New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType
-        } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
-    } -Online -ShowHTML
-
-    #>
-    <#
-
-    New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
-        New-HTMLTree -Checkbox none {
-            New-HTMLTree -Checkbox none {
-            New-HTMLTreeFileNodes -node $node -outputType $outputType 
-        } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
-    } -Online -ShowHTML
-
-    #>
 }
