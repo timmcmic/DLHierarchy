@@ -42,7 +42,7 @@ function start-HTMLOutput
             $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
             out-logfile -string $string
 
-            New-HTMLTreeNode -Title $string
+            New-HTMLTreeNode -Title $string {New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType}
 
             <#
 
