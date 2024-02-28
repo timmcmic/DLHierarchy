@@ -97,6 +97,7 @@ function start-HTMLOutput
     if ($outputType -eq $functionExchangeOnlineType)
     {
         $string = get-nodeString -node $node -outputType $functionExchangeOnlineType
+        $string = "<b>"+$string+</b>
         out-logfile -string ("Prcessing HTML: "+$string)
 
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
@@ -109,6 +110,7 @@ function start-HTMLOutput
     elseif ($outputType -eq $functionMSGraphType)
     {
         $string = get-nodeString -node $node -outputType $functionMSGraphType
+        $string = "<b>"+$string+</b>
         out-logfile -string ("Prcessing HTML: "+$string)
 
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
