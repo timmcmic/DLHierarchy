@@ -72,7 +72,7 @@ function start-HTMLOutput
     New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
         New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
         New-HTMLTree -Checkbox none {
-            New-HTMLTreeNode -title $groupObjectID -EnableChildCounter {New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType}
+            New-HTMLTreeNode -title $groupObjectID -Children {New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType}
         }-EnableChildCounter -AutoScroll
     } -Online -ShowHTML
     <#
