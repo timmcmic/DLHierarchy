@@ -51,12 +51,6 @@ function start-HTMLOutput
                 }
             } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
         } -Online -ShowHTML
-        $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
-
-        foreach ($child in $node.Children)
-        {
-            Print-Tree -node $child -indent ($indent + 2) -outputType $functionExchangeOnlineType
-        }
     }
     elseif ($outputType -eq $functionLDAPType)
     {
