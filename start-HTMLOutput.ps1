@@ -37,11 +37,18 @@ function start-HTMLOutput
         }
         elseif ($outputType -eq $functionExchangeOnlineType)
         {
-            $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
-
-            foreach ($child in $node.Children)
+            if ($node.children.count -gt 0)
             {
-                New-HTMLTreeNode -Title {New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType}
+                foreach ($child in $node.Children)
+                {
+                    New-HTMLTreeNode -Title {New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType}
+                }
+            }   
+            else 
+            {
+                $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
+
+                new-HTMLTreeNode -title $string
             }
         }
         elseif ($outputType -eq $functionLDAPType)
