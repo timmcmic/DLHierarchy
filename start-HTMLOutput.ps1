@@ -37,8 +37,8 @@ function start-HTMLOutput
         }
         elseif ($outputType -eq $functionExchangeOnlineType)
         {
-            $string = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
-
+            $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
+            
             New-HTMLTreeNode -Title $string
 
             foreach ($child in $node.Children)
