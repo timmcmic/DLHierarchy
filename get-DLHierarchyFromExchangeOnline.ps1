@@ -292,7 +292,7 @@ Function get-DLHierarchyFromExchangeOnline
 
     out-logfile -string "Generate HTML File..."
 
-    start-HTMLOutput -node $tree -outputType $exchangeOnlineType -name $groupObjectID
+    start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID
 
     $telemetryEndTime = get-universalDateTime
     $telemetryElapsedSeconds = get-elapsedTime -startTime $telemetryStartTime -endTime $telemetryEndTime
