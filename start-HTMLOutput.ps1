@@ -15,6 +15,10 @@ function get-NodeString
     {
         $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
     }
+    elseif ($outputType -eq $functionMSGraphType)
+    {
+        $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
+    }
 
     return $functionReturnString
 }
@@ -44,41 +48,25 @@ function start-HTMLOutput
 
         if ($outputType -eq $functionMSGraphType)
         {
-            <#
-            $string = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
-
-            out-logfile -string  (("-" * $indent) + $string)
-
-            $global:outputFile += (("-" * $indent) + $string +"`n")
-
-            foreach ($child in $node.Children)
+            foreach ($child in $node.children)
             {
-                Print-Tree -node $child -indent ($indent + 2) -outputType $functionMSGraphType
+                
+                $string = get-nodeString -node $child -outputType $functionMSGraphType
+                out-logfile -string ("Prcessing HTML: "+$string)
+
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType}
             }
-            #>
         }
         elseif ($outputType -eq $functionExchangeOnlineType)
         {
-            out-logfile -string $string 
-
             foreach ($child in $node.children)
             {
+                
                 $string = get-nodeString -node $child -outputType $functionExchangeOnlineType
+                out-logfile -string ("Prcessing HTML: "+$string)
 
                 New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType}
             }
-
-            <#
-            out-logfile -string $node
-            out-logfile -string $node.object.displayName
-            $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
-            out-logfile -string $string
-
-            foreach ($child in $node.Children)
-            {
-                New-HTMLTreeNode -Title $string -children {New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType}
-            }
-            #>
         }
         elseif ($outputType -eq $functionLDAPType)
         {
@@ -109,11 +97,24 @@ function start-HTMLOutput
     if ($outputType -eq $functionExchangeOnlineType)
     {
         $string = get-nodeString -node $node -outputType $functionExchangeOnlineType
+        out-logfile -string ("Prcessing HTML: "+$string)
 
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
             New-HTMLTree -Checkbox none {
                 New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                 New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType}
+            } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
+        } -Online -ShowHTML
+    }
+    elseif ($outputType -eq $functionMSGraphType)
+    {
+        $string = get-nodeString -node $node -outputType $functionMSGraphType
+        out-logfile -string ("Prcessing HTML: "+$string)
+
+        New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
+            New-HTMLTree -Checkbox none {
+                New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+                New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType}
             } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
         } -Online -ShowHTML
     }
