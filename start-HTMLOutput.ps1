@@ -1,3 +1,25 @@
+
+function get-NodeString
+{
+    param(
+        $node,
+        $outputType
+    )
+    
+    $functionMSGraphType = "MSGraph"
+    $functionExchangeOnlineType = "ExchangeOnline"
+    $functionLDAPType = "LDAP"
+    $functionReturnString = ""
+
+    if ($outputType -eq $functionExchangeOnlineType)
+    {
+        $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
+    }
+
+    return $functionReturnString
+}
+
+
 function start-HTMLOutput
 {
     param(
@@ -41,7 +63,7 @@ function start-HTMLOutput
 
             foreach ($child in $node.children)
             {
-                $string = $child.object.displayName +" (ExchangeObjectID: "+$child.object.ExchangeObjectID+") ("+$child.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
+                $string = get-nodeString -node $child -outputType $functionExchangeOnlineType
 
                 New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType}
             }
@@ -83,14 +105,17 @@ function start-HTMLOutput
 
     out-logfile -string $functionHTMLFile
 
-    $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
+    if ($outputType -eq $functionExchangeOnlineType)
+    {
+        $string = get-nodeString -node $node -outputType $functionExchangeOnlineType
 
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
-        New-HTMLTree -Checkbox none {
-            New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-            New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType}
-        } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
-    } -Online -ShowHTML
+            New-HTMLTree -Checkbox none {
+                New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+                New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType}
+            } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
+        } -Online -ShowHTML
+    }
 
     <#
 
