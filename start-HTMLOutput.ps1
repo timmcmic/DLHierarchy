@@ -44,7 +44,7 @@ function start-HTMLOutput
 
             foreach ($child in $node.Children)
             {
-                New-HTMLTreeNode -Title $string {New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType}
+                New-HTMLTreeNode -Title $string -folder {New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType}
             }
         }
         elseif ($outputType -eq $functionLDAPType)
@@ -70,9 +70,16 @@ function start-HTMLOutput
     out-logfile -string $functionHTMLFile
 
     New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
-        New-HTMLTree -Checkbox none {
-            new-htmlTreeNode { New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-            New-HTMLTreeFileNodes -node $node -outputType $outputType 
-        }} -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
+
     } -Online -ShowHTML
+    <#
+
+    New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
+        New-HTMLTree -Checkbox none {
+            New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+            New-HTMLTreeFileNodes -node $node -outputType $outputType 
+        } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
+    } -Online -ShowHTML
+
+    #>
 }
