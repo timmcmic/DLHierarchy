@@ -41,11 +41,11 @@ function start-HTMLOutput
 
             out-logfile -string $string 
 
+            New-HTMLTreeNode -Title $string
+
             foreach ($child in $node.children)
             {
-                New-HTMLTreeNode -Title $string {
-                        New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType
-                    }
+                New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType
             }
 
             <#
