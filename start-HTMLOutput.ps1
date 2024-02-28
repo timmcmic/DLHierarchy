@@ -71,13 +71,14 @@ function start-HTMLOutput
 
     New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
         New-HTMLTree -Checkbox none {
+            New-HTMLTreeFileNodes -node $node -outputType $outputType 
         }
     } -Online -ShowHTML
     <#
 
     New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
         New-HTMLTree -Checkbox none {
-            New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+            New-HTMLTree -Checkbox none {
             New-HTMLTreeFileNodes -node $node -outputType $outputType 
         } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
     } -Online -ShowHTML
