@@ -70,7 +70,8 @@ function start-HTMLOutput
     out-logfile -string $functionHTMLFile
 
     New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
-
+        New-HTMLTree -Checkbox none {
+        }
     } -Online -ShowHTML
     <#
 
