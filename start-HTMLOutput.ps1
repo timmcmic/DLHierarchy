@@ -45,7 +45,8 @@ function start-HTMLOutput
             foreach ($child in $node.Children)
             {
                 $functionCommand = "New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType"
-                New-HTMLTreeNode -Title $string {$functionCommand}
+                $scriptBlock=[scriptBlock]::create($functionCommand)
+                New-HTMLTreeNode -Title $string {$scriptBlock}
             }
         }
         elseif ($outputType -eq $functionLDAPType)
