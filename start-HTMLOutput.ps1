@@ -47,7 +47,7 @@ function start-HTMLOutput
                 }
             }
             else {
-                New-HTMLTreeNode -Title
+                New-HTMLTreeNode -Title $string
             }
         }
         elseif ($outputType -eq $functionLDAPType)
