@@ -79,9 +79,9 @@ function start-HTMLOutput
     New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
         New-HTMLTree -Checkbox none {
             New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-            foreach ($child in $node)
+            foreach ($child in $node.Children)
             {
-                New-HTMLTreeFileNodes -node $node -outputType $outputType 
+                New-HTMLTreeFileNodes -node $child -outputType $outputType 
             }
             New-HTMLTreeFileNodes -node $node -outputType $outputType 
         } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
