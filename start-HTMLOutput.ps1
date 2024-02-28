@@ -44,7 +44,7 @@ function start-HTMLOutput
 
             foreach ($child in $node.Children)
             {
-                $returnHTML = New-HTMLTreeNode -Title $string {New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType}
+                New-HTMLTreeNode -Title $string {New-HTMLTreeFileNodes -node $child -outputType $functionExchangeOnlineType}
             }
         }
         elseif ($outputType -eq $functionLDAPType)
@@ -62,8 +62,6 @@ function start-HTMLOutput
             }
             #>
         }
-
-        return $returnHTML
     }
 
     $functionHTMLSuffix = "html"
