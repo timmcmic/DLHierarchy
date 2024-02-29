@@ -57,15 +57,15 @@ function New-HTMLTreeChildNodes
                 $string = get-nodeString -node $child -outputType $functionMSGraphType
                 out-logfile -string ("Prcessing HTML: "+$string)
 
-                if (($child.object.getType().name -eq $functionGraphUser) -and ($isUserPNGPresent -eq $TRUE))
+                if ($child.object.getType().name -eq $functionGraphUser)
                 {
                     New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType} -icon $functionUserPNGHTML
                 }
-                elseif (($child.object.getType().name -eq $functionGraphGroup) -and ($isGroupPNGPresent -eq $TRUE))
+                elseif ($child.object.getType().name -eq $functionGraphGroup)
                 {
                     New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType} -icon $functionGroupPNGHTML
                 }
-                elseif (($child.object.getType().name -eq $functionGraphContact) -and ($isContactPNGPresent -eq $TRUE))
+                elseif ($child.object.getType().name -eq $functionGraphContact)
                 {
                     New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType} -icon $functionContactPNGHTML
                 }
