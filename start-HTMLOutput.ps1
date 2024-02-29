@@ -103,7 +103,7 @@ function start-HTMLOutput
 
     $functionUserPNGPath = $functioModuleInstallPath + $functionUserPNG
     $functionGroupPNGPath = $functioModuleInstallPath + $functionGroupPNG
-    $functionContactPNGPath = $functioModuleInstallPath + $functionGroupPNG
+    $functionContactPNGPath = $functioModuleInstallPath + $functionContactPNGPNG
 
     out-logfile -string $functionUserPNGPath
     out-logfile -string $functionGroupPNGPath
