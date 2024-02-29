@@ -2,7 +2,9 @@
 function get-NodeString
 {
     param(
+        [Parameter(Mandatory = $true)]
         $node,
+        [Parameter(Mandatory = $true)]
         $outputType
     )
 
@@ -18,35 +20,23 @@ function get-NodeString
         out-logfile -string "Calculating string for Microsoft Graph"
         $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
     }
+    elseif ($outputType -eq $functionLDAPType)
+    {
+        out-logfile -string "Calculating string for LDAP"
+        $functionReturnString = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+")"
+    }
 
     out-logfile -string $functionReturnString
     return $functionReturnString
 }
-
-
-function start-HTMLOutput
-{
-    param(
-        [Parameter(Mandatory = $true)]
-        $node,
-        [Parameter(Mandatory = $true)]
-        $outputType,
-        [Parameter(Mandatory = $true)]
-        $groupObjectID
-    )
-
-    function New-HTMLTreeChildNodes 
+function New-HTMLTreeChildNodes 
     {
         param(
-        $node,
-        $outputType
+            [Parameter(Mandatory = $true)]
+            $node,
+            [Parameter(Mandatory = $true)]
+            $outputType
         )
-
-        <#
-        $functionMSGraphType = "MSGraph"
-        $functionExchangeOnlineType = "ExchangeOnline"
-        $functionLDAPType = "LDAP"
-        #>
 
         if ($outputType -eq $functionMSGraphType)
         {
@@ -72,20 +62,28 @@ function start-HTMLOutput
         }
         elseif ($outputType -eq $functionLDAPType)
         {
-            <#
-            $string = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+")"
-            
-            out-logfile -string  (("-" * $indent) + $string)
-
-            $global:outputFile += (("-" * $indent) + $string +"`n")
-
-            foreach ($child in $node.Children)
+            foreach ($child in $node.children)
             {
-                Print-Tree -node $child -indent ($indent + 2) -outputType $functionLDAPType
+                
+                $string = get-nodeString -node $child -outputType $functionLDAPType
+                out-logfile -string ("Prcessing HTML: "+$string)
+
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionLDAPType}
             }
-            #>
         }
     }
+
+
+function start-HTMLOutput
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        $node,
+        [Parameter(Mandatory = $true)]
+        $outputType,
+        [Parameter(Mandatory = $true)]
+        $groupObjectID
+    )
 
     $functionHTMLSuffix = "html"
     $functionHTMLFile = $global:LogFile.replace("log","$functionHTMLSuffix")
@@ -122,6 +120,20 @@ function start-HTMLOutput
             New-HTMLTree -Checkbox none {
                 New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                 New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType}
+            } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
+        } -Online -ShowHTML
+    }
+    elseif ($outputType -eq $functionLDAPType)
+    {
+        out-logfile -string "Entering LDAP Type"
+
+        $string = get-nodeString -node $node -outputType $functionLDAPType
+        out-logfile -string ("Prcessing HTML: "+$string)
+
+        New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
+            New-HTMLTree -Checkbox none {
+                New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+                New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionLDAPType}
             } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
         } -Online -ShowHTML
     }
