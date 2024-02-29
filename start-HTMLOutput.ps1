@@ -90,11 +90,6 @@ function start-HTMLOutput
     $functionGroupPNG = "group.png"
     $functionContactPNG = "contact.png"
 
-    $functionUserPNGPath = 
-
-    $functionHTMLSuffix = "html"
-    $functionHTMLFile = $global:LogFile.replace("log","$functionHTMLSuffix")
-
     $functionMSGraphType = "MSGraph"
     $functionExchangeOnlineType = "ExchangeOnline"
     $functionLDAPType = "LDAP"
@@ -109,6 +104,10 @@ function start-HTMLOutput
     $functionUserPNGPath = $functioModuleInstallPath + $functionUserPNG
     $functionGroupPNGPath = $functioModuleInstallPath + $functionGroupPNG
     $functionContactPNGPath = $functioModuleInstallPath + $functionGroupPNG
+
+    out-logfile -string $functionUserPNGPath
+    out-logfile -string $functionGroupPNGPath
+    out-logfile -string $functionContactPNGPath
 
     $isUserPNGPresent = $TRUE
     $isGroupPNGPresent = $TRUE
@@ -133,9 +132,8 @@ function start-HTMLOutput
     out-logfile -string $isGroupPNGPresent
     out-logfile -string $isContactPNGPresent
 
-    out-logfile -string $functionUserPNGPath
-    out-logfile -string $functionGroupPNGPath
-    out-logfile -string $functionContactPNGPath
+    $functionHTMLSuffix = "html"
+    $functionHTMLFile = $global:LogFile.replace("log","$functionHTMLSuffix")
 
     out-logfile -string $functionHTMLFile
     out-logfile -string $outputType
