@@ -38,7 +38,7 @@ function New-HTMLTreeChildNodes
             $outputType
         )
 
-        $functionGraphUser = "MicroosftGraphUser"
+        $functionGraphUser = "MicrosoftGraphUser"
         $functionGraphGroup = "MicrosoftGraphGroup"
         $functionGraphContact = "MicrosoftGraphOrgContact"
 
