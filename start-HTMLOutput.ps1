@@ -5,11 +5,17 @@ function get-NodeString
         $node,
         $outputType
     )
+
+    <#
     
     $functionMSGraphType = "MSGraph"
     $functionExchangeOnlineType = "ExchangeOnline"
     $functionLDAPType = "LDAP"
+
+    #>
+    
     $functionReturnString = ""
+
 
     if ($outputType -eq $functionExchangeOnlineType)
     {
@@ -42,9 +48,11 @@ function start-HTMLOutput
         $outputType
         )
 
+        <#
         $functionMSGraphType = "MSGraph"
         $functionExchangeOnlineType = "ExchangeOnline"
         $functionLDAPType = "LDAP"
+        #>
 
         if ($outputType -eq $functionMSGraphType)
         {
