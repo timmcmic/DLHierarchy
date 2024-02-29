@@ -14,7 +14,7 @@ function get-NodeString
     {
         out-logfile -string "Calculating string for Exchange Online"
 
-        if ($node.object.groupType -ne "")
+        if ($node.object.groupType -ne $null)
         {
             $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
         }
