@@ -13,7 +13,7 @@ function get-NodeString
     if ($outputType -eq $functionExchangeOnlineType)
     {
         out-logfile -string "Calculating string for Exchange Online"
-        $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
+        $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
     }
     elseif ($outputType -eq $functionMSGraphType)
     {
