@@ -93,7 +93,7 @@ function start-HTMLOutput
     $functionLDAPType = "LDAP"
 
     out-logfile -string "Determine installation path for powershell module -> expect to find icons here."
-    $functioModuleInstallPath = (get-installedModule -identity "DLHierarchy").InstalledLocation
+    $functioModuleInstallPath = (get-installedModule -Name "DLHierarchy").InstalledLocation
     out-logfile -string $functioModuleInstallPath
 
     out-logfile -string $functionHTMLFile
