@@ -29,7 +29,14 @@ Function Print-Tree()
     }
     elseif ($outputType -eq $functionExchangeOnlineType)
     {
-        $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
+        if ($node.object.groupType -ne "")
+        {
+            $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
+        }
+        else 
+        {
+            $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
+        }
 
         out-logfile -string  (("-" * $indent) + $string)
 
