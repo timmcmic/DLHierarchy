@@ -85,6 +85,13 @@ function start-HTMLOutput
         $groupObjectID
     )
 
+    $functionModuleName = "DLHierarchy"
+    $functionUserPNG = "user.png"
+    $functionGroupPNG = "group.png"
+    $functionContactPNG = "contact.png"
+
+    $functionUserPNGPath = 
+
     $functionHTMLSuffix = "html"
     $functionHTMLFile = $global:LogFile.replace("log","$functionHTMLSuffix")
 
@@ -93,8 +100,19 @@ function start-HTMLOutput
     $functionLDAPType = "LDAP"
 
     out-logfile -string "Determine installation path for powershell module -> expect to find icons here."
-    $functioModuleInstallPath = (get-installedModule -Name "DLHierarchy").InstalledLocation
+    $functioModuleInstallPath = (get-installedModule -Name $functionModuleName).InstalledLocation
+    $functioModuleInstallPath = $functioModuleInstallPath + "\"
     out-logfile -string $functioModuleInstallPath
+
+    out-logfile -string "Calculate ICON paths."
+
+    $functionUserPNGPath = $functioModuleInstallPath + $functionUserPNG
+    $functionGroupPNGPath = $functioModuleInstallPath + $functionGroupPNG
+    $functionContactPNGPath = $functioModuleInstallPath + $functionGroupPNG
+
+    out-logfile -string $functionUserPNGPath
+    out-logfile -string $functionGroupPNGPath
+    out-logfile -string $functionContactPNGPath
 
     out-logfile -string $functionHTMLFile
     out-logfile -string $outputType
