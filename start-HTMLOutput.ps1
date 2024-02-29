@@ -133,7 +133,7 @@ function start-HTMLOutput
             New-HTMLTree -Checkbox none {
                 New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                 New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType}
-            } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
+            } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
         } -Online -ShowHTML
     }
     elseif ($outputType -eq $functionMSGraphType)
@@ -147,7 +147,7 @@ function start-HTMLOutput
             New-HTMLTree -Checkbox none {
                 New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                 New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType} -icon $functionGroupPNGHTML
-            } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
+            } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
         } -Online -ShowHTML
     }
     elseif ($outputType -eq $functionLDAPType)
@@ -161,7 +161,7 @@ function start-HTMLOutput
             New-HTMLTree -Checkbox none {
                 New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                 New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionLDAPType}
-            } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
+            } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
         } -Online -ShowHTML
     }
 }
