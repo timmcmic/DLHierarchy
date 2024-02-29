@@ -6,26 +6,20 @@ function get-NodeString
         $outputType
     )
 
-    <#
-    
-    $functionMSGraphType = "MSGraph"
-    $functionExchangeOnlineType = "ExchangeOnline"
-    $functionLDAPType = "LDAP"
-
-    #>
-    
     $functionReturnString = ""
-
 
     if ($outputType -eq $functionExchangeOnlineType)
     {
+        out-logfile -string "Calculating string for Exchange Online"
         $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
     }
     elseif ($outputType -eq $functionMSGraphType)
     {
+        out-logfile -string "Calculating string for Microsoft Graph"
         $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
     }
 
+    out-logfile -string $functionReturnString
     return $functionReturnString
 }
 
@@ -101,9 +95,12 @@ function start-HTMLOutput
     $functionLDAPType = "LDAP"
 
     out-logfile -string $functionHTMLFile
+    out-logfile -string $outputType
 
     if ($outputType -eq $functionExchangeOnlineType)
     {
+        out-logfile -string "Entering Exchange Online Type"
+
         $string = get-nodeString -node $node -outputType $functionExchangeOnlineType
         out-logfile -string ("Prcessing HTML: "+$string)
 
@@ -116,6 +113,8 @@ function start-HTMLOutput
     }
     elseif ($outputType -eq $functionMSGraphType)
     {
+        out-logfile -string "Entering MS Graph Type"
+
         $string = get-nodeString -node $node -outputType $functionMSGraphType
         out-logfile -string ("Prcessing HTML: "+$string)
 
