@@ -92,6 +92,10 @@ function start-HTMLOutput
     $functionExchangeOnlineType = "ExchangeOnline"
     $functionLDAPType = "LDAP"
 
+    out-logfile -string "Determine installation path for powershell module -> expect to find icons here."
+    $functioModuleInstallPath = (get-installedModule -identity "DLHierarchy").InstalledLocation
+    out-logfile -string $functioModuleInstallPath
+
     out-logfile -string $functionHTMLFile
     out-logfile -string $outputType
 
