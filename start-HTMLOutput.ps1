@@ -38,6 +38,10 @@ function New-HTMLTreeChildNodes
             $outputType
         )
 
+        $functionGraphUser = "MicroosftGraphUser"
+        $functionGraphGroup = "MicrosoftGraphGroup"
+        $functionGraphContact = "MicrosoftGraphOrgContact"
+
         if ($outputType -eq $functionMSGraphType)
         {
             foreach ($child in $node.children)
@@ -45,7 +49,22 @@ function New-HTMLTreeChildNodes
                 $string = get-nodeString -node $child -outputType $functionMSGraphType
                 out-logfile -string ("Prcessing HTML: "+$string)
 
-                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType}
+                if (($node.object.getType().name -eq $functionGraphUser) -and ($isUserPNGPresent -eq $TRUE))
+                {
+                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType} -icon $functionUserPNGPath
+                }
+                elseif (($node.object.getType().name -eq $functionGraphGroup) -and ($isGroupPNGPresent -eq $TRUE))
+                {
+                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType} -icon $functionGroupPNGPath
+                }
+                elseif (($node.object.getType().name -eq $functionGraphContact) -and ($isContactPNGPresent -eq $TRUE))
+                {
+                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType} -icon $functionContactPNGPath
+                }
+                else 
+                {
+                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType}
+                }
             }
         }
         elseif ($outputType -eq $functionExchangeOnlineType)
