@@ -159,12 +159,23 @@ function start-HTMLOutput
         $string = get-nodeString -node $node -outputType $functionMSGraphType
         out-logfile -string ("Prcessing HTML: "+$string)
 
-        New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
-            New-HTMLTree -Checkbox none {
-                New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-                New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType}
-            } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
-        } -Online -ShowHTML
+        if ($isGroupPNGPresent -eq $TRUE)
+        {
+            New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
+                New-HTMLTree -Checkbox none {
+                    New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+                    New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType} -icon $functionGroupPNGPath
+                } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
+            } -Online -ShowHTML
+        }
+        else {
+            New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
+                New-HTMLTree -Checkbox none {
+                    New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+                    New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType}
+                } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1
+            } -Online -ShowHTML
+        }
     }
     elseif ($outputType -eq $functionLDAPType)
     {
