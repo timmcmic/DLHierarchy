@@ -110,6 +110,35 @@ function start-HTMLOutput
     $functionGroupPNGPath = $functioModuleInstallPath + $functionGroupPNG
     $functionContactPNGPath = $functioModuleInstallPath + $functionGroupPNG
 
+    $isUserPNGPresent = $TRUE
+    $isGroupPNGPresent = $TRUE
+    $isContactPNGPresent = $TRUE
+
+    try {
+        Test-Path -Path $functionUserPNGPath -errorAction Stop
+    }
+    catch {
+        $isUserPNGPresent = $false
+    }
+
+    try {
+        Test-Path -Path $functionGroupPNGPath -errorAction Stop
+    }
+    catch {
+        $isGroupPNGPresent = $false
+    }
+
+    try {
+        Test-Path -Path $functionContactPNGPath -errorAction Stop
+    }
+    catch {
+        $isContactPNGPresent = $false
+    }
+
+    out-logfile -string $isUserPNGPresent
+    out-logfile -string $isGroupPNGPresent
+    out-logfile -string $isContactPNGPresent
+
     out-logfile -string $functionUserPNGPath
     out-logfile -string $functionGroupPNGPath
     out-logfile -string $functionContactPNGPath
