@@ -69,10 +69,6 @@ function New-HTMLTreeChildNodes
                 {
                     New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType} -icon $functionContactPNGHTML
                 }
-                else 
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType}
-                }
             }
         }
         elseif ($outputType -eq $functionExchangeOnlineType)
