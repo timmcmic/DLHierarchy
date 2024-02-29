@@ -114,24 +114,18 @@ function start-HTMLOutput
     $isGroupPNGPresent = $TRUE
     $isContactPNGPresent = $TRUE
 
-    try {
-        Test-Path -Path $functionUserPNGPath -errorAction Stop
-    }
-    catch {
+    if (!Test-Path -Path $functionUserPNGPath)
+    {
         $isUserPNGPresent = $false
     }
 
-    try {
-        Test-Path -Path $functionGroupPNGPath -errorAction Stop
-    }
-    catch {
+    if (!Test-Path -Path $functionGroupPNGPath)
+    {
         $isGroupPNGPresent = $false
     }
 
-    try {
-        Test-Path -Path $functionContactPNGPath -errorAction Stop
-    }
-    catch {
+    if (!Test-Path -Path $functionContactPNGPath)
+    {
         $isContactPNGPresent = $false
     }
 
