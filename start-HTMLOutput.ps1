@@ -42,7 +42,6 @@ function New-HTMLTreeChildNodes
         {
             foreach ($child in $node.children)
             {
-                
                 $string = get-nodeString -node $child -outputType $functionMSGraphType
                 out-logfile -string ("Prcessing HTML: "+$string)
 
