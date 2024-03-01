@@ -93,6 +93,7 @@ Function Get-GroupWithChildren()
     $functionExchangeMailContact = "MailContact"
     $functionExchangeGroupMailbox = "GroupMailbox"
     $functionExchangeDynamicGroup = "DynamicDistributionGroup"
+    $functionExchangeUser = "User"
     $isExchangeGroupType = $false
 
     $functionLDAPGroup = "Group"
@@ -280,6 +281,11 @@ Function Get-GroupWithChildren()
 
         switch ($objectType)
         {
+            $functionExchangeUser
+            {
+                out-logfile -string $functionExchangeGuestMailUser
+                $functionObject = get-ExchangeUser -objectID $objectID
+            }
             $functionExchangeGroup
             {
                 out-logfile -string $functionExchangeGroup
