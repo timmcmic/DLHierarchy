@@ -191,7 +191,7 @@ function start-HTMLOutput
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
             New-HTMLTree -Checkbox none {
                 New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-                New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType}
+                New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType} $functionGroupPNGHTML
             } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
         } -Online -ShowHTML
     }
