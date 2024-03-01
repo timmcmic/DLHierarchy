@@ -60,6 +60,11 @@ function New-HTMLTreeChildNodes
         $functionExchangeGroupMailbox = "GroupMailbox"
         $functionExchangeDynamicGroup = "DynamicDistributionGroup"
 
+        $functionLDAPGroup = "Group"
+        $functionLDAPUser = "User"
+        $functionLDAPContact = "Contact"
+        $functionLDAPDynamicGroup = "msExchDynamicDistributionList"
+
         if ($outputType -eq $functionMSGraphType)
         {
             foreach ($child in $node.children)
@@ -85,17 +90,6 @@ function New-HTMLTreeChildNodes
         {
             foreach ($child in $node.children)
             {
-                $functionExchangeGroup = "Group"
-                $functionExchangeMailUniversalSecurityGroup = "MailUniversalSecurityGroup"
-                $functionExchangeMailUniversalDistributionGroup = "MailUniversalDistributionGroup"
-                $functionExchangeUserMailbox = "UserMailbox"
-                $functionExchangeMailUser = "Mailuser"
-                $functionExchangeGuestMailUser = "GuestMailUser"
-                $functionExchangeMailContact = "MailContact"
-                $functionExchangeGroupMailbox = "GroupMailbox"
-                $functionExchangeDynamicGroup = "DynamicDistributionGroup"
-                $functionExchangeUser = "User"
-                
                 $string = get-nodeString -node $child -outputType $functionExchangeOnlineType
                 out-logfile -string ("Prcessing HTML: "+$string)
 
@@ -145,11 +139,25 @@ function New-HTMLTreeChildNodes
         {
             foreach ($child in $node.children)
             {
-                
                 $string = get-nodeString -node $child -outputType $functionLDAPType
                 out-logfile -string ("Prcessing HTML: "+$string)
 
-                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionLDAPType}
+                if ($child.object.objectClass -eq  $functionLDAPGroup)
+                {
+                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionLDAPType} -icon $functionGroupPNGHTML
+                }
+                elseif ($child.object.objectClass -eq  $functionLDAPDynamicGroup)
+                {
+                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionLDAPType} -icon $functionGroupPNGHTML
+                }
+                elseif ($child.object.objectClass -eq  $functionLDAPUser)
+                {
+                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionLDAPType} -icon $functionUserPNGHTML
+                }
+                elseif ($child.object.objectClass -eq  $functionLDAPContact)
+                {
+                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionLDAPType} -icon $functionContactPNGHTML
+                }
             }
         }
     }
