@@ -92,6 +92,8 @@ function New-HTMLTreeChildNodes
                 $functionExchangeMailUser = "Mailuser"
                 $functionExchangeGuestMailUser = "GuestMailUser"
                 $functionExchangeMailContact = "MailContact"
+                $functionExchangeGroupMailbox = "GroupMailbox"
+                $functionExchangeDynamicGroup = "DynamicDistributionGroup"
                 $functionExchangeUser = "User"
                 
                 $string = get-nodeString -node $child -outputType $functionExchangeOnlineType
@@ -105,11 +107,11 @@ function New-HTMLTreeChildNodes
                 {
                     New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
                 }
-                elseif ($child.object.recipientType -eq $functionExchangeMailUniversalDistributionGroup)
+                elseif ($child.object.recipientType -eq $functionExchangeDynamicGroup)
                 {
                     New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
                 }
-                elseif ($child.object.recipientType -eq $functionExchangeGroupMailbox)
+                elseif ($child.object.recipientType -eq $functionExchangeMailUniversalDistributionGroup)
                 {
                     New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
                 }
