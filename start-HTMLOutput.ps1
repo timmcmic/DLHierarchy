@@ -197,7 +197,6 @@ function start-HTMLOutput
         out-logfile -string ("Prcessing HTML: "+$string)
 
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
-            new-htmlText -text @(("Hierarchy output for group ID: "+$groupObjectID))
             New-HTMLTree -Checkbox none {
                 New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                 New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
@@ -227,6 +226,7 @@ function start-HTMLOutput
         out-logfile -string ("Prcessing HTML: "+$string)
 
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
+            new-htmlText -text @(("Hierarchy output for group ID: "+$groupObjectID))
             New-HTMLTree -Checkbox none {
                 New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                 New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionLDAPType} -icon $functionGroupPNGHTML
