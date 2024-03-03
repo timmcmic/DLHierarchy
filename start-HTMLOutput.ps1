@@ -226,11 +226,13 @@ function start-HTMLOutput
         out-logfile -string ("Prcessing HTML: "+$string)
 
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
-            new-htmlText -text @(("Hierarchy output for group ID: "+$groupObjectID))
-            New-HTMLTree -Checkbox none {
-                New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-                New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionLDAPType} -icon $functionGroupPNGHTML
-            } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
+            new-htmlSection -HeaderText ("Group expansion for group object id: "+$groupObjectID)
+            {
+                New-HTMLTree -Checkbox none {
+                    New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+                    New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionLDAPType} -icon $functionGroupPNGHTML
+                } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
+            }
         } -Online -ShowHTML
     }
 }
