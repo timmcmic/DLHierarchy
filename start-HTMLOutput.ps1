@@ -226,7 +226,7 @@ function start-HTMLOutput
         out-logfile -string ("Prcessing HTML: "+$string)
 
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
-            new-htmlSection {
+            new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
                 New-HTMLTree -Checkbox none {
                     New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                     New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionLDAPType} -icon $functionGroupPNGHTML
