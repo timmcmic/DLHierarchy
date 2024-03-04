@@ -268,6 +268,11 @@ Function Get-GroupWithChildren()
             $functionObject.DisplayName = $functionObject.DisplayName + " (Circular Membership)"
         }
 
+        if ($functionObject.displayName -eq "")
+        {
+            $functionObject.displayName = $functionObject.name
+        }
+
         $node = New-TreeNode -object $functionObject -children $childNodes
     }
 
@@ -461,17 +466,17 @@ Function Get-GroupWithChildren()
         {
             out-logfile -string "Group has already been processed."
 
-            if ($group.displaynnme -eq "")
+            if ($functionObject.displayName -eq "")
             {
-                $group.displayName = $group.name
+                $functionObject.displayName = $functionObject.name
             }
             
             $functionObject.DisplayName = $functionObject.DisplayName + " (Circular Membership)"
         }
 
-        if ($group.displaynnme -eq "")
+        if ($functionObject.displayName -eq "")
         {
-            $group.displayName = $group.name
+            $functionObject.displayName = $functionObject.name
         }
     
         $node = New-TreeNode -object $functionObject -children $childNodes
@@ -590,7 +595,7 @@ Function Get-GroupWithChildren()
         {
             out-logfile -string "Group has already been processed."
 
-            if ($functionObject.displaynnme -eq "")
+            if ($functionObject.displayName -eq "")
             {
                 $functionObject.displayName = $functionObject.name
             }
@@ -598,7 +603,7 @@ Function Get-GroupWithChildren()
             $functionObject.DisplayName = $functionObject.DisplayName + " (Circular Membership)"
         }
 
-        if ($functionObject.displaynnme -eq "")
+        if ($functionObject.displayName -eq "")
         {
             $functionObject.displayName = $functionObject.name
         }
