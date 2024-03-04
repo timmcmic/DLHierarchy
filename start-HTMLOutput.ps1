@@ -235,7 +235,7 @@ function start-HTMLOutput
                 } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
             new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
-                new-htmlTable -DataTable ($global:ldapObjects | select-object CanonicalName,distinguishedName,groupType,mail,mailnickanme,objectGUID,proxyAddresses) -Filtering {}
+                new-htmlTable -DataTable (($global:ldapObjects | select-object CanonicalName,distinguishedName,groupType,mail,mailnickanme,objectGUID,proxyAddresses) | sort-object distinguishedName -Unique) -Filtering {}
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
         } -Online -ShowHTML 
     }
