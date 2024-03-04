@@ -186,6 +186,7 @@ function start-HTMLOutput
     $functionHTMLSuffix = "html"
     $functionHTMLFile = $global:LogFile.replace("log","$functionHTMLSuffix")
 
+
     out-logfile -string $functionHTMLFile
     out-logfile -string $outputType
 
@@ -230,12 +231,6 @@ function start-HTMLOutput
                 New-HTMLTree -Checkbox none {
                     New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                     New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionLDAPType} -icon $functionGroupPNGHTML
-                } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
-            } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
-            new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
-                new-htmlTable -DataTable $global:ldapObjects -Filtering {
-                    New-TableHeader -Color Red -Title 'LDAP Objects'
-                    } -DataTableID 'TableContent1'
                 } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
         } -Online -ShowHTML 
