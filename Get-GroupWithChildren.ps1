@@ -119,54 +119,18 @@ Function Get-GroupWithChildren()
         Param
         (
             [Parameter(Mandatory = $true)]
-            $objectID,
-            [Parameter(Mandatory = $true)]
-            $groupType
+            $objectID
         )
 
-        $functionExchangeGroup
-
-        if ($groupType -eq $functionExchangeGroup)
-        {
-            try {
-                out-logfile -string "Exchange group type..."
-                $returnObject = get-o365group -identity $objectID -ErrorAction Stop
-            }
-            catch {
-                out-logfile -string "Object type is group - unable to obtain object."
-                out-logfile -string $_ -isError:$TRUE
-            } 
+        try {
+            $returnObject = get-o365group -identity $objectID -ErrorAction Stop
         }
-        elseif (($groupType -eq $functionExchangeMailUniversalDistributionGroup) -or ($groupType -eq $functionExchangeMailUniversalSecurityGroup))
-        {
-            try {
-                out-logfile -string "Exchange distribution group type..."
-                $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
-            }
-            catch {
-                try {
-                    out-logfile -string "Error obtaining - possible unified group."
-                    out-logfile -string "Exchange universal type..."
-                    $returnObject = get-o365UnifiedGroup -identity $objectID -ErrorAction Stop
-                }
-                catch {
-                    out-logfile -string "Error obtaining mail enabled group information."
-                    out-logfile -string $_ -isError:$TRUE
-                }
-            } 
-        }
-        elseif ($groupType -eq $functionExchangeDynamicGroup)
-        {
-            try {
-                out-logfile -string "Exchange dynamic group type..."
-                $returnObject = get-o365DynamicDistributionGroup -Identity $objectID -errorAction Stop
-            }
-            catch {
-                out-logfile -string "Object type is dynamic distibution - unable to obtain object."
-                out-logfile -string $_ -isError:$TRUE
-            }
-        }
-
+        catch {
+            write-host $_
+            write-error "Object type is group - unable to obtain object."
+            exit
+        } 
+        
         return $returnObject
     }
 
@@ -320,121 +284,65 @@ Function Get-GroupWithChildren()
             $functionExchangeUser
             {
                 out-logfile -string $functionExchangeGuestMailUser
-
-                try {
-                    $functionObject = get-ExchangeUser -objectID $objectID -errorAction Stop
-                    $global:exchangeObjects += $functionObject
-                    
-                }
-                catch {
-                    out-logfile -string "Unable to obtain Exchange Online user information."
-                    out-logfile -string $_ -isError:$TRUE
-                }    
+                $functionObject = get-ExchangeUser -objectID $objectID
             }
             $functionExchangeGroup
             {
                 out-logfile -string $functionExchangeGroup
-
-                try {
-                    $functionObject = get-ExchangeGroup -objectID $objectID -groupType $functionExchangeGroup -errorAction Stop
-                    $isExchangeGroupType=$TRUE
-                    $global:exchangeObjects += $functionObject
-                }
-                catch {
-                    out-logfile -string "Unable to obtain Exchange Group information."
-                    out-logfile -string $_ -isError:$TRUE
-                }
+                $functionObject = get-ExchangeGroup -objectID $objectID
+                $isExchangeGroupType=$TRUE 
             }
             $functionExchangeMailUniversalSecurityGroup
             {
                 out-logfile -string $functionExchangeMailUniversalSecurityGroup
-
-                try {
-                    $functionObject = get-ExchangeGroup -objectID $objectID -groupType $functionExchangeMailUniversalSecurityGroup -errorAction Stop
-                    $isExchangeGroupType=$TRUE
-                    $global:exchangeObjects += $functionObject 
-                }
-                catch {
-                    out-logfile -string "Unable to obtain Exchange Group informaiton."
-                    out-logfile -string $_ -isError:$TRUE
-                }
+                $functionObject = get-ExchangeGroup -objectID $objectID
+                $isExchangeGroupType=$TRUE  
             }
             $functionExchangeMailUniversalDistributionGroup
             {
                 out-logfile -string $functionExchangeMailUniversalDistributionGroup
-
-                try {
-                    $functionObject = get-ExchangeGroup -objectID $objectID -groupType $functionExchangeMailUniversalSecurityGroup -errorAction Stop
-                    $isExchangeGroupType=$TRUE
-                    $global:exchangeObjects += $functionObject  
-                }
-                catch {
-                    out-logfile -string "Unable to obtain Exchange Group informaiton."
-                    out-logfile -string $_ -isError:$TRUE
-                }
+                $functionObject = get-ExchangeGroup -objectID $objectID
+                $isExchangeGroupType=$TRUE  
             }   
             $functionExchangeUserMailbox
             {
                 out-logfile -string $functionExchangeUserMailbox
-
-                try {
-                    $functionObject = get-ExchangeUser -objectID $objectID -errorAction Stop
-                    $global:exchangeObjects += $functionObject
-                }
-                catch {
-                    out-logfile -string "Unable to get Exchange Online user information."
-                    out-logfile -string $_ -isError:$TRUE
-                }
+                $functionObject = get-ExchangeUser -objectID $objectID
             }
             $functionExchangeMailUser
             {
                 out-logfile -string $functionExchangeMailUser
-
-                try {
-                    $functionObject = get-ExchangeUser -objectID $objectID -errorAction Stop
-                    $global:exchangeObjects += $functionObject
-                }
-                catch {
-                    out-logfile -string "Unable to get Exchange Online user information."
-                    out-logfile -string $_ -isError:$TRUE
-                }
+                $functionObject = get-ExchangeUser -objectID $objectID
             }
             $functionExchangeGuestMailUser
             {
                 out-logfile -string $functionExchangeGuestMailUser
-                try {
-                    $functionObject = get-ExchangeUser -objectID $objectID -errorAction Stop
-                    $global:exchangeObjects += $functionObject
-                }
-                catch {
-                    out-logfile -string "Unable to get Exchange Online user information."
-                    out-logfile -string $_ -isError:$TRUE
-                }
+                $functionObject = get-ExchangeUser -objectID $objectID
             }
             $functionExchangeMailContact
             {
                 out-logfile -string $functionExchangeMailContact
                 try {
                     $functionObject = get-o365contact -Identity $objectID -errorAction Stop
-                    $global:exchangeObjects += $functionObject
                 }
                 catch {
-                    out-logfile -string "Unable to get Exchange Online mail contact information."
-                    out-logfile -string $_ -isError:$TRUE
+                    write-host $_
+                    write-error "Object type is contact - unable to obtain object."
+                    exit
                 }
             }
             $functionExchangeDynamicGroup
             {
-                out-logfile -string $functionExchangeDynamicGroup
+                out-logfile -string $functionExchangeMailContact
                 try {
-                    $functionObject = get-ExchangeGroup -objectID $objectID -groupType $functionExchangeDynamicGroup -errorAction Stop
-                    $isExchangeGroupType=$TRUE 
-                    $global:exchangeObjects += $functionObject
+                    $functionObject = get-o365DynamicDistributionGroup -Identity $objectID -errorAction Stop
                 }
                 catch {
-                    out-logfile -string "Unable to get Exchange Online user information."
-                    out-logfile -string $_ -isError:$TRUE
+                    write-host $_
+                    write-error "Object type is contact - unable to obtain object."
+                    exit
                 }
+                $isExchangeGroupType=$TRUE 
             }
             Default
             {
@@ -543,7 +451,7 @@ Function Get-GroupWithChildren()
                 $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
                 $global:childCounter++
                 out-logfile -string $global:childCounter.tostring()
-                $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.recipientType -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -errorAction STOP
+                $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.recipientType -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
                 $childNodes += $childNode
                 $global:childCounter--
                 out-logfile -string $global:childCounter.tostring()
@@ -553,12 +461,17 @@ Function Get-GroupWithChildren()
         {
             out-logfile -string "Group has already been processed."
 
-            if ($functionObject.displaynnme -eq "")
+            if ($group.displaynnme -eq "")
             {
-                $functionObject.displayName = $functionObject.name
+                $group.displayName = $group.name
             }
             
             $functionObject.DisplayName = $functionObject.DisplayName + " (Circular Membership)"
+        }
+
+        if ($group.displaynnme -eq "")
+        {
+            $group.displayName = $group.name
         }
     
         $node = New-TreeNode -object $functionObject -children $childNodes
