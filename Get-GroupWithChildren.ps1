@@ -132,9 +132,8 @@ Function Get-GroupWithChildren()
                 $returnObject = get-o365group -identity $objectID -ErrorAction Stop
             }
             catch {
-                write-host $_
-                write-error "Object type is group - unable to obtain object."
-                exit
+                out-logfile -string "Object type is group - unable to obtain object."
+                out-logfile -string $_ -isError:$TRUE
             } 
         }
         elseif (($groupType -eq $functionExchangeMailUniversalDistributionGroup) -or ($groupType -eq $functionExchangeMailUniversalSecurityGroup))
@@ -143,9 +142,8 @@ Function Get-GroupWithChildren()
                 $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
             }
             catch {
-                write-host $_
-                write-error "Object type is group - unable to obtain object."
-                exit
+                out-logfile -string "Object type is mail enable security or distribution - unable to obtain object."
+                out-logfile -string $_ -isError:$TRUE
             } 
         }
         elseif ($groupType -eq $functionExchangeDynamicGroup)
@@ -154,9 +152,8 @@ Function Get-GroupWithChildren()
                 $returnObject = get-o365DynamicDistributionGroup -Identity $objectID -errorAction Stop
             }
             catch {
-                write-host $_
-                write-error "Object type is group - unable to obtain object."
-                exit
+                out-logfile -string "Object type is dynamic distibution - unable to obtain object."
+                out-logfile -string $_ -isError:$TRUE
             }
         }
 
