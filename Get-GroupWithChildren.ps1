@@ -201,6 +201,16 @@ Function Get-GroupWithChildren()
                 out-logfile -string $_ -isError:$TRUE
             } 
         }
+        elseif ($queryType -eq $functionExchangeUserMailbox)
+        {
+            try {
+                $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
+            }
+            catch {
+                out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                out-logfile -string $_ -isError:$TRUE
+            } 
+        }
 
         return $returnObject
     }
@@ -362,7 +372,7 @@ Function Get-GroupWithChildren()
             }   
             $functionExchangeUserMailbox
             {
-                out-logfile -string $functionExchangeUserMailbox
+                out-logfile -string $functionExchangeUserMailbox -queryType $functionExchangeUserMailbox
                 $functionObject = get-ExchangeUser -objectID $objectID
             }
             $functionExchangeMailUser
