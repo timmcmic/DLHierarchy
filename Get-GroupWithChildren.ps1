@@ -211,6 +211,37 @@ Function Get-GroupWithChildren()
                 out-logfile -string $_ -isError:$TRUE
             } 
         }
+        elseif ($queryType -eq $functionExchangeMailUser)
+        {
+            try {
+                $returnObject = get-o365MailUser -identity $objectID -ErrorAction Stop
+            }
+            catch {
+                out-logfile -string "Unable to obtain Exchange Online Mail User Object"
+                out-logfile -string $_ -isError:$TRUE
+            } 
+        }
+        elseif ($queryType -eq $functionExchangeGuestMailUser)
+        {
+            try {
+                $returnObject = get-o365MailUser -identity $objectID -ErrorAction Stop
+            }
+            catch {
+                out-logfile -string "Unable to obtain Exchange Online Guest Mail Object"
+                out-logfile -string $_ -isError:$TRUE
+            } 
+        }
+        elseif ($queryType -eq $functionExchangeMailContact)
+        {
+            try {
+                $returnObject = get-o365contact -Identity $objectID -errorAction Stop
+
+            }
+            catch {
+                out-logfile -string "Unable to obtain Exchange Online Mail Contact Object"
+                out-logfile -string $_ -isError:$TRUE
+            }
+        }
 
         return $returnObject
     }
@@ -377,25 +408,18 @@ Function Get-GroupWithChildren()
             }
             $functionExchangeMailUser
             {
-                out-logfile -string $functionExchangeMailUser
+                out-logfile -string $functionExchangeMailUser -queryType $functionExchangeMailUser
                 $functionObject = get-ExchangeUser -objectID $objectID
             }
             $functionExchangeGuestMailUser
             {
-                out-logfile -string $functionExchangeGuestMailUser
+                out-logfile -string $functionExchangeGuestMailUser -queryType functionExchangeGuestMailUser
                 $functionObject = get-ExchangeUser -objectID $objectID
             }
             $functionExchangeMailContact
             {
                 out-logfile -string $functionExchangeMailContact
-                try {
-                    $functionObject = get-o365contact -Identity $objectID -errorAction Stop
-                }
-                catch {
-                    write-host $_
-                    write-error "Object type is contact - unable to obtain object."
-                    exit
-                }
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeMailContact
             }
             $functionExchangeDynamicGroup
             {
