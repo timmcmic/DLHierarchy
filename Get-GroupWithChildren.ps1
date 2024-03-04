@@ -142,8 +142,14 @@ Function Get-GroupWithChildren()
                 $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
             }
             catch {
-                out-logfile -string "Object type is mail enable security or distribution - unable to obtain object."
-                out-logfile -string $_ -isError:$TRUE
+                try {
+                    out-logfile -string "Error obtaining - possible unified group."
+                    $returnObject = get-o365UnifiedGroup -identity $objectID -ErrorAction Stop
+                }
+                catch {
+                    out-logfile -string "Error obtaining mail enabled group information."
+                    out-logfile -string $_ -isError:$TRUE
+                }
             } 
         }
         elseif ($groupType -eq $functionExchangeDynamicGroup)
