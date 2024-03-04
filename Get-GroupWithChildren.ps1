@@ -119,18 +119,42 @@ Function Get-GroupWithChildren()
         Param
         (
             [Parameter(Mandatory = $true)]
-            $objectID
+            $objectID,
+            [Parameter(Mandatory = $false)]
+            $queryType
         )
 
-        try {
-            $returnObject = get-o365group -identity $objectID -ErrorAction Stop
+        if ($queryType -eq $functionExchangeMailUniversalSecurityGroup)
+        {
+            try {
+                $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
+            }
+            catch {
+                out-logfile -string "Unable to obtain Exchange Online Mail Enabled Security Group."
+                out-logfile -string $_ -isError:$TRUE
+            } 
+        }        
+        elseif ($queryType -eq $functionExchangeMailUniversalDistributionGroup)
+        {
+            try {
+                $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
+            }
+            catch {
+                out-logfile -string "Unable to obtain Exchange Online Mail Enabled Security Group."
+                out-logfile -string $_ -isError:$TRUE
+            } 
         }
-        catch {
-            write-host $_
-            write-error "Object type is group - unable to obtain object."
-            exit
-        } 
-        
+        else 
+        {
+            try {
+                $returnObject = get-o365group -identity $objectID -ErrorAction Stop
+            }
+            catch {
+                out-logfile -string "Unable to obtain Exchange Online Group object."
+                out-logfile -string $_ -isError:$true
+            } 
+        }
+
         return $returnObject
     }
 
@@ -288,7 +312,7 @@ Function Get-GroupWithChildren()
         {
             $functionExchangeUser
             {
-                out-logfile -string $functionExchangeGuestMailUser
+                out-logfile -string $functionExchangeUser
                 $functionObject = get-ExchangeUser -objectID $objectID
             }
             $functionExchangeGroup
@@ -300,13 +324,13 @@ Function Get-GroupWithChildren()
             $functionExchangeMailUniversalSecurityGroup
             {
                 out-logfile -string $functionExchangeMailUniversalSecurityGroup
-                $functionObject = get-ExchangeGroup -objectID $objectID
+                $functionObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeMailUniversalSecurityGroup
                 $isExchangeGroupType=$TRUE  
             }
             $functionExchangeMailUniversalDistributionGroup
             {
                 out-logfile -string $functionExchangeMailUniversalDistributionGroup
-                $functionObject = get-ExchangeGroup -objectID $objectID
+                $functionObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeMailUniversalDistributionGroup
                 $isExchangeGroupType=$TRUE  
             }   
             $functionExchangeUserMailbox
