@@ -9,6 +9,7 @@ function get-NodeString
     )
 
     $functionReturnString = ""
+    $functionFullADMembership = @()
 
     if ($outputType -eq $functionExchangeOnlineType)
     {
@@ -38,129 +39,129 @@ function get-NodeString
     return $functionReturnString
 }
 function New-HTMLTreeChildNodes 
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        $node,
+        [Parameter(Mandatory = $true)]
+        $outputType
+    )
+
+    $functionGraphUser = "MicrosoftGraphUser"
+    $functionGraphGroup = "MicrosoftGraphGroup"
+    $functionGraphContact = "MicrosoftGraphOrgContact"
+
+    $functionExchangeGroup = "Group"
+    $functionExchangeMailUniversalSecurityGroup = "MailUniversalSecurityGroup"
+    $functionExchangeMailUniversalDistributionGroup = "MailUniversalDistributionGroup"
+    $functionExchangeUserMailbox = "UserMailbox"
+    $functionExchangeMailUser = "Mailuser"
+    $functionExchangeGuestMailUser = "GuestMailUser"
+    $functionExchangeMailContact = "MailContact"
+    $functionExchangeGroupMailbox = "GroupMailbox"
+    $functionExchangeDynamicGroup = "DynamicDistributionGroup"
+
+    $functionLDAPGroup = "Group"
+    $functionLDAPUser = "User"
+    $functionLDAPContact = "Contact"
+    $functionLDAPDynamicGroup = "msExchDynamicDistributionList"
+
+    if ($outputType -eq $functionMSGraphType)
     {
-        param(
-            [Parameter(Mandatory = $true)]
-            $node,
-            [Parameter(Mandatory = $true)]
-            $outputType
-        )
-
-        $functionGraphUser = "MicrosoftGraphUser"
-        $functionGraphGroup = "MicrosoftGraphGroup"
-        $functionGraphContact = "MicrosoftGraphOrgContact"
-
-        $functionExchangeGroup = "Group"
-        $functionExchangeMailUniversalSecurityGroup = "MailUniversalSecurityGroup"
-        $functionExchangeMailUniversalDistributionGroup = "MailUniversalDistributionGroup"
-        $functionExchangeUserMailbox = "UserMailbox"
-        $functionExchangeMailUser = "Mailuser"
-        $functionExchangeGuestMailUser = "GuestMailUser"
-        $functionExchangeMailContact = "MailContact"
-        $functionExchangeGroupMailbox = "GroupMailbox"
-        $functionExchangeDynamicGroup = "DynamicDistributionGroup"
-
-        $functionLDAPGroup = "Group"
-        $functionLDAPUser = "User"
-        $functionLDAPContact = "Contact"
-        $functionLDAPDynamicGroup = "msExchDynamicDistributionList"
-
-        if ($outputType -eq $functionMSGraphType)
+        foreach ($child in $node.children)
         {
-            foreach ($child in $node.children)
-            {
-                $string = get-nodeString -node $child -outputType $functionMSGraphType
-                out-logfile -string ("Prcessing HTML: "+$string)
+            $string = get-nodeString -node $child -outputType $functionMSGraphType
+            out-logfile -string ("Prcessing HTML: "+$string)
 
-                if ($child.object.getType().name -eq $functionGraphUser)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType} -icon $functionUserPNGHTML
-                }
-                elseif ($child.object.getType().name -eq $functionGraphGroup)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType} -icon $functionGroupPNGHTML
-                }
-                elseif ($child.object.getType().name -eq $functionGraphContact)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType} -icon $functionContactPNGHTML
-                }
+            if ($child.object.getType().name -eq $functionGraphUser)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType} -icon $functionUserPNGHTML
             }
-        }
-        elseif ($outputType -eq $functionExchangeOnlineType)
-        {
-            foreach ($child in $node.children)
+            elseif ($child.object.getType().name -eq $functionGraphGroup)
             {
-                $string = get-nodeString -node $child -outputType $functionExchangeOnlineType
-                out-logfile -string ("Prcessing HTML: "+$string)
-
-                if ($child.object.recipientType -eq $functionExchangeGroup)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
-                }
-                elseif ($child.object.recipientType -eq $functionExchangeMailUniversalSecurityGroup)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
-                }
-                elseif ($child.object.recipientType -eq $functionExchangeDynamicGroup)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
-                }
-                elseif ($child.object.recipientType -eq $functionExchangeMailUniversalDistributionGroup)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
-                }
-                elseif ($child.object.recipientType -eq $functionExchangeGroupMailbox)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
-                }
-                elseif ($child.object.recipientType -eq $functionExchangeGuestMailUser)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionUserPNGHTML
-                }
-                elseif ($child.object.recipientType -eq $functionExchangeMailUser)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionUserPNGHTML
-                }
-                elseif ($child.object.recipientType -eq $functionExchangeUserMailbox)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionUserPNGHTML
-                }
-                elseif ($child.object.recipientType -eq $functionExchangeUser)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionUserPNGHTML
-                }
-                elseif ($child.object.recipientType -eq $functionExchangeMailContact)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionContactPNGHTML
-                }
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType} -icon $functionGroupPNGHTML
             }
-        }
-        elseif ($outputType -eq $functionLDAPType)
-        {
-            foreach ($child in $node.children)
+            elseif ($child.object.getType().name -eq $functionGraphContact)
             {
-                $string = get-nodeString -node $child -outputType $functionLDAPType
-                out-logfile -string ("Prcessing HTML: "+$string)
-
-                if ($child.object.objectClass -eq  $functionLDAPGroup)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionLDAPType} -icon $functionGroupPNGHTML
-                }
-                elseif ($child.object.objectClass -eq  $functionLDAPDynamicGroup)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionLDAPType} -icon $functionGroupPNGHTML
-                }
-                elseif ($child.object.objectClass -eq  $functionLDAPUser)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionLDAPType} -icon $functionUserPNGHTML
-                }
-                elseif ($child.object.objectClass -eq  $functionLDAPContact)
-                {
-                    New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionLDAPType} -icon $functionContactPNGHTML
-                }
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionMSGraphType} -icon $functionContactPNGHTML
             }
         }
     }
+    elseif ($outputType -eq $functionExchangeOnlineType)
+    {
+        foreach ($child in $node.children)
+        {
+            $string = get-nodeString -node $child -outputType $functionExchangeOnlineType
+            out-logfile -string ("Prcessing HTML: "+$string)
+
+            if ($child.object.recipientType -eq $functionExchangeGroup)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
+            }
+            elseif ($child.object.recipientType -eq $functionExchangeMailUniversalSecurityGroup)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
+            }
+            elseif ($child.object.recipientType -eq $functionExchangeDynamicGroup)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
+            }
+            elseif ($child.object.recipientType -eq $functionExchangeMailUniversalDistributionGroup)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
+            }
+            elseif ($child.object.recipientType -eq $functionExchangeGroupMailbox)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
+            }
+            elseif ($child.object.recipientType -eq $functionExchangeGuestMailUser)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionUserPNGHTML
+            }
+            elseif ($child.object.recipientType -eq $functionExchangeMailUser)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionUserPNGHTML
+            }
+            elseif ($child.object.recipientType -eq $functionExchangeUserMailbox)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionUserPNGHTML
+            }
+            elseif ($child.object.recipientType -eq $functionExchangeUser)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionUserPNGHTML
+            }
+            elseif ($child.object.recipientType -eq $functionExchangeMailContact)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionContactPNGHTML
+            }
+        }
+    }
+    elseif ($outputType -eq $functionLDAPType)
+    {
+        foreach ($child in $node.children)
+        {
+            $string = get-nodeString -node $child -outputType $functionLDAPType
+            out-logfile -string ("Prcessing HTML: "+$string)
+
+            if ($child.object.objectClass -eq  $functionLDAPGroup)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionLDAPType} -icon $functionGroupPNGHTML
+            }
+            elseif ($child.object.objectClass -eq  $functionLDAPDynamicGroup)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionLDAPType} -icon $functionGroupPNGHTML
+            }
+            elseif ($child.object.objectClass -eq  $functionLDAPUser)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionLDAPType} -icon $functionUserPNGHTML
+            }
+            elseif ($child.object.objectClass -eq  $functionLDAPContact)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionLDAPType} -icon $functionContactPNGHTML
+            }
+        }
+    }
+}
 
 
 function start-HTMLOutput
