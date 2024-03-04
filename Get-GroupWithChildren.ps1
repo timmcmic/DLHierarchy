@@ -382,50 +382,59 @@ Function Get-GroupWithChildren()
             {
                 out-logfile -string $functionExchangeUser 
                 $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeUser
+                $global:exchangeObjects += $functionObject
             }
             $functionExchangeGroup
             {
                 out-logfile -string $functionExchangeGroup
                 $functionObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeGroup
-                $isExchangeGroupType=$TRUE 
+                $isExchangeGroupType=$TRUE
+                $global:exchangeObjects += $functionObject 
             }
             $functionExchangeMailUniversalSecurityGroup
             {
                 out-logfile -string $functionExchangeMailUniversalSecurityGroup
                 $functionObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeMailUniversalSecurityGroup
                 $isExchangeGroupType=$TRUE  
+                $global:exchangeObjects += $functionObject
             }
             $functionExchangeMailUniversalDistributionGroup
             {
                 out-logfile -string $functionExchangeMailUniversalDistributionGroup
                 $functionObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeMailUniversalDistributionGroup
                 $isExchangeGroupType=$TRUE  
+                $global:exchangeObjects += $functionObject
             }   
             $functionExchangeUserMailbox
             {
                 out-logfile -string $functionExchangeUserMailbox 
                 $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeUserMailbox
+                $global:exchangeObjects += $functionObject
             }
             $functionExchangeMailUser
             {
                 out-logfile -string $functionExchangeMailUser 
                 $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeMailUser
+                $global:exchangeObjects += $functionObject
             }
             $functionExchangeGuestMailUser
             {
                 out-logfile -string $functionExchangeGuestMailUser
                 $functionObject = get-ExchangeUser -objectID $objectID -queryType functionExchangeGuestMailUser
+                $global:exchangeObjects += $functionObject
             }
             $functionExchangeMailContact
             {
                 out-logfile -string $functionExchangeMailContact
                 $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeMailContact
+                $global:exchangeObjects += $functionObject
             }
             $functionExchangeDynamicGroup
             {
                 out-logfile -string $functionExchangeDynamicGroup
                 $functionObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeDynamicGroup
                 $isExchangeGroupType=$TRUE 
+                $global:exchangeObjects += $functionObject
             }
             Default
             {
