@@ -206,7 +206,7 @@ function start-HTMLOutput
                 } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
             }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
             new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
-                new-htmlTable -DataTable $global:ExchangeObjects -Filtering {
+                new-htmlTable -DataTable ($global:ExchangeObjects | select-object proxyAddresses) -Filtering {
                 } -AutoSize
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
         } -Online -ShowHTML
