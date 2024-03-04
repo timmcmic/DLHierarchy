@@ -356,7 +356,7 @@ Function Get-GroupWithChildren()
                 }
                 catch {
                     out-logfile -string "Unable to obtain Exchange Group informaiton."
-                    out-logfile -string $_
+                    out-logfile -string $_ -isError:$TRUE
                 }
             }
             $functionExchangeMailUniversalDistributionGroup
@@ -370,7 +370,7 @@ Function Get-GroupWithChildren()
                 }
                 catch {
                     out-logfile -string "Unable to obtain Exchange Group informaiton."
-                    out-logfile -string $_
+                    out-logfile -string $_ -isError:$TRUE
                 }
             }   
             $functionExchangeUserMailbox
@@ -383,7 +383,7 @@ Function Get-GroupWithChildren()
                 }
                 catch {
                     out-logfile -string "Unable to get Exchange Online user information."
-                    out-logfile -string $_
+                    out-logfile -string $_ -isError:$TRUE
                 }
             }
             $functionExchangeMailUser
@@ -396,7 +396,7 @@ Function Get-GroupWithChildren()
                 }
                 catch {
                     out-logfile -string "Unable to get Exchange Online user information."
-                    out-logfile -string $_
+                    out-logfile -string $_ -isError:$TRUE
                 }
             }
             $functionExchangeGuestMailUser
@@ -408,7 +408,7 @@ Function Get-GroupWithChildren()
                 }
                 catch {
                     out-logfile -string "Unable to get Exchange Online user information."
-                    out-logfile -string $_
+                    out-logfile -string $_ -isError:$TRUE
                 }
             }
             $functionExchangeMailContact
@@ -419,9 +419,8 @@ Function Get-GroupWithChildren()
                     $global:exchangeObjects += $functionObject
                 }
                 catch {
-                    write-host $_
-                    write-error "Object type is contact - unable to obtain object."
-                    exit
+                    out-logfile -string "Unable to get Exchange Online mail contact information."
+                    out-logfile -string $_ -isError:$TRUE
                 }
             }
             $functionExchangeDynamicGroup
@@ -433,9 +432,8 @@ Function Get-GroupWithChildren()
                     $global:exchangeObjects += $functionObject
                 }
                 catch {
-                    write-host $_
-                    write-error "Object type is contact - unable to obtain object."
-                    exit
+                    out-logfile -string "Unable to get Exchange Online user information."
+                    out-logfile -string $_ -isError:$TRUE
                 }
             }
             Default
