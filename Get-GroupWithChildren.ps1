@@ -140,8 +140,18 @@ Function Get-GroupWithChildren()
                 $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
             }
             catch {
-                out-logfile -string "Unable to obtain Exchange Online Mail Enabled Security Group."
-                out-logfile -string $_ -isError:$TRUE
+                out-logfile -string "Unable to obtain Exchange Online Mail Enabled Distribution Group."
+                out-logfile -string $_
+                out-logfile -string "Trying to obtain object as Unified Group."
+
+                try {
+                    $returnObject = get-o365UnifiedGroup -identity $objectID -ErrorAction Stop
+
+                }
+                catch {
+                    out-logfile -string "Unable to obtain Exchange Online Unified Group."
+                    out-logfile -string $_ -isError:$TRUE
+                }
             } 
         }
         else 
