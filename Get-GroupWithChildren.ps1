@@ -129,6 +129,7 @@ Function Get-GroupWithChildren()
         if ($groupType -eq $functionExchangeGroup)
         {
             try {
+                out-logfile -string "Exchange group type..."
                 $returnObject = get-o365group -identity $objectID -ErrorAction Stop
             }
             catch {
@@ -139,11 +140,13 @@ Function Get-GroupWithChildren()
         elseif (($groupType -eq $functionExchangeMailUniversalDistributionGroup) -or ($groupType -eq $functionExchangeMailUniversalSecurityGroup))
         {
             try {
+                out-logfile -string "Exchange distribution group type..."
                 $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
             }
             catch {
                 try {
                     out-logfile -string "Error obtaining - possible unified group."
+                    out-logfile -string "Exchange universal type..."
                     $returnObject = get-o365UnifiedGroup -identity $objectID -ErrorAction Stop
                 }
                 catch {
@@ -155,6 +158,7 @@ Function Get-GroupWithChildren()
         elseif ($groupType -eq $functionExchangeDynamicGroup)
         {
             try {
+                out-logfile -string "Exchange dynamic group type..."
                 $returnObject = get-o365DynamicDistributionGroup -Identity $objectID -errorAction Stop
             }
             catch {
