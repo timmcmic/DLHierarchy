@@ -186,18 +186,22 @@ Function Get-GroupWithChildren()
         Param
         (
             [Parameter(Mandatory = $true)]
-            $objectID
+            $objectID,
+            [Parameter(Mandatory = $true)]
+            $queryType
         )
 
-        try {
-            $returnObject = get-o365user -identity $objectID -ErrorAction Stop
+        if ($queryType -eq $functionExchangeUser)
+        {
+            try {
+                $returnObject = get-o365user -identity $objectID -ErrorAction Stop
+            }
+            catch {
+                out-logfile -string "Unable to obtain Exchange Online User Object"
+                out-logfile -string $_ -isError:$TRUE
+            } 
         }
-        catch {
-            write-host $_
-            write-error "Object type is user - unable to obtain object."
-            exit
-        } 
-        
+
         return $returnObject
     }
 
@@ -335,7 +339,7 @@ Function Get-GroupWithChildren()
         {
             $functionExchangeUser
             {
-                out-logfile -string $functionExchangeUser
+                out-logfile -string $functionExchangeUser -queryType $functionExchangeUser
                 $functionObject = get-ExchangeUser -objectID $objectID
             }
             $functionExchangeGroup
