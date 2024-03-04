@@ -154,6 +154,16 @@ Function Get-GroupWithChildren()
                 }
             } 
         }
+        elseif ($queryType -eq $functionExchangeDynamicGroup)
+        {
+            try {
+                $returnObject = get-o365DynamicDistributionGroup -Identity $objectID -errorAction Stop
+            }
+            catch {
+                out-logfile -string "Unable to obtain Exchange Online Dynamic Distribution Group."
+                out-logfile -string $_ -isError:$TRUE
+            }
+        }
         else 
         {
             try {
