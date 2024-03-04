@@ -9,7 +9,6 @@ function get-NodeString
     )
 
     $functionReturnString = ""
-    $functionFullADMembership = @()
 
     if ($outputType -eq $functionExchangeOnlineType)
     {

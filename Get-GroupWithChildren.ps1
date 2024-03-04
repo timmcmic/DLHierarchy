@@ -489,6 +489,7 @@ Function Get-GroupWithChildren()
 
         try{
             $functionObject = get-adObject -identity $objectID -properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+            $global:ldapObjects += $functionObject
         }
         catch {
             out-logfile -string $_
