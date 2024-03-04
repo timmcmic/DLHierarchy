@@ -553,6 +553,8 @@ Function Get-GroupWithChildren()
         {
             out-logfile -string "Group has already been processed."
 
+            out-logfile -string $group.displayName
+
             if ($group.displaynnme -eq "")
             {
                 $group.displayName = $group.name
