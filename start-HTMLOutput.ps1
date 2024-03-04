@@ -236,7 +236,7 @@ function start-HTMLOutput
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
             new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
                 new-htmlTable -DataTable ($global:ldapObjects | sort-object distinguishedName -Unique) -Filtering {
-                } -AutoSize
+                } -AutoSize -EnableScroller
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
         } -Online -ShowHTML 
     }
