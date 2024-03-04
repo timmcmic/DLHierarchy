@@ -231,7 +231,7 @@ function start-HTMLOutput
                     New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                     New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionLDAPType} -icon $functionGroupPNGHTML
                 } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
-            } -HeaderTextAlignment "Left" -HeaderTextSize "12" -HeaderTextColor "Black"
+            } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderBackGroundColor "Black"
         } -Online -ShowHTML 
     }
 }
