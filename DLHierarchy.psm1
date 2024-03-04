@@ -153,6 +153,8 @@ Function get-DLHierachyFromGraph
 
     [int]$defaultIndent = 0
 
+    $global:msGraphObjects = @()
+
     #Define windows title.
 
     $windowTitle = ("Start-DistributionListMigration "+$groupSMTPAddress)
