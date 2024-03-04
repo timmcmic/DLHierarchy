@@ -382,15 +382,8 @@ Function Get-GroupWithChildren()
             }
             $functionExchangeDynamicGroup
             {
-                out-logfile -string $functionExchangeMailContact
-                try {
-                    $functionObject = get-o365DynamicDistributionGroup -Identity $objectID -errorAction Stop
-                }
-                catch {
-                    write-host $_
-                    write-error "Object type is contact - unable to obtain object."
-                    exit
-                }
+                out-logfile -string $functionExchangeDynamicGroup
+                $functionObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeDynamicGroup
                 $isExchangeGroupType=$TRUE 
             }
             Default
