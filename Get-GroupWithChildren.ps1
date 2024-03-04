@@ -119,18 +119,47 @@ Function Get-GroupWithChildren()
         Param
         (
             [Parameter(Mandatory = $true)]
-            $objectID
+            $objectID,
+            [Parameter(Mandatory = $true)]
+            $groupType
         )
 
-        try {
-            $returnObject = get-o365group -identity $objectID -ErrorAction Stop
+        $functionExchangeGroup
+
+        if ($groupType -eq $functionExchangeGroup)
+        {
+            try {
+                $returnObject = get-o365group -identity $objectID -ErrorAction Stop
+            }
+            catch {
+                write-host $_
+                write-error "Object type is group - unable to obtain object."
+                exit
+            } 
         }
-        catch {
-            write-host $_
-            write-error "Object type is group - unable to obtain object."
-            exit
-        } 
-        
+        elseif (($groupType -eq $functionExchangeMailUniversalDistributionGroup) -or ($groupType -eq $functionExchangeMailUniversalSecurityGroup))
+        {
+            try {
+                $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
+            }
+            catch {
+                write-host $_
+                write-error "Object type is group - unable to obtain object."
+                exit
+            } 
+        }
+        elseif ($groupType -eq $functionExchangeDynamicGroup)
+        {
+            try {
+                $returnObject = get-o365DynamicDistributionGroup -Identity $objectID -errorAction Stop
+            }
+            catch {
+                write-host $_
+                write-error "Object type is group - unable to obtain object."
+                exit
+            }
+        }
+
         return $returnObject
     }
 
@@ -300,7 +329,7 @@ Function Get-GroupWithChildren()
                 out-logfile -string $functionExchangeGroup
 
                 try {
-                    $functionObject = get-ExchangeGroup -objectID $objectID -errorAction Stop
+                    $functionObject = get-ExchangeGroup -objectID $objectID -groupType $functionExchangeGroup -errorAction Stop
                     $isExchangeGroupType=$TRUE
                     $global:exchangeObjects += $functionObject
                 }
@@ -314,7 +343,7 @@ Function Get-GroupWithChildren()
                 out-logfile -string $functionExchangeMailUniversalSecurityGroup
 
                 try {
-                    $functionObject = get-ExchangeGroup -objectID $objectID -errorAction Stop
+                    $functionObject = get-ExchangeGroup -objectID $objectID -groupType $functionExchangeMailUniversalSecurityGroup -errorAction Stop
                     $isExchangeGroupType=$TRUE
                     $global:exchangeObjects += $functionObject 
                 }
@@ -328,7 +357,7 @@ Function Get-GroupWithChildren()
                 out-logfile -string $functionExchangeMailUniversalDistributionGroup
 
                 try {
-                    $functionObject = get-ExchangeGroup -objectID $objectID -errorAction Stop
+                    $functionObject = get-ExchangeGroup -objectID $objectID -groupType $functionExchangeMailUniversalSecurityGroup -errorAction Stop
                     $isExchangeGroupType=$TRUE
                     $global:exchangeObjects += $functionObject  
                 }
@@ -390,9 +419,9 @@ Function Get-GroupWithChildren()
             }
             $functionExchangeDynamicGroup
             {
-                out-logfile -string $functionExchangeMailContact
+                out-logfile -string $functionExchangeDynamicGroup
                 try {
-                    $functionObject = get-o365DynamicDistributionGroup -Identity $objectID -errorAction Stop
+                    $functionObject = get-ExchangeGroup -objectID $objectID -groupType $functionExchangeDynamicGroup -errorAction Stop
                     $isExchangeGroupType=$TRUE 
                     $global:exchangeObjects += $functionObject
                 }
