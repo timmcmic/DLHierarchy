@@ -380,8 +380,8 @@ Function Get-GroupWithChildren()
         {
             $functionExchangeUser
             {
-                out-logfile -string $functionExchangeUser -queryType $functionExchangeUser
-                $functionObject = get-ExchangeUser -objectID $objectID
+                out-logfile -string $functionExchangeUser 
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeUser
             }
             $functionExchangeGroup
             {
@@ -403,18 +403,18 @@ Function Get-GroupWithChildren()
             }   
             $functionExchangeUserMailbox
             {
-                out-logfile -string $functionExchangeUserMailbox -queryType $functionExchangeUserMailbox
-                $functionObject = get-ExchangeUser -objectID $objectID
+                out-logfile -string $functionExchangeUserMailbox 
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeUserMailbox
             }
             $functionExchangeMailUser
             {
-                out-logfile -string $functionExchangeMailUser -queryType $functionExchangeMailUser
-                $functionObject = get-ExchangeUser -objectID $objectID
+                out-logfile -string $functionExchangeMailUser 
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeMailUser
             }
             $functionExchangeGuestMailUser
             {
-                out-logfile -string $functionExchangeGuestMailUser -queryType functionExchangeGuestMailUser
-                $functionObject = get-ExchangeUser -objectID $objectID
+                out-logfile -string $functionExchangeGuestMailUser
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType functionExchangeGuestMailUser
             }
             $functionExchangeMailContact
             {
