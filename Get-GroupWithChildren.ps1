@@ -164,13 +164,16 @@ Function Get-GroupWithChildren()
                 out-logfile -string $_ -isError:$TRUE
             }
         }
-        else 
+        elseif ($queryType -eq $functionExchangeGroup) 
         {
             try {
                 $returnObject = get-o365group -identity $objectID -ErrorAction Stop
             }
             catch {
-                out-logfile -string "Unable to obtain Exchange Online Group object."
+                out-logfile -string "Unable to obtain Exchange Group object."
+                out-logfile -string "This error may be expected.  If a security group was previously mail enabled.."
+                out-logfile -string "And then mail disalbed it remains in Exchange Online and could be a member..."
+                out-logfile -string "But is not returned by get-Group."
                 out-logfile -string $_ -isError:$true
             } 
         }
@@ -338,7 +341,7 @@ Function Get-GroupWithChildren()
             $functionExchangeGroup
             {
                 out-logfile -string $functionExchangeGroup
-                $functionObject = get-ExchangeGroup -objectID $objectID
+                $functionObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeGroup
                 $isExchangeGroupType=$TRUE 
             }
             $functionExchangeMailUniversalSecurityGroup
