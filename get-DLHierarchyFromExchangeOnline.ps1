@@ -155,6 +155,8 @@ Function get-DLHierarchyFromExchangeOnline
 
     [int]$defaultIndent = 0
 
+    $global:exchangeObjects =@()
+
     #Preare items for HTML Export.
 
     $global:HTMLSections = @()

@@ -284,46 +284,103 @@ Function Get-GroupWithChildren()
             $functionExchangeUser
             {
                 out-logfile -string $functionExchangeGuestMailUser
-                $functionObject = get-ExchangeUser -objectID $objectID
+
+                try {
+                    $functionObject = get-ExchangeUser -objectID $objectID -errorAction Stop
+                    $global:exchangeObjects += $functionObject
+                    
+                }
+                catch {
+                    out-logfile -string "Unable to obtain Exchange Online user information."
+                    out-logfile -string $_ -isError:$TRUE
+                }    
             }
             $functionExchangeGroup
             {
                 out-logfile -string $functionExchangeGroup
-                $functionObject = get-ExchangeGroup -objectID $objectID
-                $isExchangeGroupType=$TRUE 
+
+                try {
+                    $functionObject = get-ExchangeGroup -objectID $objectID -errorAction Stop
+                    $isExchangeGroupType=$TRUE
+                    $global:exchangeObjects += $functionObject
+                }
+                catch {
+                    out-logfile -string "Unable to obtain Exchange Group information."
+                    out-logfile -string $_ -isError:$TRUE
+                }
             }
             $functionExchangeMailUniversalSecurityGroup
             {
                 out-logfile -string $functionExchangeMailUniversalSecurityGroup
-                $functionObject = get-ExchangeGroup -objectID $objectID
-                $isExchangeGroupType=$TRUE  
+
+                try {
+                    $functionObject = get-ExchangeGroup -objectID $objectID -errorAction Stop
+                    $isExchangeGroupType=$TRUE
+                    $global:exchangeObjects += $functionObject 
+                }
+                catch {
+                    out-logfile -string "Unable to obtain Exchange Group informaiton."
+                    out-logfile -string $_
+                }
             }
             $functionExchangeMailUniversalDistributionGroup
             {
                 out-logfile -string $functionExchangeMailUniversalDistributionGroup
-                $functionObject = get-ExchangeGroup -objectID $objectID
-                $isExchangeGroupType=$TRUE  
+
+                try {
+                    $functionObject = get-ExchangeGroup -objectID $objectID -errorAction Stop
+                    $isExchangeGroupType=$TRUE
+                    $global:exchangeObjects += $functionObject  
+                }
+                catch {
+                    out-logfile -string "Unable to obtain Exchange Group informaiton."
+                    out-logfile -string $_
+                }
             }   
             $functionExchangeUserMailbox
             {
                 out-logfile -string $functionExchangeUserMailbox
-                $functionObject = get-ExchangeUser -objectID $objectID
+
+                try {
+                    $functionObject = get-ExchangeUser -objectID $objectID -errorAction Stop
+                    $global:exchangeObjects += $functionObject
+                }
+                catch {
+                    out-logfile -string "Unable to get Exchange Online user information."
+                    out-logfile -string $_
+                }
             }
             $functionExchangeMailUser
             {
                 out-logfile -string $functionExchangeMailUser
-                $functionObject = get-ExchangeUser -objectID $objectID
+
+                try {
+                    $functionObject = get-ExchangeUser -objectID $objectID -errorAction Stop
+                    $global:exchangeObjects += $functionObject
+                }
+                catch {
+                    out-logfile -string "Unable to get Exchange Online user information."
+                    out-logfile -string $_
+                }
             }
             $functionExchangeGuestMailUser
             {
                 out-logfile -string $functionExchangeGuestMailUser
-                $functionObject = get-ExchangeUser -objectID $objectID
+                try {
+                    $functionObject = get-ExchangeUser -objectID $objectID -errorAction Stop
+                    $global:exchangeObjects += $functionObject
+                }
+                catch {
+                    out-logfile -string "Unable to get Exchange Online user information."
+                    out-logfile -string $_
+                }
             }
             $functionExchangeMailContact
             {
                 out-logfile -string $functionExchangeMailContact
                 try {
                     $functionObject = get-o365contact -Identity $objectID -errorAction Stop
+                    $global:exchangeObjects += $functionObject
                 }
                 catch {
                     write-host $_
@@ -336,13 +393,14 @@ Function Get-GroupWithChildren()
                 out-logfile -string $functionExchangeMailContact
                 try {
                     $functionObject = get-o365DynamicDistributionGroup -Identity $objectID -errorAction Stop
+                    $isExchangeGroupType=$TRUE 
+                    $global:exchangeObjects += $functionObject
                 }
                 catch {
                     write-host $_
                     write-error "Object type is contact - unable to obtain object."
                     exit
                 }
-                $isExchangeGroupType=$TRUE 
             }
             Default
             {
