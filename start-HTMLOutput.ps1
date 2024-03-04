@@ -198,10 +198,17 @@ function start-HTMLOutput
         out-logfile -string ("Prcessing HTML: "+$string)
 
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
-            New-HTMLTree -Checkbox none {
-                New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-                New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
-            } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
+            New-HTMLTableOption -DataStore JavaScript
+            new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
+                New-HTMLTree -Checkbox none {
+                    New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+                    New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
+                } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
+            }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+            new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
+                new-htmlTable -DataTable $global:ExchangeObjects -Filtering {
+                } -AutoSize
+            } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
         } -Online -ShowHTML
     }
     elseif ($outputType -eq $functionMSGraphType)
