@@ -644,7 +644,7 @@ Function Get-GroupWithChildren()
                 {
                     out-logfile -string "Expand full group membership eanbled."
 
-                    $children = ($functionObject.member | sort-object $functionObject.member)
+                    $children = $functionObject.member
                 }
                 else
                 {
