@@ -55,7 +55,7 @@ Function Print-Tree()
 
         $global:outputFile += (("-" * $indent) + $string +"`n")
 
-        foreach ($child in ($node.Children | sort-object )
+        foreach ($child in $node.Children)
         {
             Print-Tree -node $child -indent ($indent + 2) -outputType $functionLDAPType
         }
