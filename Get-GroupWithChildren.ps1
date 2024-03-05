@@ -209,6 +209,39 @@ Function Get-GroupWithChildren()
                 out-logfile -string $_ -isError:$TRUE
             } 
         }
+        elseif ($queryType -eq $functionExchangeSharedMailbox)
+        {
+            try {
+                $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
+                $global:sharedMailboxCounter+=$returnObject.exchangeObjectID
+            }
+            catch {
+                out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                out-logfile -string $_ -isError:$TRUE
+            } 
+        }
+        elseif ($queryType -eq $functionExchangeEquipmentMailbox)
+        {
+            try {
+                $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
+                $global:equipmentMailboxCounter+=$returnObject.exchangeObjectID
+            }
+            catch {
+                out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                out-logfile -string $_ -isError:$TRUE
+            } 
+        }
+        elseif ($queryType -eq $functionExchangeRoomMailbox)
+        {
+            try {
+                $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
+                $global:roomMailboxCounter+=$returnObject.exchangeObjectID
+            }
+            catch {
+                out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                out-logfile -string $_ -isError:$TRUE
+            } 
+        }
         elseif ($queryType -eq $functionExchangeUserMailbox)
         {
             try {
@@ -388,6 +421,24 @@ Function Get-GroupWithChildren()
 
         switch ($objectType)
         {
+            $functionExchangeRoomMailbox
+            {
+                out-logfile -string $functionExchangeRoomMailbox 
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeRoomMailbox
+                $global:exchangeObjects += $functionObject
+            }
+            $functionExchangeSharedMailbox
+            {
+                out-logfile -string $functionExchangeSharedMailbox 
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeSharedMailbox
+                $global:exchangeObjects += $functionObject
+            }
+            $functionExchangeEquipmentMailbox
+            {
+                out-logfile -string $functionExchangeEquipmentMailbox 
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeEquipmentMailbox
+                $global:exchangeObjects += $functionObject
+            }
             $functionExchangeUser
             {
                 out-logfile -string $functionExchangeUser 
