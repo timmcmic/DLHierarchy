@@ -252,6 +252,28 @@ function start-HTMLOutput
                 new-htmlTable -DataTable (($global:ldapObjects | select-object DistinguishedName,CanonicalName,objectGUID,Name,DisplayName,groupType,mail,mailnickanme,proxyAddresses,targetAddress,legacyExchangeDN,'mS-DS-ConsistencyGuid','msDS-ExternalDirectoryObjectId',msExchRecipientDisplayType,msExchRecipientTypeDetails,msExchRemoteRecipientType,msExchMailboxGuid,msExchArchiveGUID) | sort-object distinguishedName -Unique) -Filtering {
                 } -AutoSize
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+            new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
+                New-HTMLPanel {
+                    New-HTMLChart -Gradient {
+                        New-ChartDonut -Name 'Groups' -Value $global:groupCounter
+                        New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter
+                    }
+                }
+                New-HTMLPanel {
+                    New-HTMLChart -Gradient {
+                        New-ChartDonut -Name 'Users' -Value $global:userCounter
+                        New-ChartDonut -Name 'Contacts' -Value $global:contactCounter
+                    }
+                }
+                New-HTMLPanel {
+                    New-HTMLChart -Gradient {
+                        New-ChartDonut -Name 'Users' -Value $global:userCounter
+                        New-ChartDonut -Name 'Contacts' -Value $global:contactCounter
+                        New-ChartDonut -Name 'Groups' -Value $global:groupCounter
+                        New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter
+                    }
+                }
+            } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
         } -Online -ShowHTML 
     }
 }
