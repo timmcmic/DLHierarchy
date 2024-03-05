@@ -679,19 +679,19 @@ Function Get-GroupWithChildren()
 
         if ($functionObject.objectClass -eq $functionLDAPDynamicGroup)
         {
-            $global:dynamicGroupCounter++
+            $global:dynamicGroupCounter+=$functionObject.objectGUID
         }
         elseif ($functionObject.objectClass -eq $functionLDAPContact)
         {
-            $global:contactCounter++
+            $global:contactCounter+=$functionObject.objectGUID
         }
         elseif ($functionObject.objectClass -eq $functionLDAPUser)
         {
-            $global:userCounter++
+            $global:userCounter+=$functionObject.objectGUID
         }
         elseif ($functionObject.objectClass -eq $functionLDAPGroup)
         {
-            $global:groupCounter++
+            $global:groupCounter+=$functionObject.objectGUID
         }
 
         if (!$processedGroupIds.Contains($functionObject.distinguishedName))

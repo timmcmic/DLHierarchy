@@ -307,22 +307,22 @@ function start-HTMLOutput
             new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
                 New-HTMLPanel {
                     New-HTMLChart -Gradient {
-                        New-ChartDonut -Name 'Groups' -Value $global:groupCounter
-                        New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter
+                        New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
+                        New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
                     }
                 }
                 New-HTMLPanel {
                     New-HTMLChart -Gradient {
-                        New-ChartDonut -Name 'Users' -Value $global:userCounter
-                        New-ChartDonut -Name 'Contacts' -Value $global:contactCounter
+                        New-ChartDonut -Name 'Users' -Value $global:userCounter.count
+                        New-ChartDonut -Name 'Contacts' -Value $global:contactCounter.count
                     }
                 }
                 New-HTMLPanel {
                     New-HTMLChart -Gradient {
-                        New-ChartDonut -Name 'Users' -Value $global:userCounter
-                        New-ChartDonut -Name 'Contacts' -Value $global:contactCounter
-                        New-ChartDonut -Name 'Groups' -Value $global:groupCounter
-                        New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter
+                        New-ChartDonut -Name 'Users' -Value $global:userCounter.count
+                        New-ChartDonut -Name 'Contacts' -Value $global:contactCounter.count
+                        New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
+                        New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
                     }
                 }
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
