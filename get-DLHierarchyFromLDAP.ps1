@@ -130,6 +130,11 @@ Function get-DLHierachyFromLDAP
     $global:childCounter = 0
 
     $global:ldapObjects =@()
+    $global:groupCounter = 0
+    $global:userCounter = 0
+    $global:contactCounter = 0
+    $global:dynamicGroupCounter = 0
+    $totalObjectsProcessed = 0
 
     #Define windows title.
 
@@ -227,6 +232,14 @@ Function get-DLHierachyFromLDAP
 
     start-HTMLOutput -node $tree -outputType $LDAPType -groupObjectID $groupObjectID
 
+    $totalObjectsProcessed = $global:groupCounter + $global:contactCounter + $global:userCounter +$global:dynamicGroupCounter
+
+    Out-logfile -string ("Groups Processed: "+$global:groupCounter)
+    out-logfile -string ("Users Processed: "+$global:userCounter)
+    out-logfile -string ("Contacts Processed: "+$global:contactCounter)
+    out-logfile -string ("Dynamic Groups Processed: "+$global:dynamicGroupCounter)
+    out-logfile -string ("Total objects processed: "+$totalObjectsProcessed)
+
     $telemetryEndTime = get-universalDateTime
     $telemetryElapsedSeconds = get-elapsedTime -startTime $telemetryStartTime -endTime $telemetryEndTime
 
@@ -238,6 +251,11 @@ Function get-DLHierachyFromLDAP
         MigrationStartTimeUTC = $telemetryStartTime
         MigrationEndTimeUTC = $telemetryEndTime
         MigrationErrors = $telemetryError
+        GroupsProcessed = $global:groupCounter
+        UsersProcessed = $global:userCounter
+        ContactsProcessed = $global:contactCounter
+        DynamicGroupsProcessed = $global:dynamicGroupCounter
+        TotalObjectsProcessed = $totalObjectsProcessed
     }
 
     $telemetryEventMetrics = @{

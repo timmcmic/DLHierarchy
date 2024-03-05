@@ -603,6 +603,23 @@ Function Get-GroupWithChildren()
 
         out-logfile -string "Beginning object processing..."
 
+        if ($functionObject.objectClass -eq $functionLDAPDynamicGroup)
+        {
+            $global:dynamicGroupCounter++
+        }
+        elseif ($functionObject.objectClass -eq $functionLDAPContact)
+        {
+            $global:contactCounter++
+        }
+        elseif ($functionObject.objectClass -eq $functionLDAPUser)
+        {
+            $global:userCounter++
+        }
+        elseif ($functionObject.objectClass -eq $functionLDAPGroup)
+        {
+            $global:groupCounter++
+        }
+
         if (!$processedGroupIds.Contains($functionObject.distinguishedName))
         {
             out-logfile -string "Object has not been previously processed..."
