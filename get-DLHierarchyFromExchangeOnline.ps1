@@ -329,7 +329,7 @@ Function get-DLHierarchyFromExchangeOnline
     $global:sharedMailboxCounter = $global:sharedMailboxCounter | Sort-Object -Unique
     $global:roomMailboxCounter = $global:roomMailboxCounter | Sort-Object -Unique
 
-    start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID
+    start-HTMLOutput -node $sorted -outputType $exchangeOnlineType -groupObjectID $groupObjectID
 
     out-logfile -string ("Total groups processed: "+$global:groupCounter.count)
     out-logfile -string ("Total mail security groups processed: "+$global:mailUniversalSecurityGroupCounter.count)

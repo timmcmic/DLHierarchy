@@ -241,7 +241,7 @@ Function get-DLHierachyFromLDAP
 
     out-logfile -string "Generate HTML File..."
 
-    start-HTMLOutput -node $tree -outputType $LDAPType -groupObjectID $groupObjectID
+    start-HTMLOutput -node $sorted -outputType $LDAPType -groupObjectID $groupObjectID
 
     $totalObjectsProcessed = $global:groupCounter.count + $global:contactCounter.count + $global:userCounter.count +$global:dynamicGroupCounter.count
 
