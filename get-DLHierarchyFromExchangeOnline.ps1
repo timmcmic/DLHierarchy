@@ -156,6 +156,16 @@ Function get-DLHierarchyFromExchangeOnline
     [int]$defaultIndent = 0
 
     $global:exchangeObjects =@()
+    $global:groupCounter = 0
+    $global:mailUniversalSecurityGroupCounter = 0
+    $global:mailUniversalDistributionGroupCounter = 0
+    $global:userMailboxCounter = 0
+    $global:mailUserCounter = 0
+    $global:guestMailUserCounter = 0
+    $global:mailContactCounter = 0
+    $global:groupMailboxCounter = 0
+    $global:dynamicGroupCounter = 0
+    $global:userCounter = 0
 
     #Preare items for HTML Export.
 

@@ -128,6 +128,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
+                $global:mailUniversalSecurityGroupCounter++
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online Mail Enabled Security Group."
@@ -138,6 +139,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
+                $global:mailUniversalDistributionGroupCounter++
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online Mail Enabled Distribution Group."
@@ -158,6 +160,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365DynamicDistributionGroup -Identity $objectID -errorAction Stop
+                $global:dynamicGroupCounter++
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online Dynamic Distribution Group."
@@ -168,6 +171,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365group -identity $objectID -ErrorAction Stop
+                $global:groupCounter++
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Group object."
@@ -195,6 +199,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365user -identity $objectID -ErrorAction Stop
+                $global:userCounter++
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online User Object"
@@ -205,6 +210,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
+                $global:userMailboxCounter++
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
@@ -215,6 +221,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365MailUser -identity $objectID -ErrorAction Stop
+                $global:mailUserCounter++
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online Mail User Object"
@@ -225,6 +232,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365MailUser -identity $objectID -ErrorAction Stop
+                $global:guestMailUserCounter++
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online Guest Mail Object"
@@ -235,6 +243,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365contact -Identity $objectID -errorAction Stop
+                $global:mailContactCounter++
 
             }
             catch {
