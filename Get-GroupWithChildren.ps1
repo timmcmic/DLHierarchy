@@ -335,7 +335,7 @@ Function Get-GroupWithChildren()
                 try {
                     $functionObject = get-MGContact -OrgContactId $objectID -errorAction Stop
                     $global:msGraphObjects+=$functionObject
-                    $global:msGraphContactCount+=$functionObject.Id
+                    $global:msGraphContactCount+=$functionObject.id
                 }
                 catch {
                     out-logfile -string $_

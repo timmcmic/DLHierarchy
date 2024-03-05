@@ -22,7 +22,13 @@ Function Print-Tree()
 
         $global:outputFile += (("-" * $indent) + $string +"`n")
 
-        foreach ($child in $node.Children)
+        $sorted = New-Object System.Collections.Generic.List[pscustomobject]
+        $node.Children | % { $sorted.Add($_) }
+     
+        $sorted = [System.Linq.Enumerable]::OrderBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.AdditionalProperties.'@odata.type' })
+        $sorted = [System.Linq.Enumerable]::ThenBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.DisplayName })
+
+        foreach ($child in $sorted)
         {
             Print-Tree -node $child -indent ($indent + 2) -outputType $functionMSGraphType
         }

@@ -300,7 +300,13 @@ Function get-DLHierachyFromGraph
 
     out-logfile -string $global:outputFile
 
-    print-tree -node $tree -indent $defaultIndent -outputType $msGraphType
+    $sorted = New-Object System.Collections.Generic.List[pscustomobject]
+    $tree.Children | % { $sorted.Add($_) }
+    
+    $sorted = [System.Linq.Enumerable]::OrderBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.AdditionalProperties.'@odata.type' })
+    $sorted = [System.Linq.Enumerable]::ThenBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.DisplayName })
+
+    print-tree -node $sorted -indent $defaultIndent -outputType $msGraphType
 
     out-logfile -string "Export hierarchy to file."
 
