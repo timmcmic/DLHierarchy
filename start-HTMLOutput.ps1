@@ -238,6 +238,9 @@ function start-HTMLOutput
                         New-ChartDonut -Name 'GuestMailUsers' -Value $global:guestMailUserCounter.count
                         New-ChartDonut -Name 'MailUsers' -Value $global:mailUserCounter.count
                         New-ChartDonut -Name 'UserMailbox' -Value $global:userMailboxCounter.count
+                        New-ChartDonut -Name 'RoomMailbox' -Value $global:roomMailboxCounter.count
+                        New-ChartDonut -Name 'EqipmentMailbox' -Value $global:equipmentMailboxCounter.count
+                        New-ChartDonut -Name 'SharedMailbox' -Value $global:sharedMailboxCounter.count
                     }
                 }
                 New-HTMLPanel {
@@ -252,6 +255,9 @@ function start-HTMLOutput
                         New-ChartDonut -Name 'GuestMailUsers' -Value $global:guestMailUserCounter.count
                         New-ChartDonut -Name 'MailUsers' -Value $global:mailUserCounter.count
                         New-ChartDonut -Name 'UserMailbox' -Value $global:userMailboxCounter.count
+                        New-ChartDonut -Name 'RoomMailbox' -Value $global:roomMailboxCounter.count
+                        New-ChartDonut -Name 'EqipmentMailbox' -Value $global:equipmentMailboxCounter.count
+                        New-ChartDonut -Name 'SharedMailbox' -Value $global:sharedMailboxCounter.count
                     }
                 }
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px

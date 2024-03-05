@@ -421,6 +421,12 @@ Function Get-GroupWithChildren()
 
         switch ($objectType)
         {
+            $functionExchangeGroupMailbox
+            {
+                out-logfile -string $functionExchangeGroupMailbox 
+                $functionObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeGroupMailbox
+                $global:exchangeObjects += $functionObject
+            }
             $functionExchangeRoomMailbox
             {
                 out-logfile -string $functionExchangeRoomMailbox 
