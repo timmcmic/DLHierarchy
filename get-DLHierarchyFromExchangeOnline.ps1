@@ -301,7 +301,13 @@ Function get-DLHierarchyFromExchangeOnline
 
     out-logfile -string "Print hierarchy to log file."
 
-    print-tree -node $tree -indent $defaultIndent -outputType $exchangeOnlineType
+    $sorted = New-Object System.Collections.Generic.List[pscustomobject]
+    $tree.Children | % { $sorted.Add($_) }
+    
+    $sorted = [System.Linq.Enumerable]::OrderBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.RecipientTypeDetails })
+    $sorted = [System.Linq.Enumerable]::ThenBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.DisplayName })
+
+    print-tree -node $sorted -indent $defaultIndent -outputType $exchangeOnlineType
 
     out-logfile -string "Export hierarchy to file."
 
