@@ -128,7 +128,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
-                $global:mailUniversalSecurityGroupCounter+=$returnObject
+                $global:mailUniversalSecurityGroupCounter+=$returnObject.exchangeObjectID
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online Mail Enabled Security Group."
@@ -139,7 +139,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
-                $global:mailUniversalDistributionGroupCounter+=$returnObject
+                $global:mailUniversalDistributionGroupCounter+=$returnObject.exchangeObjectID
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online Mail Enabled Distribution Group."
@@ -148,7 +148,7 @@ Function Get-GroupWithChildren()
 
                 try {
                     $returnObject = get-o365UnifiedGroup -identity $objectID -ErrorAction Stop
-                    $global:groupMailboxCounter+=$returnObject
+                    $global:groupMailboxCounter+=$returnObject.exchangeObjectID
                 }
                 catch {
                     out-logfile -string "Unable to obtain Exchange Online Unified Group."
@@ -160,7 +160,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365DynamicDistributionGroup -Identity $objectID -errorAction Stop
-                $global:dynamicGroupCounter+=$returnObject
+                $global:dynamicGroupCounter+=$returnObject.exchangeObjectID
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online Dynamic Distribution Group."
@@ -171,7 +171,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365group -identity $objectID -ErrorAction Stop
-                $global:groupCounter+=$returnObject
+                $global:groupCounter+=$returnObject.exchangeObjectID
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Group object."
@@ -199,7 +199,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365user -identity $objectID -ErrorAction Stop
-                $global:userCounter+=$returnObject
+                $global:userCounter+=$returnObject.exchangeObjectID
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online User Object"
@@ -210,7 +210,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
-                $global:userMailboxCounter+=$returnObject
+                $global:userMailboxCounter+=$returnObject.exchangeObjectID
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
@@ -221,7 +221,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365MailUser -identity $objectID -ErrorAction Stop
-                $global:mailUserCounter+=$returnObject
+                $global:mailUserCounter+=$returnObject.exchangeObjectID
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online Mail User Object"
@@ -232,7 +232,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365MailUser -identity $objectID -ErrorAction Stop
-                $global:guestMailUserCounter+=$returnObject
+                $global:guestMailUserCounter+=$returnObject.exchangeObjectID
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online Guest Mail Object"
@@ -243,7 +243,7 @@ Function Get-GroupWithChildren()
         {
             try {
                 $returnObject = get-o365contact -Identity $objectID -errorAction Stop
-                $global:mailContactCounter+=$returnObject
+                $global:mailContactCounter+=$returnObject.exchangeObjectID
 
             }
             catch {
