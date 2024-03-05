@@ -166,6 +166,8 @@ Function get-DLHierarchyFromExchangeOnline
     $global:groupMailboxCounter = 0
     $global:dynamicGroupCounter = 0
     $global:userCounter = 0
+    $totalObjectsProcessed = 0
+
 
     #Preare items for HTML Export.
 
@@ -306,6 +308,21 @@ Function get-DLHierarchyFromExchangeOnline
 
     start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID
 
+    out-logfile -string ("Total groups processed: "+$global:groupCounter)
+    out-logfile -string ("Total mail security groups processed: "+$global:mailUniversalSecurityGroupCounter)
+    out-logfile -string ("Total mail distribution groups processed: "+$global:mailUniversalDistributionGroupCounter)
+    out-logfile -string ("Total user mailbox processed: "+$global:userMailboxCounter)
+    out-logfile -string ("Total mail user processed: "+$global:mailUserCounter)
+    out-logfile -string ("Total guest mail user processed: "+$global:guestMailUserCounter)
+    out-logfile -string ("Total mail contact processed: "+$global:mailContactCounter)
+    out-logfile -string ("Total group mailbox processed: "+$global:groupMailboxCounter)
+    out-logfile -string ("Total dynamic groups processed: "+$global:dynamicGroupCounter)
+    out-logfile -string ("Total user processed: "+$global:userCounter)
+
+    $totalObjectsProcessed = $global:groupCounter+$global:mailUniversalSecurityGroupCounter+$global:mailUniversalDistributionGroupCounter+$global:userMailboxCounter+$global:mailUserCounter+$global:guestMailUserCounter+$global:mailContactCounter+$global:groupMailboxCounter+$global:dynamicGroupCounter+$global:userCounter
+
+    out-logfile -string ("Total objects processed: "+$totalObjectsProcessed)
+
     $telemetryEndTime = get-universalDateTime
     $telemetryElapsedSeconds = get-elapsedTime -startTime $telemetryStartTime -endTime $telemetryEndTime
 
@@ -317,7 +334,17 @@ Function get-DLHierarchyFromExchangeOnline
         MigrationStartTimeUTC = $telemetryStartTime
         MigrationEndTimeUTC = $telemetryEndTime
         MigrationErrors = $telemetryError
-
+        GroupsProcessed = $global:groupCounter
+        MailSecurityGroupsProcessed = $global:mailUniversalSecurityGroupCounter
+        MailDistributionGroupsProcessed = $global:mailUniversalDistributionGroupCounter
+        UserMailboxProcessed = $global:userMailboxCounter
+        MailUsersProcessed = $global:mailUserCounter
+        GuestMailUserProcessed = $global:guestMailUserCounter
+        MailContactProcessed = $global:mailContactCounter
+        GroupMailboxProcessed = $global:groupMailboxCounter
+        DynamicGroupsProcessed = $global:dynamicGroupCounter
+        UsersProcessed = $global:userCounter
+        TotalObjectsProcessed = $totalObjectsProcessed
     }
 
     $telemetryEventMetrics = @{
