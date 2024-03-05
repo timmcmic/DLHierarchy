@@ -221,28 +221,6 @@ function start-HTMLOutput
                 new-htmlTable -DataTable ($global:exchangeObjects | select-object DisplayName,Alias,ExternalDirectoryObjectId,ExchangeObjectId,Identity,ID,Name,PrimarySmtpAddress,EmailAddresses,LegacyExchangeDN,externalEmailAddress,RecipientType,RecipientTypeDetails,GroupType,IsDirSynced | sort-object externalDirectoryObjectID -Unique) -Filtering {
                 } -AutoSize
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
-        } -Online -ShowHTML
-    }
-    elseif ($outputType -eq $functionMSGraphType)
-    {
-        out-logfile -string "Entering MS Graph Type"
-
-        $string = get-nodeString -node $node -outputType $functionMSGraphType
-        out-logfile -string ("Prcessing HTML: "+$string)
-
-        New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
-            New-HTMLTableOption -DataStore JavaScript
-            new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
-                New-HTMLTree -Checkbox none {
-                    New-HTMLHeading -HeadingText ('Group Expansion for: '+$groupObjectID) -Heading h1
-                    New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-                    New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType} -icon $functionGroupPNGHTML
-                } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
-            }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
-            new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
-                new-htmlTable -DataTable ($global:msGraphObjects | select-object DisplayName,Id,Mail,MailEnabled,MailNickname,ProxyAddresses,SecurityEnabled | sort-object ID -Unique) -Filtering {
-                } -AutoSize
-            } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
             new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
                 New-HTMLPanel {
                     New-HTMLChart -Gradient {
@@ -276,6 +254,28 @@ function start-HTMLOutput
                         New-ChartDonut -Name 'UserMailbox' -Value $global:userMailboxCounter
                     }
                 }
+            } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+        } -Online -ShowHTML
+    }
+    elseif ($outputType -eq $functionMSGraphType)
+    {
+        out-logfile -string "Entering MS Graph Type"
+
+        $string = get-nodeString -node $node -outputType $functionMSGraphType
+        out-logfile -string ("Prcessing HTML: "+$string)
+
+        New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
+            New-HTMLTableOption -DataStore JavaScript
+            new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
+                New-HTMLTree -Checkbox none {
+                    New-HTMLHeading -HeadingText ('Group Expansion for: '+$groupObjectID) -Heading h1
+                    New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+                    New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType} -icon $functionGroupPNGHTML
+                } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
+            }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+            new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
+                new-htmlTable -DataTable ($global:msGraphObjects | select-object DisplayName,Id,Mail,MailEnabled,MailNickname,ProxyAddresses,SecurityEnabled | sort-object ID -Unique) -Filtering {
+                } -AutoSize
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
         } -Online -ShowHTML
     }
