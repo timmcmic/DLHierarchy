@@ -370,6 +370,9 @@ Function get-DLHierarchyFromExchangeOnline
         GroupMailboxProcessed = $global:groupMailboxCounter.count
         DynamicGroupsProcessed = $global:dynamicGroupCounter.count
         UsersProcessed = $global:userCounter.count
+        RoomMailboxProcessed = $global:roomMailboxCounter.Count
+        EquipmentMailboxProcessed = $global:equipmentMailboxCounter.Count
+        SharedMailboxProcessed = $global:sharedMailboxCounter.Count
         TotalObjectsProcessed = $totalObjectsProcessed
     }
 
