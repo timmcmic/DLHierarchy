@@ -489,7 +489,7 @@ Function Get-GroupWithChildren()
             $functionExchangeGuestMailUser
             {
                 out-logfile -string $functionExchangeGuestMailUser
-                $functionObject = get-ExchangeUser -objectID $objectID -queryType functionExchangeGuestMailUser
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeGuestMailUser
                 $global:exchangeObjects += $functionObject
             }
             $functionExchangeMailContact
