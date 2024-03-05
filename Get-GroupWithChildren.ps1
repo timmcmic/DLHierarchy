@@ -698,7 +698,7 @@ Function Get-GroupWithChildren()
             $functionObject.displayName = $functionObject.name
         }
 
-        $node = New-TreeNode -object $functionObject -children ($childNodes | sort-object name)
+        $node = New-TreeNode -object $functionObject -children $childNodes
     }
 
     $global:childCounter--
