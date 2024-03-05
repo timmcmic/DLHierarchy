@@ -306,16 +306,16 @@ Function get-DLHierarchyFromExchangeOnline
 
     out-logfile -string "Generate HTML File..."
 
-    $global:GroupCounter = $global:GroupCounter | Sort-Object ExchangeObjectId -unique
-    $global:mailUniversalSecurityGroupCounter = $global:mailUniversalSecurityGroupCounter | Sort-Object ExchangeObjectId -unique
-    $global:mailUniversalDistributionGroupCounter = $global:mailUniversalDistributionGroupCounter | Sort-Object ExchangeObjectId -unique
-    $global:userMailboxCounter = $global:userMailboxCounter | Sort-Object ExchangeObjectId -Unique
-    $global:mailUserCounter = $global:mailUserCounter | Sort-Object ExchangeObjectId -Unique
-    $global:guestMailUserCounter = $global:guestMailUserCounter | Sort-Object ExchangeObjectId -Unique
-    $global:mailContactCounter = $global:mailContactCounter | Sort-Object ExchangeObjectId -Unique
-    $global:groupMailboxCounter = $global:groupMailboxCounter | Sort-Object ExchangeObjectId -Unique
-    $global:dynamicGroupCounter = $global:dynamicGroupCounter | Sort-Object ExchangeObjectId -Unique
-    $global:userCounter = $global:userCounter | Sort-Object ExchangeObjectId -Unique
+    $global:GroupCounter = $global:GroupCounter | Sort-Object -unique
+    $global:mailUniversalSecurityGroupCounter = $global:mailUniversalSecurityGroupCounter | Sort-Object -unique
+    $global:mailUniversalDistributionGroupCounter = $global:mailUniversalDistributionGroupCounter | Sort-Object -unique
+    $global:userMailboxCounter = $global:userMailboxCounter | Sort-Object -Unique
+    $global:mailUserCounter = $global:mailUserCounter | Sort-Object -Unique
+    $global:guestMailUserCounter = $global:guestMailUserCounter | Sort-Object -Unique
+    $global:mailContactCounter = $global:mailContactCounter | Sort-Object -Unique
+    $global:groupMailboxCounter = $global:groupMailboxCounter | Sort-Object -Unique
+    $global:dynamicGroupCounter = $global:dynamicGroupCounter | Sort-Object -Unique
+    $global:userCounter = $global:userCounter | Sort-Object -Unique
 
     start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID
 
