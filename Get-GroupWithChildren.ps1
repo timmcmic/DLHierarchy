@@ -148,7 +148,7 @@ Function Get-GroupWithChildren()
 
                 try {
                     $returnObject = get-o365UnifiedGroup -identity $objectID -ErrorAction Stop
-
+                    $global:groupMailboxCounter++
                 }
                 catch {
                     out-logfile -string "Unable to obtain Exchange Online Unified Group."
