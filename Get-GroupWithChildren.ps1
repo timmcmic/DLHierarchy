@@ -146,18 +146,19 @@ Function Get-GroupWithChildren()
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online Mail Enabled Distribution Group."
-                out-logfile -string $_
-                out-logfile -string "Trying to obtain object as Unified Group."
-
-                try {
-                    $returnObject = get-o365UnifiedGroup -identity $objectID -ErrorAction Stop
-                    $global:groupMailboxCounter+=$returnObject.exchangeObjectID
-                }
-                catch {
-                    out-logfile -string "Unable to obtain Exchange Online Unified Group."
-                    out-logfile -string $_ -isError:$TRUE
-                }
+                out-logfile -string $_ -isError:$TRUE
             } 
+        }
+        elseif ($queryType -eq $functionExchangeGroupMailbox)
+        {
+            try {
+                $returnObject = get-o365UnifiedGroup -identity $objectID -ErrorAction Stop
+                $global:groupMailboxCounter+=$returnObject.exchangeObjectID
+            }
+            catch {
+                out-logfile -string "Unable to obtain Exchange Online Unified Group."
+                out-logfile -string $_ -isError:$TRUE
+            }
         }
         elseif ($queryType -eq $functionExchangeDynamicGroup)
         {
