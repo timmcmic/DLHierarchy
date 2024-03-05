@@ -243,6 +243,40 @@ function start-HTMLOutput
                 new-htmlTable -DataTable ($global:msGraphObjects | select-object DisplayName,Id,Mail,MailEnabled,MailNickname,ProxyAddresses,SecurityEnabled | sort-object ID -Unique) -Filtering {
                 } -AutoSize
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+            new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
+                New-HTMLPanel {
+                    New-HTMLChart -Gradient {
+                        New-ChartDonut -Name 'Groups' -Value $global:groupCounter
+                        New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter
+                        new-ChartDonut -Name 'MailSecurityGroups' -value $global:mailUniversalSecurityGroupCounter
+                        new-chartDonut -name 'MailDistributionGroups' -value $global:mailUniversalDistributionGroupCounter
+                        new-chartDonut -name 'UnifiedGroups' -value $global:groupMailboxCounter
+                    }
+                }
+                New-HTMLPanel {
+                    New-HTMLChart -Gradient {
+                        New-ChartDonut -Name 'Users' -Value $global:userCounter
+                        New-ChartDonut -Name 'MailContacts' -Value $global:mailContactCounter
+                        New-ChartDonut -Name 'GuestMailUsers' -Value $global:guestMailUserCounter
+                        New-ChartDonut -Name 'MailUsers' -Value $global:mailUserCounter
+                        New-ChartDonut -Name 'UserMailbox' -Value $global:userMailboxCounter
+                    }
+                }
+                New-HTMLPanel {
+                    New-HTMLChart -Gradient {
+                        New-ChartDonut -Name 'Groups' -Value $global:groupCounter
+                        New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter
+                        new-ChartDonut -Name 'MailSecurityGroups' -value $global:mailUniversalSecurityGroupCounter
+                        new-chartDonut -name 'MailDistributionGroups' -value $global:mailUniversalDistributionGroupCounter
+                        new-chartDonut -name 'UnifiedGroups' -value $global:groupMailboxCounter
+                        New-ChartDonut -Name 'Users' -Value $global:userCounter
+                        New-ChartDonut -Name 'MailContacts' -Value $global:mailContactCounter
+                        New-ChartDonut -Name 'GuestMailUsers' -Value $global:guestMailUserCounter
+                        New-ChartDonut -Name 'MailUsers' -Value $global:mailUserCounter
+                        New-ChartDonut -Name 'UserMailbox' -Value $global:userMailboxCounter
+                    }
+                }
+            } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
         } -Online -ShowHTML
     }
     elseif ($outputType -eq $functionLDAPType)
