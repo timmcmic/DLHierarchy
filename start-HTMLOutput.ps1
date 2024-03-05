@@ -137,7 +137,13 @@ function New-HTMLTreeChildNodes
     }
     elseif ($outputType -eq $functionLDAPType)
     {
-        foreach ($child in $node.children)
+        $sorted = New-Object System.Collections.Generic.List[pscustomobject]
+        $node.Children | % { $sorted.Add($_) }
+     
+        $sorted = [System.Linq.Enumerable]::OrderBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.objectClass })
+        $sorted = [System.Linq.Enumerable]::ThenBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.Name })
+
+        foreach ($child in $sorted)
         {
             $string = get-nodeString -node $child -outputType $functionLDAPType
             out-logfile -string ("Prcessing HTML: "+$string)

@@ -14,12 +14,6 @@ Function Print-Tree()
     $functionExchangeOnlineType = "ExchangeOnline"
     $functionLDAPType = "LDAP"
 
-    $sorted = New-Object System.Collections.Generic.List[pscustomobject]
-    $node.Children | % { $sorted.Add($_) }
- 
-    $sorted = [System.Linq.Enumerable]::OrderBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.objectClass })
-    $sorted = [System.Linq.Enumerable]::ThenBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.Name })
-
     if ($outputType -eq $functionMSGraphType)
     {
         $string = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
@@ -60,6 +54,12 @@ Function Print-Tree()
         out-logfile -string  (("-" * $indent) + $string)
 
         $global:outputFile += (("-" * $indent) + $string +"`n")
+
+        $sorted = New-Object System.Collections.Generic.List[pscustomobject]
+        $node.Children | % { $sorted.Add($_) }
+     
+        $sorted = [System.Linq.Enumerable]::OrderBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.objectClass })
+        $sorted = [System.Linq.Enumerable]::ThenBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.Name })
 
         foreach ($child in $sorted)
         {
