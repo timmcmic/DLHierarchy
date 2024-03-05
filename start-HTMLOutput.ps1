@@ -218,40 +218,40 @@ function start-HTMLOutput
                 } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
             }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
             new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
-                new-htmlTable -DataTable ($global:exchangeObjects | select-object DisplayName,Alias,ExternalDirectoryObjectId,ExchangeObjectId,Identity,ID,Name,PrimarySmtpAddress,EmailAddresses,LegacyExchangeDN,externalEmailAddress,RecipientType,RecipientTypeDetails,GroupType,IsDirSynced | sort-object externalDirectoryObjectID -Unique) -Filtering {
+                new-htmlTable -DataTable ($global:exchangeObjects | select-object DisplayName,Alias,ExternalDirectoryObjectId,ExchangeObjectId,Identity,ID,Name,PrimarySmtpAddress,EmailAddresses,LegacyExchangeDN,externalEmailAddress,RecipientType,RecipientTypeDetails,GroupType,IsDirSynced | sort-object exchangeObjectID -Unique) -Filtering {
                 } -AutoSize
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
             new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
                 New-HTMLPanel {
                     New-HTMLChart -Gradient {
-                        New-ChartDonut -Name 'Groups' -Value $global:groupCounter
-                        New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter
-                        new-ChartDonut -Name 'MailSecurityGroups' -value $global:mailUniversalSecurityGroupCounter
-                        new-chartDonut -name 'MailDistributionGroups' -value $global:mailUniversalDistributionGroupCounter
-                        new-chartDonut -name 'UnifiedGroups' -value $global:groupMailboxCounter
+                        New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
+                        New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
+                        new-ChartDonut -Name 'MailSecurityGroups' -value $global:mailUniversalSecurityGroupCounter.count
+                        new-chartDonut -name 'MailDistributionGroups' -value $global:mailUniversalDistributionGroupCounter.count
+                        new-chartDonut -name 'UnifiedGroups' -value $global:groupMailboxCounter.count
                     }
                 }
                 New-HTMLPanel {
                     New-HTMLChart -Gradient {
-                        New-ChartDonut -Name 'Users' -Value $global:userCounter
-                        New-ChartDonut -Name 'MailContacts' -Value $global:mailContactCounter
-                        New-ChartDonut -Name 'GuestMailUsers' -Value $global:guestMailUserCounter
-                        New-ChartDonut -Name 'MailUsers' -Value $global:mailUserCounter
-                        New-ChartDonut -Name 'UserMailbox' -Value $global:userMailboxCounter
+                        New-ChartDonut -Name 'Users' -Value $global:userCounter.count
+                        New-ChartDonut -Name 'MailContacts' -Value $global:mailContactCounter.count
+                        New-ChartDonut -Name 'GuestMailUsers' -Value $global:guestMailUserCounter.count
+                        New-ChartDonut -Name 'MailUsers' -Value $global:mailUserCounter.count
+                        New-ChartDonut -Name 'UserMailbox' -Value $global:userMailboxCounter.count
                     }
                 }
                 New-HTMLPanel {
                     New-HTMLChart -Gradient {
-                        New-ChartDonut -Name 'Groups' -Value $global:groupCounter
-                        New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter
-                        new-ChartDonut -Name 'MailSecurityGroups' -value $global:mailUniversalSecurityGroupCounter
-                        new-chartDonut -name 'MailDistributionGroups' -value $global:mailUniversalDistributionGroupCounter
-                        new-chartDonut -name 'UnifiedGroups' -value $global:groupMailboxCounter
-                        New-ChartDonut -Name 'Users' -Value $global:userCounter
-                        New-ChartDonut -Name 'MailContacts' -Value $global:mailContactCounter
-                        New-ChartDonut -Name 'GuestMailUsers' -Value $global:guestMailUserCounter
-                        New-ChartDonut -Name 'MailUsers' -Value $global:mailUserCounter
-                        New-ChartDonut -Name 'UserMailbox' -Value $global:userMailboxCounter
+                        New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
+                        New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
+                        new-ChartDonut -Name 'MailSecurityGroups' -value $global:mailUniversalSecurityGroupCounter.count
+                        new-chartDonut -name 'MailDistributionGroups' -value $global:mailUniversalDistributionGroupCounter.count
+                        new-chartDonut -name 'UnifiedGroups' -value $global:groupMailboxCounter.count
+                        New-ChartDonut -Name 'Users' -Value $global:userCounter.count
+                        New-ChartDonut -Name 'MailContacts' -Value $global:mailContactCounter.count
+                        New-ChartDonut -Name 'GuestMailUsers' -Value $global:guestMailUserCounter.count
+                        New-ChartDonut -Name 'MailUsers' -Value $global:mailUserCounter.count
+                        New-ChartDonut -Name 'UserMailbox' -Value $global:userMailboxCounter.count
                     }
                 }
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px

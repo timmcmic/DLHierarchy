@@ -156,16 +156,16 @@ Function get-DLHierarchyFromExchangeOnline
     [int]$defaultIndent = 0
 
     $global:exchangeObjects =@()
-    $global:groupCounter = 0
-    $global:mailUniversalSecurityGroupCounter = 0
-    $global:mailUniversalDistributionGroupCounter = 0
-    $global:userMailboxCounter = 0
-    $global:mailUserCounter = 0
-    $global:guestMailUserCounter = 0
-    $global:mailContactCounter = 0
-    $global:groupMailboxCounter = 0
-    $global:dynamicGroupCounter = 0
-    $global:userCounter = 0
+    $global:groupCounter = @()
+    $global:mailUniversalSecurityGroupCounter = @()
+    $global:mailUniversalDistributionGroupCounter = @()
+    $global:userMailboxCounter = @()
+    $global:mailUserCounter = @()
+    $global:guestMailUserCounter = @()
+    $global:mailContactCounter = @()
+    $global:groupMailboxCounter = @()
+    $global:dynamicGroupCounter = @()
+    $global:userCounter = @()
     $totalObjectsProcessed = 0
 
 
@@ -306,20 +306,31 @@ Function get-DLHierarchyFromExchangeOnline
 
     out-logfile -string "Generate HTML File..."
 
+    $global:GroupCounter = $global:GroupCounter | Sort-Object ExchangeObjectId -unique
+    $global:mailUniversalSecurityGroupCounter = $global:mailUniversalSecurityGroupCounter | Sort-Object ExchangeObjectId -unique
+    $global:mailUniversalDistributionGroupCounter = $global:mailUniversalDistributionGroupCounter | Sort-Object ExchangeObjectId -unique
+    $global:userMailboxCounter = $global:userMailboxCounter | Sort-Object ExchangeObjectId -Unique
+    $global:mailUserCounter = $global:mailUserCounter | Sort-Object ExchangeObjectId -Unique
+    $global:guestMailUserCounter = $global:guestMailUserCounter | Sort-Object ExchangeObjectId -Unique
+    $global:mailContactCounter = $global:mailContactCounter | Sort-Object ExchangeObjectId -Unique
+    $global:groupMailboxCounter = $global:groupMailboxCounter | Sort-Object ExchangeObjectId -Unique
+    $global:dynamicGroupCounter = $global:dynamicGroupCounter | Sort-Object ExchangeObjectId -Unique
+    $global:userCounter = $global:userCounter | Sort-Object ExchangeObjectId -Unique
+
     start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID
 
-    out-logfile -string ("Total groups processed: "+$global:groupCounter)
-    out-logfile -string ("Total mail security groups processed: "+$global:mailUniversalSecurityGroupCounter)
-    out-logfile -string ("Total mail distribution groups processed: "+$global:mailUniversalDistributionGroupCounter)
-    out-logfile -string ("Total user mailbox processed: "+$global:userMailboxCounter)
-    out-logfile -string ("Total mail user processed: "+$global:mailUserCounter)
-    out-logfile -string ("Total guest mail user processed: "+$global:guestMailUserCounter)
-    out-logfile -string ("Total mail contact processed: "+$global:mailContactCounter)
-    out-logfile -string ("Total group mailbox processed: "+$global:groupMailboxCounter)
-    out-logfile -string ("Total dynamic groups processed: "+$global:dynamicGroupCounter)
-    out-logfile -string ("Total user processed: "+$global:userCounter)
+    out-logfile -string ("Total groups processed: "+$global:groupCounter.count)
+    out-logfile -string ("Total mail security groups processed: "+$global:mailUniversalSecurityGroupCounter.count)
+    out-logfile -string ("Total mail distribution groups processed: "+$global:mailUniversalDistributionGroupCounter.count)
+    out-logfile -string ("Total user mailbox processed: "+$global:userMailboxCounter.count)
+    out-logfile -string ("Total mail user processed: "+$global:mailUserCounter.count)
+    out-logfile -string ("Total guest mail user processed: "+$global:guestMailUserCounter.count)
+    out-logfile -string ("Total mail contact processed: "+$global:mailContactCounter.count)
+    out-logfile -string ("Total group mailbox processed: "+$global:groupMailboxCounter.count)
+    out-logfile -string ("Total dynamic groups processed: "+$global:dynamicGroupCounter.count)
+    out-logfile -string ("Total user processed: "+$global:userCounter.count)
 
-    $totalObjectsProcessed = $global:groupCounter+$global:mailUniversalSecurityGroupCounter+$global:mailUniversalDistributionGroupCounter+$global:userMailboxCounter+$global:mailUserCounter+$global:guestMailUserCounter+$global:mailContactCounter+$global:groupMailboxCounter+$global:dynamicGroupCounter+$global:userCounter
+    $totalObjectsProcessed = $global:groupCounter.count+$global:mailUniversalSecurityGroupCounter.count+$global:mailUniversalDistributionGroupCounter.count+$global:userMailboxCounter.count+$global:mailUserCounter.count+$global:guestMailUserCounter.count+$global:mailContactCounter.count+$global:groupMailboxCounter.count+$global:dynamicGroupCounter.count+$global:userCounter.count
 
     out-logfile -string ("Total objects processed: "+$totalObjectsProcessed)
 
@@ -334,16 +345,16 @@ Function get-DLHierarchyFromExchangeOnline
         MigrationStartTimeUTC = $telemetryStartTime
         MigrationEndTimeUTC = $telemetryEndTime
         MigrationErrors = $telemetryError
-        GroupsProcessed = $global:groupCounter
-        MailSecurityGroupsProcessed = $global:mailUniversalSecurityGroupCounter
-        MailDistributionGroupsProcessed = $global:mailUniversalDistributionGroupCounter
-        UserMailboxProcessed = $global:userMailboxCounter
-        MailUsersProcessed = $global:mailUserCounter
-        GuestMailUserProcessed = $global:guestMailUserCounter
-        MailContactProcessed = $global:mailContactCounter
-        GroupMailboxProcessed = $global:groupMailboxCounter
-        DynamicGroupsProcessed = $global:dynamicGroupCounter
-        UsersProcessed = $global:userCounter
+        GroupsProcessed = $global:groupCounter.count
+        MailSecurityGroupsProcessed = $global:mailUniversalSecurityGroupCounter.count
+        MailDistributionGroupsProcessed = $global:mailUniversalDistributionGroupCounter.count
+        UserMailboxProcessed = $global:userMailboxCounter.count
+        MailUsersProcessed = $global:mailUserCounter.count
+        GuestMailUserProcessed = $global:guestMailUserCounter.count
+        MailContactProcessed = $global:mailContactCounter.count
+        GroupMailboxProcessed = $global:groupMailboxCounter.count
+        DynamicGroupsProcessed = $global:dynamicGroupCounter.count
+        UsersProcessed = $global:userCounter.count
         TotalObjectsProcessed = $totalObjectsProcessed
     }
 
