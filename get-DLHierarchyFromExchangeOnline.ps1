@@ -301,13 +301,7 @@ Function get-DLHierarchyFromExchangeOnline
 
     out-logfile -string "Print hierarchy to log file."
 
-    $sorted = New-Object System.Collections.Generic.List[pscustomobject]
-    $tree.Children | % { $sorted.Add($_) }
-    
-    $sorted = [System.Linq.Enumerable]::OrderBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.RecipientTypeDetails })
-    $sorted = [System.Linq.Enumerable]::ThenBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.DisplayName })
-
-    print-tree -node $sorted -indent $defaultIndent -outputType $exchangeOnlineType
+    print-tree -node $tree -indent $defaultIndent -outputType $exchangeOnlineType
 
     out-logfile -string "Export hierarchy to file."
 
@@ -329,7 +323,7 @@ Function get-DLHierarchyFromExchangeOnline
     $global:sharedMailboxCounter = $global:sharedMailboxCounter | Sort-Object -Unique
     $global:roomMailboxCounter = $global:roomMailboxCounter | Sort-Object -Unique
 
-    start-HTMLOutput -node $sorted -outputType $exchangeOnlineType -groupObjectID $groupObjectID
+    start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID
 
     out-logfile -string ("Total groups processed: "+$global:groupCounter.count)
     out-logfile -string ("Total mail security groups processed: "+$global:mailUniversalSecurityGroupCounter.count)

@@ -222,13 +222,7 @@ Function get-DLHierachyFromLDAP
 
     out-logfile -string "Print hierarchy to log file."
 
-    $sorted = New-Object System.Collections.Generic.List[pscustomobject]
-    $tree.Children | % { $sorted.Add($_) }
-    
-    $sorted = [System.Linq.Enumerable]::OrderBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.objectClass })
-    $sorted = [System.Linq.Enumerable]::ThenBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.Name })
-
-    print-tree -node $sorted -indent $defaultIndent -outputType $LDAPType
+    print-tree -node $tree -indent $defaultIndent -outputType $LDAPType
 
     out-logfile -string "Export hierarchy to file."
 
@@ -241,7 +235,7 @@ Function get-DLHierachyFromLDAP
 
     out-logfile -string "Generate HTML File..."
 
-    start-HTMLOutput -node $sorted -outputType $LDAPType -groupObjectID $groupObjectID
+    start-HTMLOutput -node $tree -outputType $LDAPType -groupObjectID $groupObjectID
 
     $totalObjectsProcessed = $global:groupCounter.count + $global:contactCounter.count + $global:userCounter.count +$global:dynamicGroupCounter.count
 
