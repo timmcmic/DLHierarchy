@@ -363,11 +363,6 @@ Function Get-GroupWithChildren()
             $functionObject.DisplayName = $functionObject.DisplayName + " (Circular Membership)"
         }
 
-        if ($functionObject.displayName -eq "")
-        {
-            $functionObject.displayName = $functionObject.name
-        }
-
         $node = New-TreeNode -object $functionObject -children $childNodes
     }
 
@@ -560,11 +555,19 @@ Function Get-GroupWithChildren()
             {
                 $functionObject.displayName = $functionObject.name
             }
+            elseif ($functionObject.displayName -eq $NULL)
+            {
+                $functionObject.displayName = $functionObject.name
+            }
             
             $functionObject.DisplayName = $functionObject.DisplayName + " (Circular Membership)"
         }
 
         if ($functionObject.displayName -eq "")
+        {
+            $functionObject.displayName = $functionObject.name
+        }
+        elseif ($functionObject.displayName -eq $NULL)
         {
             $functionObject.displayName = $functionObject.name
         }
