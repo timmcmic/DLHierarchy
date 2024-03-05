@@ -222,7 +222,13 @@ Function get-DLHierachyFromLDAP
 
     out-logfile -string "Print hierarchy to log file."
 
-    print-tree -node $tree -indent $defaultIndent -outputType $LDAPType
+    $sorted = New-Object System.Collections.Generic.List[pscustomobject]
+    $tree.Children | % { $sorted.Add($_) }
+    
+    $sorted = [System.Linq.Enumerable]::OrderBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.objectClass })
+    $sorted = [System.Linq.Enumerable]::ThenBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.Name })
+
+    print-tree -node $sorted -indent $defaultIndent -outputType $LDAPType
 
     out-logfile -string "Export hierarchy to file."
 
