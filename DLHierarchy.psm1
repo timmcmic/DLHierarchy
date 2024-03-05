@@ -320,7 +320,7 @@ Function get-DLHierachyFromGraph
 
     out-logfile -string "Generate HTML File..."
 
-    start-HTMLOutput -node $sorted -outputType $msGraphType -groupObjectID $groupObjectID
+    start-HTMLOutput -node $tree -outputType $msGraphType -groupObjectID $groupObjectID
 
     out-logfile -string ("Graph group count: "+$global:msGraphGroupCount.count)
     out-logfile -string ("Graph contact count: "+$global:msGraphContactCount.count)
