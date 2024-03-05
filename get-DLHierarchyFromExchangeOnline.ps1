@@ -166,6 +166,9 @@ Function get-DLHierarchyFromExchangeOnline
     $global:groupMailboxCounter = @()
     $global:dynamicGroupCounter = @()
     $global:userCounter = @()
+    $global:equipmentMailboxCounter = @()
+    $global:sharedMailboxCounter = @()
+    $global:roomMailboxCounter = @()
     $totalObjectsProcessed = 0
 
 
@@ -316,6 +319,9 @@ Function get-DLHierarchyFromExchangeOnline
     $global:groupMailboxCounter = $global:groupMailboxCounter | Sort-Object -Unique
     $global:dynamicGroupCounter = $global:dynamicGroupCounter | Sort-Object -Unique
     $global:userCounter = $global:userCounter | Sort-Object -Unique
+    $global:equipmentMailboxCounter = $global:equipmentMailboxCounter | Sort-Object -Unique
+    $global:sharedMailboxCounter = $global:sharedMailboxCounter | Sort-Object -Unique
+    $global:roomMailboxCounter = $global:roomMailboxCounter | Sort-Object -Unique
 
     start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID
 
@@ -329,8 +335,11 @@ Function get-DLHierarchyFromExchangeOnline
     out-logfile -string ("Total group mailbox processed: "+$global:groupMailboxCounter.count)
     out-logfile -string ("Total dynamic groups processed: "+$global:dynamicGroupCounter.count)
     out-logfile -string ("Total user processed: "+$global:userCounter.count)
+    out-logfile -string ("Total equipment mailbox processed: "+$global:equipmentMailboxCounter.count)
+    out-logfile -string ("Total shared mailbox processed: "+$global:sharedMailboxCounter.count)
+    out-logfile -string ("Total room mailbox processed: "+$global:roomMailboxCounter.count)
 
-    $totalObjectsProcessed = $global:groupCounter.count+$global:mailUniversalSecurityGroupCounter.count+$global:mailUniversalDistributionGroupCounter.count+$global:userMailboxCounter.count+$global:mailUserCounter.count+$global:guestMailUserCounter.count+$global:mailContactCounter.count+$global:groupMailboxCounter.count+$global:dynamicGroupCounter.count+$global:userCounter.count
+    $totalObjectsProcessed = $global:groupCounter.count+$global:mailUniversalSecurityGroupCounter.count+$global:mailUniversalDistributionGroupCounter.count+$global:userMailboxCounter.count+$global:mailUserCounter.count+$global:guestMailUserCounter.count+$global:mailContactCounter.count+$global:groupMailboxCounter.count+$global:dynamicGroupCounter.count+$global:userCounter.count+$global:equipmentMailboxCounter.count+$global:sharedMailboxCounter.count+$global:roomMailboxCounter.count
 
     out-logfile -string ("Total objects processed: "+$totalObjectsProcessed)
 

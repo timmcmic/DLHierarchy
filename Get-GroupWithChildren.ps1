@@ -93,6 +93,9 @@ Function Get-GroupWithChildren()
     $functionExchangeMailContact = "MailContact"
     $functionExchangeGroupMailbox = "GroupMailbox"
     $functionExchangeDynamicGroup = "DynamicDistributionGroup"
+    $functionExchangeSharedMailbox = "SharedMailbox"
+    $functionExchangeRoomMailbox = "RoomMailbox"
+    $functionExchangeEquipmentMailbox = "EquipmentMailbox"
     $functionExchangeUser = "User"
     $isExchangeGroupType = $false
 
@@ -550,7 +553,7 @@ Function Get-GroupWithChildren()
                 $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
                 $global:childCounter++
                 out-logfile -string $global:childCounter.tostring()
-                $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.recipientType -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
+                $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.RecipientTypeDetails -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
                 $childNodes += $childNode
                 $global:childCounter--
                 out-logfile -string $global:childCounter.tostring()
