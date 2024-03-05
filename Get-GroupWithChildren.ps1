@@ -644,7 +644,7 @@ Function Get-GroupWithChildren()
                 {
                     out-logfile -string "Expand full group membership eanbled."
 
-                    $children = $functionObject.member
+                    $children = ($functionObject.member | sort-object $functionObject.member)
                 }
                 else
                 {
@@ -698,7 +698,7 @@ Function Get-GroupWithChildren()
             $functionObject.displayName = $functionObject.name
         }
 
-        $node = New-TreeNode -object $functionObject -children $childNodes
+        $node = New-TreeNode -object $functionObject -children ($childNodes | sort-object name)
     }
 
     $global:childCounter--
