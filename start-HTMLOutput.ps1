@@ -283,15 +283,6 @@ function start-HTMLOutput
                 new-htmlTable -DataTable ($global:msGraphObjects | select-object DisplayName,Id,Mail,MailEnabled,MailNickname,ProxyAddresses,SecurityEnabled | sort-object ID -Unique) -Filtering {
                 } -AutoSize
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
-            new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
-                New-HTMLPanel {
-                    New-HTMLChart -Gradient {
-                        New-ChartDonut -Name 'Groups' -Value $global:msGraphGroupCount.count
-                        New-ChartDonut -Name 'Users' -Value $global:msGraphUserCount.count
-                        new-ChartDonut -Name 'Contactrs' -value $global:msGraphContactCount.count
-                    }
-                }
-            } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
         } -Online -ShowHTML
     }
     elseif ($outputType -eq $functionLDAPType)
