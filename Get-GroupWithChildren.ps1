@@ -309,6 +309,7 @@ Function Get-GroupWithChildren()
                 try {
                     $functionObject = get-MGGroup -GroupId $objectID -ErrorAction Stop
                     $global:msGraphObjects+=$functionObject
+                    $global:msGraphGroupCount+=$functionObject.id
                 }
                 catch {
                     out-logfile -string $_
@@ -321,6 +322,7 @@ Function Get-GroupWithChildren()
                 try {
                     $functionObject = get-MGUser -userID $objectID -ErrorAction Stop
                     $global:msGraphObjects+=$functionObject
+                    $global:msGraphUserCount+=$functionObject.id
                 }
                 catch {
                     out-logfile -string $_
@@ -333,6 +335,7 @@ Function Get-GroupWithChildren()
                 try {
                     $functionObject = get-MGContact -OrgContactId $objectID -errorAction Stop
                     $global:msGraphObjects+=$functionObject
+                    $global:msGraphContactCount+=$functionObject.Id
                 }
                 catch {
                     out-logfile -string $_

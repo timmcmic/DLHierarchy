@@ -154,6 +154,9 @@ Function get-DLHierachyFromGraph
     [int]$defaultIndent = 0
 
     $global:msGraphObjects = @()
+    $global:msGraphUserCount = @()
+    $global:msGraphGroupCount = @()
+    $global:msGraphContactCount = @()
 
     #Define windows title.
 
