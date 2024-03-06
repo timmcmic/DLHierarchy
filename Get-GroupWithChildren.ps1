@@ -124,7 +124,9 @@ Function Get-GroupWithChildren()
             [Parameter(Mandatory = $true)]
             $objectID,
             [Parameter(Mandatory = $false)]
-            $queryType
+            $queryType,
+            [Parameter(Mandatory = $false)]
+            $secondTry = $FALSE
         )
 
         if ($queryType -eq $functionExchangeMailUniversalSecurityGroup)
@@ -168,7 +170,15 @@ Function Get-GroupWithChildren()
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online Dynamic Distribution Group."
-                out-logfile -string $_ -isError:$TRUE
+
+                if ($secondTry -eq $FALSE)
+                {
+                    out-logfile -string $_ -isError:$TRUE
+                }
+                else 
+                {
+                    out-logfile -string $_
+                }
             }
         }
         elseif ($queryType -eq $functionExchangeGroup) 
@@ -178,11 +188,21 @@ Function Get-GroupWithChildren()
                 $global:groupCounter+=$returnObject.exchangeObjectID
             }
             catch {
-                out-logfile -string "Unable to obtain Exchange Group object."
-                out-logfile -string "This error may be expected.  If a security group was previously mail enabled.."
-                out-logfile -string "And then mail disalbed it remains in Exchange Online and could be a member..."
-                out-logfile -string "But is not returned by get-Group."
-                out-logfile -string $_ -isError:$true
+                out-logfile -string "It is possible the root group is a dynamic group - this is not returned by get-group."
+                out-logfile -string "Try obtaining dynamic group."
+
+                try {
+                    $returnObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeDynamicGroup -ErrorAction Stop
+                }
+                catch {
+                    out-logfile -string "Group is neither a root dynamic group or returned by get-group."
+                    out-logfile -string "Unable to obtain Exchange Group object."
+                    out-logfile -string "This error may be expected.  If a security group was previously mail enabled.."
+                    out-logfile -string "And then mail disalbed it remains in Exchange Online and could be a member..."
+                    out-logfile -string "But is not returned by get-Group."
+                    out-logfile -string "Testing to ensure root group is not a dynamic group."
+                    out-logfile -string $_ -isError:$true
+                }
             } 
         }
 
