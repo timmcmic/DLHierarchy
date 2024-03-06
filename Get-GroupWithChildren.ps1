@@ -192,7 +192,7 @@ Function Get-GroupWithChildren()
                 out-logfile -string "Try obtaining dynamic group."
 
                 try {
-                    $returnObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeDynamicGroup -ErrorAction Stop
+                    $returnObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeDynamicGroup -ErrorAction Stop -secondTry $TRUE
                 }
                 catch {
                     out-logfile -string "Group is neither a root dynamic group or returned by get-group."
