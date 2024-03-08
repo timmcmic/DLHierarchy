@@ -153,6 +153,8 @@ Function get-DLHierachyFromGraph
 
     [int]$defaultIndent = 0
 
+    $global:childCounter = 0
+
     $global:msGraphObjects = @()
     $global:msGraphUserCount = @()
     $global:msGraphGroupCount = @()

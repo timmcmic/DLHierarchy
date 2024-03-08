@@ -117,6 +117,34 @@ Function Get-GroupWithChildren()
     #Exchange Functions
     #===============================================================================
 
+    function reset-exchangeOnlinePowershell
+    {
+        if ($exchangeOnlineCertificateThumbPrint -eq "")
+        {
+            #User specified non-certifate authentication credentials.
+
+                try {
+                    New-ExchangeOnlinePowershellSession -exchangeOnlineCredentials $exchangeOnlineCredential -exchangeOnlineEnvironmentName $exchangeOnlineEnvironmentName -debugLogPath $logFolderPath
+                }
+                catch {
+                    out-logfile -string "Unable to create the exchange online connection using credentials."
+                    out-logfile -string $_ -isError:$TRUE
+                }
+        }
+        elseif ($exchangeOnlineCertificateThumbPrint -ne "")
+        {
+            #User specified thumbprint authentication.
+
+                try {
+                    new-ExchangeOnlinePowershellSession -exchangeOnlineCertificateThumbPrint $exchangeOnlineCertificateThumbPrint -exchangeOnlineAppId $exchangeOnlineAppID -exchangeOnlineOrganizationName $exchangeOnlineOrganizationName -exchangeOnlineEnvironmentName $exchangeOnlineEnvironmentName -debugLogPath $logFolderPath
+                }
+                catch {
+                    out-logfile -string "Unable to create the exchange online connection using certificate."
+                    out-logfile -string $_ -isError:$TRUE
+                }
+        }
+    }
+
     function get-ExchangeGroup
     {
         Param
@@ -241,6 +269,7 @@ Function Get-GroupWithChildren()
                     else {
                         start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
                         disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
                     }
                 } 
             }
@@ -262,6 +291,7 @@ Function Get-GroupWithChildren()
                     else {
                         start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
                         disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
                     }
                 } 
             }
@@ -283,6 +313,7 @@ Function Get-GroupWithChildren()
                     else {
                         start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
                         disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
                     }
                 } 
             }
@@ -304,6 +335,7 @@ Function Get-GroupWithChildren()
                     else {
                         start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
                         disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
                     }
                 } 
             }
@@ -325,35 +357,12 @@ Function Get-GroupWithChildren()
                     else {
                         start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
                         disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
                     }
                 } 
             }
             elseif ($queryType -eq $functionExchangeMailUser)
             {
-                if ($exchangeOnlineCertificateThumbPrint -eq "")
-                {
-                    #User specified non-certifate authentication credentials.
-
-                        try {
-                            New-ExchangeOnlinePowershellSession -exchangeOnlineCredentials $exchangeOnlineCredential -exchangeOnlineEnvironmentName $exchangeOnlineEnvironmentName -debugLogPath $logFolderPath
-                        }
-                        catch {
-                            out-logfile -string "Unable to create the exchange online connection using credentials."
-                            out-logfile -string $_ -isError:$TRUE
-                        }
-                }
-                elseif ($exchangeOnlineCertificateThumbPrint -ne "")
-                {
-                    #User specified thumbprint authentication.
-
-                        try {
-                            new-ExchangeOnlinePowershellSession -exchangeOnlineCertificateThumbPrint $exchangeOnlineCertificateThumbPrint -exchangeOnlineAppId $exchangeOnlineAppID -exchangeOnlineOrganizationName $exchangeOnlineOrganizationName -exchangeOnlineEnvironmentName $exchangeOnlineEnvironmentName -debugLogPath $logFolderPath
-                        }
-                        catch {
-                            out-logfile -string "Unable to create the exchange online connection using certificate."
-                            out-logfile -string $_ -isError:$TRUE
-                        }
-                }
                 try {
                     $returnObject = get-o365MailUser -identity $objectID -ErrorAction Stop
                     $global:mailUserCounter+=$returnObject.exchangeObjectID
@@ -370,6 +379,7 @@ Function Get-GroupWithChildren()
                     else {
                         start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
                         disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
                     }
                 } 
             }
@@ -391,6 +401,7 @@ Function Get-GroupWithChildren()
                     else {
                         start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
                         disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
                     }
                 } 
             }
@@ -413,6 +424,7 @@ Function Get-GroupWithChildren()
                     else {
                         start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
                         disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
                     }
                 }
             }
