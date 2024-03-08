@@ -219,95 +219,112 @@ Function Get-GroupWithChildren()
             $queryType
         )
 
-        if ($queryType -eq $functionExchangeUser)
-        {
-            try {
-                $returnObject = get-o365user -identity $objectID -ErrorAction Stop
-                $global:userCounter+=$returnObject.exchangeObjectID
-            }
-            catch {
-                out-logfile -string "Unable to obtain Exchange Online User Object"
-                out-logfile -string $_ -isError:$TRUE
-            } 
-        }
-        elseif ($queryType -eq $functionExchangeSharedMailbox)
-        {
-            try {
-                $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
-                $global:sharedMailboxCounter+=$returnObject.exchangeObjectID
-            }
-            catch {
-                out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
-                out-logfile -string $_ -isError:$TRUE
-            } 
-        }
-        elseif ($queryType -eq $functionExchangeEquipmentMailbox)
-        {
-            try {
-                $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
-                $global:equipmentMailboxCounter+=$returnObject.exchangeObjectID
-            }
-            catch {
-                out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
-                out-logfile -string $_ -isError:$TRUE
-            } 
-        }
-        elseif ($queryType -eq $functionExchangeRoomMailbox)
-        {
-            try {
-                $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
-                $global:roomMailboxCounter+=$returnObject.exchangeObjectID
-            }
-            catch {
-                out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
-                out-logfile -string $_ -isError:$TRUE
-            } 
-        }
-        elseif ($queryType -eq $functionExchangeUserMailbox)
-        {
-            try {
-                $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
-                $global:userMailboxCounter+=$returnObject.exchangeObjectID
-            }
-            catch {
-                out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
-                out-logfile -string $_ -isError:$TRUE
-            } 
-        }
-        elseif ($queryType -eq $functionExchangeMailUser)
-        {
-            try {
-                $returnObject = get-o365MailUser -identity $objectID -ErrorAction Stop
-                $global:mailUserCounter+=$returnObject.exchangeObjectID
-            }
-            catch {
-                out-logfile -string "Unable to obtain Exchange Online Mail User Object"
-                out-logfile -string $_ -isError:$TRUE
-            } 
-        }
-        elseif ($queryType -eq $functionExchangeGuestMailUser)
-        {
-            try {
-                $returnObject = get-o365MailUser -identity $objectID -ErrorAction Stop
-                $global:guestMailUserCounter+=$returnObject.exchangeObjectID
-            }
-            catch {
-                out-logfile -string "Unable to obtain Exchange Online Guest Mail Object"
-                out-logfile -string $_ -isError:$TRUE
-            } 
-        }
-        elseif ($queryType -eq $functionExchangeMailContact)
-        {
-            try {
-                $returnObject = get-o365contact -Identity $objectID -errorAction Stop
-                $global:mailContactCounter+=$returnObject.exchangeObjectID
+        $retryCounter = 0
+        $retryRequired = $TRUE
 
+        do {
+            if ($queryType -eq $functionExchangeUser)
+            {
+                try {
+                    $returnObject = get-o365user -identity $objectID -ErrorAction Stop
+                    $global:userCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    out-logfile -string "Unable to obtain Exchange Online User Object"
+                    out-logfile -string $_ -isError:$TRUE
+                } 
             }
-            catch {
-                out-logfile -string "Unable to obtain Exchange Online Mail Contact Object"
-                out-logfile -string $_ -isError:$TRUE
+            elseif ($queryType -eq $functionExchangeSharedMailbox)
+            {
+                try {
+                    $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
+                    $global:sharedMailboxCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                    out-logfile -string $_ -isError:$TRUE
+                } 
             }
-        }
+            elseif ($queryType -eq $functionExchangeEquipmentMailbox)
+            {
+                try {
+                    $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
+                    $global:equipmentMailboxCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                    out-logfile -string $_ -isError:$TRUE
+                } 
+            }
+            elseif ($queryType -eq $functionExchangeRoomMailbox)
+            {
+                try {
+                    $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
+                    $global:roomMailboxCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                    out-logfile -string $_ -isError:$TRUE
+                } 
+            }
+            elseif ($queryType -eq $functionExchangeUserMailbox)
+            {
+                try {
+                    $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
+                    $global:userMailboxCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                    out-logfile -string $_ -isError:$TRUE
+                } 
+            }
+            elseif ($queryType -eq $functionExchangeMailUser)
+            {
+                try {
+                    $returnObject = get-o365MailUser -identity $objectID -ErrorAction Stop
+                    $global:mailUserCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    out-logfile -string "Unable to obtain Exchange Online Mail User Object"
+                    out-logfile -string $_ -isError:$TRUE
+                } 
+            }
+            elseif ($queryType -eq $functionExchangeGuestMailUser)
+            {
+                try {
+                    $returnObject = get-o365MailUser -identity $objectID -ErrorAction Stop
+                    $global:guestMailUserCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    out-logfile -string "Unable to obtain Exchange Online Guest Mail Object"
+                    out-logfile -string $_ -isError:$TRUE
+                } 
+            }
+            elseif ($queryType -eq $functionExchangeMailContact)
+            {
+                try {
+                    $returnObject = get-o365contact -Identity $objectID -errorAction Stop
+                    $global:mailContactCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+
+                }
+                catch {
+                    out-logfile -string "Unable to obtain Exchange Online Mail Contact Object"
+                    out-logfile -string $_ -isError:$TRUE
+                }
+            }
+        } until (
+            $retryRequired -eq $FALSE
+        )
+
+        
 
         return $returnObject
     }
