@@ -231,8 +231,17 @@ Function Get-GroupWithChildren()
                     $retryRequired = $FALSE
                 }
                 catch {
-                    out-logfile -string "Unable to obtain Exchange Online User Object"
-                    out-logfile -string $_ -isError:$TRUE
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online User Object"
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                    }
                 } 
             }
             elseif ($queryType -eq $functionExchangeSharedMailbox)
@@ -243,8 +252,17 @@ Function Get-GroupWithChildren()
                     $retryRequired = $FALSE
                 }
                 catch {
-                    out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
-                    out-logfile -string $_ -isError:$TRUE
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                    }
                 } 
             }
             elseif ($queryType -eq $functionExchangeEquipmentMailbox)
@@ -255,8 +273,17 @@ Function Get-GroupWithChildren()
                     $retryRequired = $FALSE
                 }
                 catch {
-                    out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
-                    out-logfile -string $_ -isError:$TRUE
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                    }
                 } 
             }
             elseif ($queryType -eq $functionExchangeRoomMailbox)
@@ -267,8 +294,17 @@ Function Get-GroupWithChildren()
                     $retryRequired = $FALSE
                 }
                 catch {
-                    out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
-                    out-logfile -string $_ -isError:$TRUE
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                    }
                 } 
             }
             elseif ($queryType -eq $functionExchangeUserMailbox)
@@ -279,20 +315,62 @@ Function Get-GroupWithChildren()
                     $retryRequired = $FALSE
                 }
                 catch {
-                    out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
-                    out-logfile -string $_ -isError:$TRUE
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                    }
                 } 
             }
             elseif ($queryType -eq $functionExchangeMailUser)
             {
+                if ($exchangeOnlineCertificateThumbPrint -eq "")
+                {
+                    #User specified non-certifate authentication credentials.
+
+                        try {
+                            New-ExchangeOnlinePowershellSession -exchangeOnlineCredentials $exchangeOnlineCredential -exchangeOnlineEnvironmentName $exchangeOnlineEnvironmentName -debugLogPath $logFolderPath
+                        }
+                        catch {
+                            out-logfile -string "Unable to create the exchange online connection using credentials."
+                            out-logfile -string $_ -isError:$TRUE
+                        }
+                }
+                elseif ($exchangeOnlineCertificateThumbPrint -ne "")
+                {
+                    #User specified thumbprint authentication.
+
+                        try {
+                            new-ExchangeOnlinePowershellSession -exchangeOnlineCertificateThumbPrint $exchangeOnlineCertificateThumbPrint -exchangeOnlineAppId $exchangeOnlineAppID -exchangeOnlineOrganizationName $exchangeOnlineOrganizationName -exchangeOnlineEnvironmentName $exchangeOnlineEnvironmentName -debugLogPath $logFolderPath
+                        }
+                        catch {
+                            out-logfile -string "Unable to create the exchange online connection using certificate."
+                            out-logfile -string $_ -isError:$TRUE
+                        }
+                }
                 try {
                     $returnObject = get-o365MailUser -identity $objectID -ErrorAction Stop
                     $global:mailUserCounter+=$returnObject.exchangeObjectID
                     $retryRequired = $FALSE
                 }
                 catch {
-                    out-logfile -string "Unable to obtain Exchange Online Mail User Object"
-                    out-logfile -string $_ -isError:$TRUE
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Mail User Object"
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                    }
                 } 
             }
             elseif ($queryType -eq $functionExchangeGuestMailUser)
@@ -303,8 +381,17 @@ Function Get-GroupWithChildren()
                     $retryRequired = $FALSE
                 }
                 catch {
-                    out-logfile -string "Unable to obtain Exchange Online Guest Mail Object"
-                    out-logfile -string $_ -isError:$TRUE
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Guest Mail Object"
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                    }
                 } 
             }
             elseif ($queryType -eq $functionExchangeMailContact)
@@ -316,8 +403,17 @@ Function Get-GroupWithChildren()
 
                 }
                 catch {
-                    out-logfile -string "Unable to obtain Exchange Online Mail Contact Object"
-                    out-logfile -string $_ -isError:$TRUE
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Mail Contact Object"
+                        out-logfile -string $_ -isError:$TR
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                    }
                 }
             }
         } until (
