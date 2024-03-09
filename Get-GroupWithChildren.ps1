@@ -282,7 +282,7 @@ Function Get-GroupWithChildren()
             }
             
         } until (
-            $retyrRequired -eq $false
+            $retryRequired -eq $false
         )
 
         return $returnObject
