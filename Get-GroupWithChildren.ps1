@@ -157,15 +157,33 @@ Function Get-GroupWithChildren()
             $secondTry = $FALSE
         )
 
+        $retryCounter = 0
+        $retryRequired = $TRUE
+
+        do {
+            
+        } until (
+            $retyrRequired -eq $false
+        )
+
         if ($queryType -eq $functionExchangeMailUniversalSecurityGroup)
         {
             try {
                 $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
                 $global:mailUniversalSecurityGroupCounter+=$returnObject.exchangeObjectID
+                $retryRequired = $FALSE
             }
             catch {
-                out-logfile -string "Unable to obtain Exchange Online Mail Enabled Security Group."
-                out-logfile -string $_ -isError:$TRUE
+                if ($returnCounter -gt 4)
+                {
+                    out-logfile -string "Unable to obtain Exchange Online Mail Enabled Security Group."
+                    out-logfile -string $_ -isError:$TRUE
+                }
+                else {
+                    start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                    disable-allPowerShellSessions
+                    reset-exchangeOnlinePowershell
+                }
             } 
         }        
         elseif ($queryType -eq $functionExchangeMailUniversalDistributionGroup)
@@ -173,10 +191,19 @@ Function Get-GroupWithChildren()
             try {
                 $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
                 $global:mailUniversalDistributionGroupCounter+=$returnObject.exchangeObjectID
+                $retryRequired = $FALSE
             }
             catch {
-                out-logfile -string "Unable to obtain Exchange Online Mail Enabled Distribution Group."
-                out-logfile -string $_ -isError:$TRUE
+                if ($retryCounter -gt 4)
+                {
+                    out-logfile -string "Unable to obtain Exchange Online Mail Enabled Distribution Group."
+                    out-logfile -string $_ -isError:$TRUE
+                }
+                else {
+                    start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                    disable-allPowerShellSessions
+                    reset-exchangeOnlinePowershell
+                }
             } 
         }
         elseif ($queryType -eq $functionExchangeGroupMailbox)
@@ -184,10 +211,19 @@ Function Get-GroupWithChildren()
             try {
                 $returnObject = get-o365UnifiedGroup -identity $objectID -ErrorAction Stop
                 $global:groupMailboxCounter+=$returnObject.exchangeObjectID
+                $retryRequired = $FALSE
             }
             catch {
-                out-logfile -string "Unable to obtain Exchange Online Unified Group."
-                out-logfile -string $_ -isError:$TRUE
+                if ($retryCounter -gt 4)
+                {
+                    out-logfile -string "Unable to obtain Exchange Online Unified Group."
+                    out-logfile -string $_ -isError:$TRUE
+                }
+                else {
+                    start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                    disable-allPowerShellSessions
+                    reset-exchangeOnlinePowershell
+                }
             }
         }
         elseif ($queryType -eq $functionExchangeDynamicGroup)
@@ -195,13 +231,23 @@ Function Get-GroupWithChildren()
             try {
                 $returnObject = get-o365DynamicDistributionGroup -Identity $objectID -errorAction Stop
                 $global:dynamicGroupCounter+=$returnObject.exchangeObjectID
+                $retryRequired = $FALSE
             }
             catch {
                 out-logfile -string "Unable to obtain Exchange Online Dynamic Distribution Group."
 
                 if ($secondTry -eq $FALSE)
                 {
-                    out-logfile -string $_ -isError:$TRUE
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else
+                    {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
+                    }
                 }
                 else 
                 {
@@ -214,6 +260,7 @@ Function Get-GroupWithChildren()
             try {
                 $returnObject = get-o365group -identity $objectID -ErrorAction Stop
                 $global:groupCounter+=$returnObject.exchangeObjectID
+                $retryRequired = $FALSE
             }
             catch {
                 out-logfile -string "It is possible the root group is a dynamic group - this is not returned by get-group."
@@ -221,6 +268,7 @@ Function Get-GroupWithChildren()
 
                 try {
                     $returnObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeDynamicGroup -ErrorAction Stop -secondTry $TRUE
+                    $retryRequired = $FALSE
                 }
                 catch {
                     out-logfile -string "Group is neither a root dynamic group or returned by get-group."
@@ -431,8 +479,6 @@ Function Get-GroupWithChildren()
         } until (
             $retryRequired -eq $FALSE
         )
-
-        
 
         return $returnObject
     }
