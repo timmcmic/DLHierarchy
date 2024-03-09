@@ -174,6 +174,7 @@ Function Get-GroupWithChildren()
                 $retryRequired = $FALSE
             }
             catch {
+                $retryCounter++
                 if ($returnCounter -gt 4)
                 {
                     out-logfile -string "Unable to obtain Exchange Online Mail Enabled Security Group."
@@ -194,6 +195,7 @@ Function Get-GroupWithChildren()
                 $retryRequired = $FALSE
             }
             catch {
+                $retryCounter++
                 if ($retryCounter -gt 4)
                 {
                     out-logfile -string "Unable to obtain Exchange Online Mail Enabled Distribution Group."
@@ -214,6 +216,7 @@ Function Get-GroupWithChildren()
                 $retryRequired = $FALSE
             }
             catch {
+                $retryCounter++
                 if ($retryCounter -gt 4)
                 {
                     out-logfile -string "Unable to obtain Exchange Online Unified Group."
@@ -234,6 +237,7 @@ Function Get-GroupWithChildren()
                 $retryRequired = $FALSE
             }
             catch {
+                $retryCounter++
                 out-logfile -string "Unable to obtain Exchange Online Dynamic Distribution Group."
 
                 if ($secondTry -eq $FALSE)
