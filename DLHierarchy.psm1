@@ -155,9 +155,9 @@ Function get-DLHierachyFromGraph
 
     $global:childCounter = 0
 
-    $global:msGraphObjects = @()
     $global:msGraphUserCount = @()
     $global:msGraphGroupCount = @()
+    $global:msGraphGroupDynamicCount = @()
     $global:msGraphContactCount = @()
     $totalObjectsProcessed = 0
 
@@ -312,7 +312,7 @@ Function get-DLHierachyFromGraph
     $global:msGraphContactCount = $global:msGraphContactCount | Sort-Object -Unique
     $global:msGraphUserCount = $global:msGraphUserCount | Sort-Object -Unique
 
-    $totalObjectsProcessed = $global:msGraphGroupCount.count + $global:msGraphContactCount.count + $global:msGraphUserCount.count
+    $totalObjectsProcessed = $global:msGraphGroupCount.count + $global:msGraphContactCount.count + $global:msGraphUserCount.count + $global:msGraphGroupDynamicCount.count()
 
     out-logfile -string "Generate HTML File..."
 
@@ -338,6 +338,7 @@ Function get-DLHierachyFromGraph
         MigrationEndTimeUTC = $telemetryEndTime
         MigrationErrors = $telemetryError
         GroupsProcessed = $global:msGraphGroupCount.Count
+        DynamicGroupsProcessed = $global:msGraphGroupDynamicCount.Count
         ContactsProcessed = $global:msGraphContactCount.Count
         UsersProcessed = $global:msGraphUserCount.Count
         TotalObjectsProcessed = $totalObjectsProcessed
