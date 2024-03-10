@@ -153,6 +153,15 @@ Function get-DLHierachyFromGraph
 
     [int]$defaultIndent = 0
 
+    $global:childCounter = 0
+
+    $global:msGraphObjects = @()
+    $global:msGraphUserCount = @()
+    $global:msGraphGroupCount = @()
+    $global:msGraphGroupDynamicCount = @()
+    $global:msGraphContactCount = @()
+    $totalObjectsProcessed = 0
+
     #Define windows title.
 
     $windowTitle = ("Start-DistributionListMigration "+$groupSMTPAddress)
@@ -300,6 +309,23 @@ Function get-DLHierachyFromGraph
 
     out-HierarchyFile -outputFileName  ("Hierarchy-"+$logFileName) -logFolderPath $global:logFolderPath
 
+    $global:msGraphGroupCount = $global:msGraphGroupCount | Sort-Object -Unique
+    $global:msGraphContactCount = $global:msGraphContactCount | Sort-Object -Unique
+    $global:msGraphGroupDynamicCount = $global:msGraphGroupDynamicCount | sort-object -Unique
+    $global:msGraphUserCount = $global:msGraphUserCount | Sort-Object -Unique
+
+    $totalObjectsProcessed = $global:msGraphGroupCount.count + $global:msGraphContactCount.count + $global:msGraphUserCount.count + $global:msGraphGroupDynamicCount.count
+
+    out-logfile -string "Generate HTML File..."
+
+    start-HTMLOutput -node $tree -outputType $msGraphType -groupObjectID $groupObjectID
+
+    out-logfile -string ("Graph group count: "+$global:msGraphGroupCount.count)
+    out-logfile -string ("Graph contact count: "+$global:msGraphContactCount.count)
+    out-logfile -string ("Graph user count: "+$global:msGraphUserCount.count)
+    out-logfile -string ("Graph dynamic group count: "+$global:msGraphGroupDynamicCount.Count)
+    out-logfile -string ("Total Objects Processed: "+$totalObjectsProcessed)
+
     $telemetryEndTime = get-universalDateTime
     $telemetryElapsedSeconds = get-elapsedTime -startTime $telemetryStartTime -endTime $telemetryEndTime
 
@@ -314,6 +340,11 @@ Function get-DLHierachyFromGraph
         MigrationStartTimeUTC = $telemetryStartTime
         MigrationEndTimeUTC = $telemetryEndTime
         MigrationErrors = $telemetryError
+        GroupsProcessed = $global:msGraphGroupCount.Count
+        DynamicGroupsProcessed = $global:msGraphGroupDynamicCount.Count
+        ContactsProcessed = $global:msGraphContactCount.Count
+        UsersProcessed = $global:msGraphUserCount.Count
+        TotalObjectsProcessed = $totalObjectsProcessed
     }
 
     $telemetryEventMetrics = @{
@@ -332,4 +363,6 @@ Function get-DLHierachyFromGraph
         out-logfile -string $telemetryEventProperties
         send-TelemetryEvent -traceModuleName $traceModuleName -eventName $telemetryEventName -eventMetrics $telemetryEventMetrics -eventProperties $telemetryEventProperties
     }
+
+    disable-allPowerShellSessions
 }

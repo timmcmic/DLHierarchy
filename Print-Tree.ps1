@@ -22,20 +22,39 @@ Function Print-Tree()
 
         $global:outputFile += (("-" * $indent) + $string +"`n")
 
-        foreach ($child in $node.Children)
+        $sorted = New-Object System.Collections.Generic.List[pscustomobject]
+        $node.Children | % { $sorted.Add($_) }
+     
+        $sorted = [System.Linq.Enumerable]::OrderBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.object.additionalproperties.'@odata.context' })
+        $sorted = [System.Linq.Enumerable]::ThenBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.DisplayName })
+
+        foreach ($child in $sorted)
         {
             Print-Tree -node $child -indent ($indent + 2) -outputType $functionMSGraphType
         }
     }
     elseif ($outputType -eq $functionExchangeOnlineType)
     {
-        $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
+        if ($node.object.groupType -ne $NULL)
+        {
+            $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
+        }
+        else 
+        {
+            $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
+        }
 
         out-logfile -string  (("-" * $indent) + $string)
 
         $global:outputFile += (("-" * $indent) + $string +"`n")
 
-        foreach ($child in $node.Children)
+        $sorted = New-Object System.Collections.Generic.List[pscustomobject]
+        $node.Children | % { $sorted.Add($_) }
+     
+        $sorted = [System.Linq.Enumerable]::OrderBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.RecipientTypeDetails })
+        $sorted = [System.Linq.Enumerable]::ThenBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.DisplayName })
+
+        foreach ($child in $sorted)
         {
             Print-Tree -node $child -indent ($indent + 2) -outputType $functionExchangeOnlineType
         }
@@ -48,7 +67,13 @@ Function Print-Tree()
 
         $global:outputFile += (("-" * $indent) + $string +"`n")
 
-        foreach ($child in $node.Children)
+        $sorted = New-Object System.Collections.Generic.List[pscustomobject]
+        $node.Children | % { $sorted.Add($_) }
+     
+        $sorted = [System.Linq.Enumerable]::OrderBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.objectClass })
+        $sorted = [System.Linq.Enumerable]::ThenBy($sorted, [Func[pscustomobject,string]]{ param($x) $x.Object.Name })
+
+        foreach ($child in $sorted)
         {
             Print-Tree -node $child -indent ($indent + 2) -outputType $functionLDAPType
         }

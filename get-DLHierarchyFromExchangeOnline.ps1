@@ -155,6 +155,30 @@ Function get-DLHierarchyFromExchangeOnline
 
     [int]$defaultIndent = 0
 
+    $global:childCounter = 0
+
+    $global:exchangeObjects =@()
+    $global:groupCounter = @()
+    $global:mailUniversalSecurityGroupCounter = @()
+    $global:mailUniversalDistributionGroupCounter = @()
+    $global:userMailboxCounter = @()
+    $global:mailUserCounter = @()
+    $global:guestMailUserCounter = @()
+    $global:mailContactCounter = @()
+    $global:groupMailboxCounter = @()
+    $global:groupMailboxDyanmicCounter = @()
+    $global:dynamicGroupCounter = @()
+    $global:userCounter = @()
+    $global:equipmentMailboxCounter = @()
+    $global:sharedMailboxCounter = @()
+    $global:roomMailboxCounter = @()
+    $totalObjectsProcessed = 0
+
+
+    #Preare items for HTML Export.
+
+    $global:HTMLSections = @()
+
     #Define windows title.
 
     $windowTitle = ("Get-DLHierarchyFromExchangeOnline "+$groupObjectID)
@@ -286,6 +310,44 @@ Function get-DLHierarchyFromExchangeOnline
 
     out-HierarchyFile -outputFileName  ("Hierarchy-"+$logFileName) -logFolderPath $global:logFolderPath
 
+    out-logfile -string "Generate HTML File..."
+
+    $global:GroupCounter = $global:GroupCounter | Sort-Object -unique
+    $global:mailUniversalSecurityGroupCounter = $global:mailUniversalSecurityGroupCounter | Sort-Object -unique
+    $global:mailUniversalDistributionGroupCounter = $global:mailUniversalDistributionGroupCounter | Sort-Object -unique
+    $global:userMailboxCounter = $global:userMailboxCounter | Sort-Object -Unique
+    $global:mailUserCounter = $global:mailUserCounter | Sort-Object -Unique
+    $global:guestMailUserCounter = $global:guestMailUserCounter | Sort-Object -Unique
+    $global:mailContactCounter = $global:mailContactCounter | Sort-Object -Unique
+    $global:groupMailboxCounter = $global:groupMailboxCounter | Sort-Object -Unique
+    $global:groupMailboxDyanmicCounter = $global:groupMailboxDyanmicCounter | Sort-Object -Unique
+    $global:dynamicGroupCounter = $global:dynamicGroupCounter | Sort-Object -Unique
+    $global:userCounter = $global:userCounter | Sort-Object -Unique
+    $global:equipmentMailboxCounter = $global:equipmentMailboxCounter | Sort-Object -Unique
+    $global:sharedMailboxCounter = $global:sharedMailboxCounter | Sort-Object -Unique
+    $global:roomMailboxCounter = $global:roomMailboxCounter | Sort-Object -Unique
+
+    start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID
+
+    out-logfile -string ("Total groups processed: "+$global:groupCounter.count)
+    out-logfile -string ("Total mail security groups processed: "+$global:mailUniversalSecurityGroupCounter.count)
+    out-logfile -string ("Total mail distribution groups processed: "+$global:mailUniversalDistributionGroupCounter.count)
+    out-logfile -string ("Total user mailbox processed: "+$global:userMailboxCounter.count)
+    out-logfile -string ("Total mail user processed: "+$global:mailUserCounter.count)
+    out-logfile -string ("Total guest mail user processed: "+$global:guestMailUserCounter.count)
+    out-logfile -string ("Total mail contact processed: "+$global:mailContactCounter.count)
+    out-logfile -string ("Total group mailbox processed: "+$global:groupMailboxDyanmicCounter.count)
+    out-logfile -string ("Total group mailbox dynamic processed: ")
+    out-logfile -string ("Total dynamic groups processed: "+$global:dynamicGroupCounter.count)
+    out-logfile -string ("Total user processed: "+$global:userCounter.count)
+    out-logfile -string ("Total equipment mailbox processed: "+$global:equipmentMailboxCounter.count)
+    out-logfile -string ("Total shared mailbox processed: "+$global:sharedMailboxCounter.count)
+    out-logfile -string ("Total room mailbox processed: "+$global:roomMailboxCounter.count)
+
+    $totalObjectsProcessed = $global:groupMailboxDyanmicCounter.count+$global:groupCounter.count+$global:mailUniversalSecurityGroupCounter.count+$global:mailUniversalDistributionGroupCounter.count+$global:userMailboxCounter.count+$global:mailUserCounter.count+$global:guestMailUserCounter.count+$global:mailContactCounter.count+$global:groupMailboxCounter.count+$global:dynamicGroupCounter.count+$global:userCounter.count+$global:equipmentMailboxCounter.count+$global:sharedMailboxCounter.count+$global:roomMailboxCounter.count
+
+    out-logfile -string ("Total objects processed: "+$totalObjectsProcessed)
+
     $telemetryEndTime = get-universalDateTime
     $telemetryElapsedSeconds = get-elapsedTime -startTime $telemetryStartTime -endTime $telemetryEndTime
 
@@ -297,7 +359,21 @@ Function get-DLHierarchyFromExchangeOnline
         MigrationStartTimeUTC = $telemetryStartTime
         MigrationEndTimeUTC = $telemetryEndTime
         MigrationErrors = $telemetryError
-
+        GroupsProcessed = $global:groupCounter.count
+        MailSecurityGroupsProcessed = $global:mailUniversalSecurityGroupCounter.count
+        MailDistributionGroupsProcessed = $global:mailUniversalDistributionGroupCounter.count
+        UserMailboxProcessed = $global:userMailboxCounter.count
+        MailUsersProcessed = $global:mailUserCounter.count
+        GuestMailUserProcessed = $global:guestMailUserCounter.count
+        MailContactProcessed = $global:mailContactCounter.count
+        GroupMailboxProcessed = $global:groupMailboxCounter.count
+        GroupMailboxProcessedDynamic = $global:groupMailboxDyanmicCounter.Count
+        DynamicGroupsProcessed = $global:dynamicGroupCounter.count
+        UsersProcessed = $global:userCounter.count
+        RoomMailboxProcessed = $global:roomMailboxCounter.Count
+        EquipmentMailboxProcessed = $global:equipmentMailboxCounter.Count
+        SharedMailboxProcessed = $global:sharedMailboxCounter.Count
+        TotalObjectsProcessed = $totalObjectsProcessed
     }
 
     $telemetryEventMetrics = @{
@@ -316,4 +392,6 @@ Function get-DLHierarchyFromExchangeOnline
         out-logfile -string $telemetryEventProperties
         send-TelemetryEvent -traceModuleName $traceModuleName -eventName $telemetryEventName -eventMetrics $telemetryEventMetrics -eventProperties $telemetryEventProperties
     }
+
+    disable-allPowerShellSessions
 }

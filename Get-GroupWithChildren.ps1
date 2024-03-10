@@ -93,6 +93,10 @@ Function Get-GroupWithChildren()
     $functionExchangeMailContact = "MailContact"
     $functionExchangeGroupMailbox = "GroupMailbox"
     $functionExchangeDynamicGroup = "DynamicDistributionGroup"
+    $functionExchangeSharedMailbox = "SharedMailbox"
+    $functionExchangeRoomMailbox = "RoomMailbox"
+    $functionExchangeEquipmentMailbox = "EquipmentMailbox"
+    $functionExchangeUser = "User"
     $isExchangeGroupType = $false
 
     $functionLDAPGroup = "Group"
@@ -113,23 +117,181 @@ Function Get-GroupWithChildren()
     #Exchange Functions
     #===============================================================================
 
+    function reset-exchangeOnlinePowershell
+    {
+        if ($exchangeOnlineCertificateThumbPrint -eq "")
+        {
+            #User specified non-certifate authentication credentials.
+
+                try {
+                    New-ExchangeOnlinePowershellSession -exchangeOnlineCredentials $exchangeOnlineCredential -exchangeOnlineEnvironmentName $exchangeOnlineEnvironmentName -debugLogPath $logFolderPath
+                }
+                catch {
+                    out-logfile -string "Unable to create the exchange online connection using credentials."
+                    out-logfile -string $_ -isError:$TRUE
+                }
+        }
+        elseif ($exchangeOnlineCertificateThumbPrint -ne "")
+        {
+            #User specified thumbprint authentication.
+
+                try {
+                    new-ExchangeOnlinePowershellSession -exchangeOnlineCertificateThumbPrint $exchangeOnlineCertificateThumbPrint -exchangeOnlineAppId $exchangeOnlineAppID -exchangeOnlineOrganizationName $exchangeOnlineOrganizationName -exchangeOnlineEnvironmentName $exchangeOnlineEnvironmentName -debugLogPath $logFolderPath
+                }
+                catch {
+                    out-logfile -string "Unable to create the exchange online connection using certificate."
+                    out-logfile -string $_ -isError:$TRUE
+                }
+        }
+    }
+
     function get-ExchangeGroup
     {
         Param
         (
             [Parameter(Mandatory = $true)]
-            $objectID
+            $objectID,
+            [Parameter(Mandatory = $false)]
+            $queryType,
+            [Parameter(Mandatory = $false)]
+            $secondTry = $FALSE
         )
 
-        try {
-            $returnObject = get-o365group -identity $objectID -ErrorAction Stop
-        }
-        catch {
-            write-host $_
-            write-error "Object type is group - unable to obtain object."
-            exit
-        } 
-        
+        $retryCounter = 0
+        $retryRequired = $TRUE
+
+        do {
+            if ($queryType -eq $functionExchangeMailUniversalSecurityGroup)
+            {
+                try {
+                    $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
+                    $global:mailUniversalSecurityGroupCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    $retryCounter++
+                    if ($returnCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Mail Enabled Security Group."
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
+                    }
+                } 
+            }        
+            elseif ($queryType -eq $functionExchangeMailUniversalDistributionGroup)
+            {
+                try {
+                    $returnObject = get-o365DistributionGroup -identity $objectID -ErrorAction Stop
+                    $global:mailUniversalDistributionGroupCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    $retryCounter++
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Mail Enabled Distribution Group."
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
+                    }
+                } 
+            }
+            elseif ($queryType -eq $functionExchangeGroupMailbox)
+            {
+                try {
+                    $returnObject = get-o365UnifiedGroup -identity $objectID -ErrorAction Stop
+
+                    if ($returnObject.IsMembershipDynamic -eq $TRUE)
+                    {
+                        $global:groupMailboxDynamicCounter+=$returnObject.exchangeObjectID
+                    }
+                    else {
+                        $global:groupMailboxCounter+=$returnObject.exchangeObjectID
+                    }
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    $retryCounter++
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Unified Group."
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
+                    }
+                }
+            }
+            elseif ($queryType -eq $functionExchangeDynamicGroup)
+            {
+                try {
+                    $returnObject = get-o365DynamicDistributionGroup -Identity $objectID -errorAction Stop
+                    $global:dynamicGroupCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    $retryCounter++
+                    out-logfile -string "Unable to obtain Exchange Online Dynamic Distribution Group."
+
+                    if ($secondTry -eq $FALSE)
+                    {
+                        if ($retryCounter -gt 4)
+                        {
+                            out-logfile -string $_ -isError:$TRUE
+                        }
+                        else
+                        {
+                            start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                            disable-allPowerShellSessions
+                            reset-exchangeOnlinePowershell
+                        }
+                    }
+                    else 
+                    {
+                        out-logfile -string $_
+                    }
+                }
+            }
+            elseif ($queryType -eq $functionExchangeGroup) 
+            {
+                try {
+                    $returnObject = get-o365group -identity $objectID -ErrorAction Stop
+                    $global:groupCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    out-logfile -string "It is possible the root group is a dynamic group - this is not returned by get-group."
+                    out-logfile -string "Try obtaining dynamic group."
+
+                    try {
+                        $returnObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeDynamicGroup -ErrorAction Stop -secondTry $TRUE
+                        $retryRequired = $FALSE
+                    }
+                    catch {
+                        out-logfile -string "Group is neither a root dynamic group or returned by get-group."
+                        out-logfile -string "Unable to obtain Exchange Group object."
+                        out-logfile -string "This error may be expected.  If a security group was previously mail enabled.."
+                        out-logfile -string "And then mail disalbed it remains in Exchange Online and could be a member..."
+                        out-logfile -string "But is not returned by get-Group."
+                        out-logfile -string "Testing to ensure root group is not a dynamic group."
+                        out-logfile -string $_ -isError:$true
+                    }
+                } 
+            }
+            
+        } until (
+            $retryRequired -eq $false
+        )
+
         return $returnObject
     }
 
@@ -138,18 +300,196 @@ Function Get-GroupWithChildren()
         Param
         (
             [Parameter(Mandatory = $true)]
-            $objectID
+            $objectID,
+            [Parameter(Mandatory = $true)]
+            $queryType
         )
 
-        try {
-            $returnObject = get-o365user -identity $objectID -ErrorAction Stop
-        }
-        catch {
-            write-host $_
-            write-error "Object type is user - unable to obtain object."
-            exit
-        } 
-        
+        $retryCounter = 0
+        $retryRequired = $TRUE
+
+        do {
+            if ($queryType -eq $functionExchangeUser)
+            {
+                try {
+                    $returnObject = get-o365user -identity $objectID -ErrorAction Stop
+                    $global:userCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online User Object"
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
+                    }
+                } 
+            }
+            elseif ($queryType -eq $functionExchangeSharedMailbox)
+            {
+                try {
+                    $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
+                    $global:sharedMailboxCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
+                    }
+                } 
+            }
+            elseif ($queryType -eq $functionExchangeEquipmentMailbox)
+            {
+                try {
+                    $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
+                    $global:equipmentMailboxCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
+                    }
+                } 
+            }
+            elseif ($queryType -eq $functionExchangeRoomMailbox)
+            {
+                try {
+                    $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
+                    $global:roomMailboxCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
+                    }
+                } 
+            }
+            elseif ($queryType -eq $functionExchangeUserMailbox)
+            {
+                try {
+                    $returnObject = get-o365Mailbox -identity $objectID -ErrorAction Stop
+                    $global:userMailboxCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Mailbox Object"
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
+                    }
+                } 
+            }
+            elseif ($queryType -eq $functionExchangeMailUser)
+            {
+                try {
+                    $returnObject = get-o365MailUser -identity $objectID -ErrorAction Stop
+                    $global:mailUserCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Mail User Object"
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
+                    }
+                } 
+            }
+            elseif ($queryType -eq $functionExchangeGuestMailUser)
+            {
+                try {
+                    $returnObject = get-o365MailUser -identity $objectID -ErrorAction Stop
+                    $global:guestMailUserCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+                }
+                catch {
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Guest Mail Object"
+                        out-logfile -string $_ -isError:$TRUE
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
+                    }
+                } 
+            }
+            elseif ($queryType -eq $functionExchangeMailContact)
+            {
+                try {
+                    $returnObject = get-o365contact -Identity $objectID -errorAction Stop
+                    $global:mailContactCounter+=$returnObject.exchangeObjectID
+                    $retryRequired = $FALSE
+
+                }
+                catch {
+                    $retryCounter++
+
+                    if ($retryCounter -gt 4)
+                    {
+                        out-logfile -string "Unable to obtain Exchange Online Mail Contact Object"
+                        out-logfile -string $_ -isError:$TR
+                    }
+                    else {
+                        start-sleepProgress -sleepString "Error obtaining Exchange Online object - resetting connection." -sleepSeconds 60
+                        disable-allPowerShellSessions
+                        reset-exchangeOnlinePowershell
+                    }
+                }
+            }
+        } until (
+            $retryRequired -eq $FALSE
+        )
+
         return $returnObject
     }
 
@@ -169,6 +509,17 @@ Function Get-GroupWithChildren()
                 out-logfile -string $functionGraphGroup
                 try {
                     $functionObject = get-MGGroup -GroupId $objectID -ErrorAction Stop
+
+                    if ($functionObject.groupTypes -contains "DynamicMembership")
+                    {
+                        $global:msGraphObjects+=$functionObjects
+                        $global:msGraphGroupDynamicCount+=$functionObject.id
+                    }
+                    else 
+                    {    
+                        $global:msGraphObjects+=$functionObject
+                        $global:msGraphGroupCount+=$functionObject.id
+                    }
                 }
                 catch {
                     out-logfile -string $_
@@ -180,6 +531,8 @@ Function Get-GroupWithChildren()
                 out-logfile -string $functiongraphUser
                 try {
                     $functionObject = get-MGUser -userID $objectID -ErrorAction Stop
+                    $global:msGraphObjects+=$functionObject
+                    $global:msGraphUserCount+=$functionObject.id
                 }
                 catch {
                     out-logfile -string $_
@@ -191,6 +544,8 @@ Function Get-GroupWithChildren()
                 out-logfile -string $functionGraphContact
                 try {
                     $functionObject = get-MGContact -OrgContactId $objectID -errorAction Stop
+                    $global:msGraphObjects+=$functionObject
+                    $global:msGraphContactCount+=$functionObject.id
                 }
                 catch {
                     out-logfile -string $_
@@ -280,63 +635,88 @@ Function Get-GroupWithChildren()
 
         switch ($objectType)
         {
+            $functionExchangeGroupMailbox
+            {
+                out-logfile -string $functionExchangeGroupMailbox 
+                $functionObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeGroupMailbox
+                $isExchangeGroupType=$TRUE 
+                $global:exchangeObjects += $functionObject
+            }
+            $functionExchangeRoomMailbox
+            {
+                out-logfile -string $functionExchangeRoomMailbox 
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeRoomMailbox
+                $global:exchangeObjects += $functionObject
+            }
+            $functionExchangeSharedMailbox
+            {
+                out-logfile -string $functionExchangeSharedMailbox 
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeSharedMailbox
+                $global:exchangeObjects += $functionObject
+            }
+            $functionExchangeEquipmentMailbox
+            {
+                out-logfile -string $functionExchangeEquipmentMailbox 
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeEquipmentMailbox
+                $global:exchangeObjects += $functionObject
+            }
+            $functionExchangeUser
+            {
+                out-logfile -string $functionExchangeUser 
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeUser
+                $global:exchangeObjects += $functionObject
+            }
             $functionExchangeGroup
             {
                 out-logfile -string $functionExchangeGroup
-                $functionObject = get-ExchangeGroup -objectID $objectID
-                $isExchangeGroupType=$TRUE 
+                $functionObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeGroup
+                $isExchangeGroupType=$TRUE
+                $global:exchangeObjects += $functionObject 
             }
             $functionExchangeMailUniversalSecurityGroup
             {
                 out-logfile -string $functionExchangeMailUniversalSecurityGroup
-                $functionObject = get-ExchangeGroup -objectID $objectID
+                $functionObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeMailUniversalSecurityGroup
                 $isExchangeGroupType=$TRUE  
+                $global:exchangeObjects += $functionObject
             }
             $functionExchangeMailUniversalDistributionGroup
             {
                 out-logfile -string $functionExchangeMailUniversalDistributionGroup
-                $functionObject = get-ExchangeGroup -objectID $objectID
+                $functionObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeMailUniversalDistributionGroup
                 $isExchangeGroupType=$TRUE  
+                $global:exchangeObjects += $functionObject
             }   
             $functionExchangeUserMailbox
             {
-                out-logfile -string $functionExchangeUserMailbox
-                $functionObject = get-ExchangeUser -objectID $objectID
+                out-logfile -string $functionExchangeUserMailbox 
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeUserMailbox
+                $global:exchangeObjects += $functionObject
             }
             $functionExchangeMailUser
             {
-                out-logfile -string $functionExchangeMailUser
-                $functionObject = get-ExchangeUser -objectID $objectID
+                out-logfile -string $functionExchangeMailUser 
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeMailUser
+                $global:exchangeObjects += $functionObject
             }
             $functionExchangeGuestMailUser
             {
                 out-logfile -string $functionExchangeGuestMailUser
-                $functionObject = get-ExchangeUser -objectID $objectID
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeGuestMailUser
+                $global:exchangeObjects += $functionObject
             }
             $functionExchangeMailContact
             {
                 out-logfile -string $functionExchangeMailContact
-                try {
-                    $functionObject = get-o365contact -Identity $objectID -errorAction Stop
-                }
-                catch {
-                    write-host $_
-                    write-error "Object type is contact - unable to obtain object."
-                    exit
-                }
+                $functionObject = get-ExchangeUser -objectID $objectID -queryType $functionExchangeMailContact
+                $global:exchangeObjects += $functionObject
             }
             $functionExchangeDynamicGroup
             {
-                out-logfile -string $functionExchangeMailContact
-                try {
-                    $functionObject = get-o365DynamicDistributionGroup -Identity $objectID -errorAction Stop
-                }
-                catch {
-                    write-host $_
-                    write-error "Object type is contact - unable to obtain object."
-                    exit
-                }
+                out-logfile -string $functionExchangeDynamicGroup
+                $functionObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeDynamicGroup
                 $isExchangeGroupType=$TRUE 
+                $global:exchangeObjects += $functionObject
             }
             Default
             {
@@ -445,7 +825,7 @@ Function Get-GroupWithChildren()
                 $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
                 $global:childCounter++
                 out-logfile -string $global:childCounter.tostring()
-                $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.recipientType -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
+                $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.RecipientTypeDetails -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
                 $childNodes += $childNode
                 $global:childCounter--
                 out-logfile -string $global:childCounter.tostring()
@@ -455,17 +835,25 @@ Function Get-GroupWithChildren()
         {
             out-logfile -string "Group has already been processed."
 
-            if ($group.displaynnme -eq "")
+            if ($functionObject.displayName -eq "")
             {
-                $group.displayName = $group.name
+                $functionObject.displayName = $functionObject.name
+            }
+            elseif ($functionObject.displayName -eq $NULL)
+            {
+                $functionObject.displayName = $functionObject.name
             }
             
             $functionObject.DisplayName = $functionObject.DisplayName + " (Circular Membership)"
         }
 
-        if ($group.displaynnme -eq "")
+        if ($functionObject.displayName -eq "")
         {
-            $group.displayName = $group.name
+            $functionObject.displayName = $functionObject.name
+        }
+        elseif ($functionObject.displayName -eq $NULL)
+        {
+            $functionObject.displayName = $functionObject.name
         }
     
         $node = New-TreeNode -object $functionObject -children $childNodes
@@ -483,6 +871,7 @@ Function Get-GroupWithChildren()
 
         try{
             $functionObject = get-adObject -identity $objectID -properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+            $global:ldapObjects += $functionObject
         }
         catch {
             out-logfile -string $_
@@ -500,6 +889,23 @@ Function Get-GroupWithChildren()
         out-logfile -string $functionObject
 
         out-logfile -string "Beginning object processing..."
+
+        if ($functionObject.objectClass -eq $functionLDAPDynamicGroup)
+        {
+            $global:dynamicGroupCounter+=$functionObject.objectGUID
+        }
+        elseif ($functionObject.objectClass -eq $functionLDAPContact)
+        {
+            $global:contactCounter+=$functionObject.objectGUID
+        }
+        elseif ($functionObject.objectClass -eq $functionLDAPUser)
+        {
+            $global:userCounter+=$functionObject.objectGUID
+        }
+        elseif ($functionObject.objectClass -eq $functionLDAPGroup)
+        {
+            $global:groupCounter+=$functionObject.objectGUID
+        }
 
         if (!$processedGroupIds.Contains($functionObject.distinguishedName))
         {
@@ -583,7 +989,11 @@ Function Get-GroupWithChildren()
         {
             out-logfile -string "Group has already been processed."
 
-            if ($functionObject.displaynnme -eq "")
+            if ($functionObject.displayName -eq "")
+            {
+                $functionObject.displayName = $functionObject.name
+            }
+            elseif ($functionObject.displayname -eq $NULL)
             {
                 $functionObject.displayName = $functionObject.name
             }
@@ -591,7 +1001,11 @@ Function Get-GroupWithChildren()
             $functionObject.DisplayName = $functionObject.DisplayName + " (Circular Membership)"
         }
 
-        if ($functionObject.displaynnme -eq "")
+        if ($functionObject.displayName -eq "")
+        {
+            $functionObject.displayName = $functionObject.name
+        }
+        elseif ($functionObject.displayname -eq $NULL)
         {
             $functionObject.displayName = $functionObject.name
         }
