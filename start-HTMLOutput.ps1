@@ -236,6 +236,7 @@ function start-HTMLOutput
                         new-ChartDonut -Name 'MailSecurityGroups' -value $global:mailUniversalSecurityGroupCounter.count
                         new-chartDonut -name 'MailDistributionGroups' -value $global:mailUniversalDistributionGroupCounter.count
                         new-chartDonut -name 'UnifiedGroups' -value $global:groupMailboxCounter.count
+                        new-chartDonut -name 'UnifiedGroups-Dynamic' -value $global:groupMailboxDyanmicCounter.count
                     }
                 }
                 New-HTMLPanel {
@@ -257,6 +258,7 @@ function start-HTMLOutput
                         new-ChartDonut -Name 'MailSecurityGroups' -value $global:mailUniversalSecurityGroupCounter.count
                         new-chartDonut -name 'MailDistributionGroups' -value $global:mailUniversalDistributionGroupCounter.count
                         new-chartDonut -name 'UnifiedGroups' -value $global:groupMailboxCounter.count
+                        new-chartDonut -name 'UnifiedGroups-Dynamic' -value $global:groupMailboxDyanmicCounter.count
                         New-ChartDonut -Name 'Users' -Value $global:userCounter.count
                         New-ChartDonut -Name 'MailContacts' -Value $global:mailContactCounter.count
                         New-ChartDonut -Name 'GuestMailUsers' -Value $global:guestMailUserCounter.count

@@ -207,7 +207,14 @@ Function Get-GroupWithChildren()
             {
                 try {
                     $returnObject = get-o365UnifiedGroup -identity $objectID -ErrorAction Stop
-                    $global:groupMailboxCounter+=$returnObject.exchangeObjectID
+
+                    if ($returnObject.isDynamicMembership -eq $TRUE)
+                    {
+                        $global:groupMailboxDynamicCounter+=$returnObject.exchangeObjectID
+                    }
+                    else {
+                        $global:groupMailboxCounter+=$returnObject.exchangeObjectID
+                    }
                     $retryRequired = $FALSE
                 }
                 catch {
