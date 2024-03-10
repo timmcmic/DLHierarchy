@@ -155,6 +155,7 @@ Function get-DLHierachyFromGraph
 
     $global:childCounter = 0
 
+    $global:msGraphObjects = @()
     $global:msGraphUserCount = @()
     $global:msGraphGroupCount = @()
     $global:msGraphGroupDynamicCount = @()
@@ -310,9 +311,10 @@ Function get-DLHierachyFromGraph
 
     $global:msGraphGroupCount = $global:msGraphGroupCount | Sort-Object -Unique
     $global:msGraphContactCount = $global:msGraphContactCount | Sort-Object -Unique
+    $global:msGraphGroupDynamicCount = $global:msGraphGroupDynamicCount | sort-object -Unique
     $global:msGraphUserCount = $global:msGraphUserCount | Sort-Object -Unique
 
-    $totalObjectsProcessed = $global:msGraphGroupCount.count + $global:msGraphContactCount.count + $global:msGraphUserCount.count + $global:msGraphGroupDynamicCount.count()
+    $totalObjectsProcessed = $global:msGraphGroupCount.count + $global:msGraphContactCount.count + $global:msGraphUserCount.count + $global:msGraphGroupDynamicCount.count
 
     out-logfile -string "Generate HTML File..."
 

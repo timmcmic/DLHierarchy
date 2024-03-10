@@ -509,8 +509,17 @@ Function Get-GroupWithChildren()
                 out-logfile -string $functionGraphGroup
                 try {
                     $functionObject = get-MGGroup -GroupId $objectID -ErrorAction Stop
-                    $global:msGraphObjects+=$functionObject
-                    $global:msGraphGroupCount+=$functionObject.id
+
+                    if ($functionObject.groupTypes -contains "DynamicMembership")
+                    {
+                        $global:msGraphObjects+=$functionObjects
+                        $global:msGraphGroupDynamicCount+=$functionObject.id
+                    }
+                    else 
+                    {    
+                        $global:msGraphObjects+=$functionObject
+                        $global:msGraphGroupCount+=$functionObject.id
+                    }
                 }
                 catch {
                     out-logfile -string $_
