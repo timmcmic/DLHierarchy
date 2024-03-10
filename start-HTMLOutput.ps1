@@ -16,7 +16,7 @@ function get-NodeString
 
         if ($node.object.groupType -ne $null)
         {
-            if ($node.object.isMembershipDynamic -eq $FALSE)
+            if ($node.object.IsMembershipDynamic -eq $FALSE)
             {
                 $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
             }
