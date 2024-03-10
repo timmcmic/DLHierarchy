@@ -16,7 +16,14 @@ function get-NodeString
 
         if ($node.object.groupType -ne $null)
         {
-            $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
+            if ($node.object.isMembershipDynamic -eq $FALSE)
+            {
+                $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
+            }
+            else 
+            {
+                $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") (DynamicMembership)"
+            }
         }
         else 
         {
