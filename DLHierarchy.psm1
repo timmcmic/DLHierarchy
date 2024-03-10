@@ -323,6 +323,7 @@ Function get-DLHierachyFromGraph
     out-logfile -string ("Graph group count: "+$global:msGraphGroupCount.count)
     out-logfile -string ("Graph contact count: "+$global:msGraphContactCount.count)
     out-logfile -string ("Graph user count: "+$global:msGraphUserCount.count)
+    out-logfile -string ("Graph dynamic group count: "+$global:msGraphGroupDynamicCount.Count)
     out-logfile -string ("Total Objects Processed: "+$totalObjectsProcessed)
 
     $telemetryEndTime = get-universalDateTime

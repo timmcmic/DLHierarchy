@@ -296,8 +296,21 @@ function start-HTMLOutput
                 New-HTMLPanel {
                     New-HTMLChart -Gradient {
                         New-ChartDonut -Name 'Groups' -Value $global:msGraphGroupCount.count
+                        New-ChartDonut -name 'DynamnicGroups' -value $global:msGraphGroupDynamicCount.Count
+                    }
+                }
+                New-HTMLPanel {
+                    New-HTMLChart -Gradient {
                         New-ChartDonut -Name 'Users' -Value $global:msGraphUserCount.count
-                        new-ChartDonut -Name 'Contactrs' -value $global:msGraphContactCount.count
+                        new-ChartDonut -Name 'Contacts' -value $global:msGraphContactCount.count
+                    }
+                }
+                New-HTMLPanel {
+                    New-HTMLChart -Gradient {
+                        New-ChartDonut -Name 'Groups' -Value $global:msGraphGroupCount.count
+                        New-ChartDonut -name 'DynamnicGroups' -value $global:msGraphGroupDynamicCount.Count
+                        New-ChartDonut -Name 'Users' -Value $global:msGraphUserCount.count
+                        new-ChartDonut -Name 'Contacts' -value $global:msGraphContactCount.count
                     }
                 }
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
