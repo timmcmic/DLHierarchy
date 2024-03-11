@@ -34,7 +34,14 @@ function get-NodeString
     elseif ($outputType -eq $functionMSGraphType)
     {
         out-logfile -string "Calculating string for Microsoft Graph"
-        $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
+        if ($object.groupType -ne $NULL)
+        {
+            $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+") ("+$node.object.groupType+")"
+        }
+        else 
+        {
+            $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
+        }
     }
     elseif ($outputType -eq $functionLDAPType)
     {
