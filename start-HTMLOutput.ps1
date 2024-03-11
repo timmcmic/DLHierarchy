@@ -305,7 +305,7 @@ function start-HTMLOutput
                 } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
             }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
             new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
-                new-htmlTable -DataTable ($global:msGraphObjects | select-object DisplayName,Id,Mail,MailEnabled,MailNickname,ProxyAddresses,SecurityEnabled | sort-object ID -Unique) -Filtering {
+                new-htmlTable -DataTable ($global:msGraphObjects | select-object DisplayName,Id,Mail,MailEnabled,MailNickname,ProxyAddresses,GroupTypes,SecurityEnabled | sort-object ID -Unique) -Filtering {
                 } -AutoSize
             } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
             new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
