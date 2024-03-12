@@ -81,7 +81,7 @@ Function get-DLHierachyFromLDAP
         #Local Active Director Domain Controller Parameters
         [Parameter(Mandatory = $true)]
         [string]$globalCatalogServer,
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [pscredential]$activeDirectoryCredential,
         #Define other mandatory parameters
         [Parameter(Mandatory = $true)]
