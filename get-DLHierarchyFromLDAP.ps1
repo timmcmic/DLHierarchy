@@ -82,7 +82,7 @@ Function get-DLHierarchyFromLDAP
         [Parameter(Mandatory = $true)]
         [string]$globalCatalogServer,
         [Parameter(Mandatory = $false)]
-        [pscredential]$activeDirectoryCredential=$NULL,
+        [pscredential]$activeDirectoryCredential,
         #Define other mandatory parameters
         [Parameter(Mandatory = $true)]
         [string]$logFolderPath,
@@ -164,16 +164,6 @@ Function get-DLHierarchyFromLDAP
     {
         start-telemetryConfiguration -allowTelemetryCollection $allowTelemetryCollection -appInsightAPIKey $appInsightAPIKey -traceModuleName $traceModuleName
     }
-
-    if ($activeDirectoryCredential -eq $NULL)
-    {
-        out-logfile -string "Active directory credential no specified."
-        $activeDirectoryCredential = Get-Credential
-    }
-    else 
-    {
-        out-logfile -string "Active directory credential specified."
-    
 
     out-logfile -string "Testing for supported version of Powershell engine."
 
