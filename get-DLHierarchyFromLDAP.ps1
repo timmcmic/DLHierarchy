@@ -82,7 +82,7 @@ Function get-DLHierarchyFromLDAP
         [Parameter(Mandatory = $true)]
         [string]$globalCatalogServer,
         [Parameter(Mandatory = $false)]
-        [pscredential]$activeDirectoryCredential,
+        [pscredential]$activeDirectoryCredential=$NULL,
         #Define other mandatory parameters
         [Parameter(Mandatory = $true)]
         [string]$logFolderPath,
@@ -165,6 +165,16 @@ Function get-DLHierarchyFromLDAP
         start-telemetryConfiguration -allowTelemetryCollection $allowTelemetryCollection -appInsightAPIKey $appInsightAPIKey -traceModuleName $traceModuleName
     }
 
+    if ($activeDirectoryCredential -eq $NULL)
+    {
+        out-logfile -string "Active directory credential no specified."
+        $activeDirectoryCredential = Get-Credential
+    }
+    else 
+    {
+        out-logfile -string "Active directory credential specified."
+    
+
     out-logfile -string "Testing for supported version of Powershell engine."
 
     test-powershellVersion
@@ -184,16 +194,6 @@ Function get-DLHierarchyFromLDAP
     Out-LogFile -string "********************************************************************************"
 
     write-functionParameters -keyArray $MyInvocation.MyCommand.Parameters.Keys -parameterArray $PSBoundParameters -variableArray (Get-Variable -Scope Local -ErrorAction Ignore)
-
-    if ($activeDirectoryCredential.UserName -eq $NULL)
-    {
-        out-logfile -string "Active directory credential no specified."
-        $activeDirectoryCredential = Get-Credential
-    }
-    else 
-    {
-        out-logfile -string "Active directory credential specified."
-    }
 
     out-logfile -string "Ensure that all strings specified have no leading or trailing spaces."
 
