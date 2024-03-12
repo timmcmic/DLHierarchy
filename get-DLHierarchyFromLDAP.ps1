@@ -185,6 +185,11 @@ Function get-DLHierarchyFromLDAP
 
     write-functionParameters -keyArray $MyInvocation.MyCommand.Parameters.Keys -parameterArray $PSBoundParameters -variableArray (Get-Variable -Scope Local -ErrorAction Ignore)
 
+    if ($activeDirectoryCredential.UserName -eq $NULL)
+    {
+        $activeDirectoryCredential = Get-Credential
+    }
+
     out-logfile -string "Ensure that all strings specified have no leading or trailing spaces."
 
     #Perform cleanup of any strings so that no spaces existin trailing or leading.
