@@ -92,7 +92,11 @@ Function get-DLHierarchyFromLDAP
         [Parameter(Mandatory =$FALSE)]
         [boolean]$expandGroupMembership=$TRUE,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$expandDynamicGroupMembership=$TRUE
+        [boolean]$expandDynamicGroupMembership=$TRUE,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$enableTextOutput=$TRUE,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$enableHTMLOutput=$TRUE
     )
 
     #Define script based variables.
@@ -216,26 +220,41 @@ Function get-DLHierarchyFromLDAP
 
     $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $LDAPGroupType -queryMethodLDAP:$TRUE -globalCatalogServer $coreVariables.globalCatalogWithPort.Value -activeDirectoryCredential $activeDirectoryCredential -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLdapQuery $TRUE
 
-    out-logfile -string "Set header in output file to group name."
+    if ($enableTextOutput -eq $TRUE)
+    {
+        out-logfile -string "Set header in output file to group name."
 
-    $global:outputFile += "Group Hierarchy for Group ID: "+$groupObjectID+"`n"
-
-    out-logfile -string "Print hierarchy to log file."
-
-    print-tree -node $tree -indent $defaultIndent -outputType $LDAPType
-
-    out-logfile -string "Export hierarchy to file."
-
-    out-HierarchyFile -outputFileName  ("Hierarchy-"+$logFileName) -logFolderPath $global:logFolderPath
-
+        $global:outputFile += "Group Hierarchy for Group ID: "+$groupObjectID+"`n"
+    
+        out-logfile -string "Print hierarchy to log file."
+    
+        print-tree -node $tree -indent $defaultIndent -outputType $LDAPType
+    
+        out-logfile -string "Export hierarchy to file."
+    
+        out-HierarchyFile -outputFileName  ("Hierarchy-"+$logFileName) -logFolderPath $global:logFolderPath
+    }
+    else 
+    {
+        out-logfile -string "Text output is disabled."
+    }
+   
     $global:groupCounter = $global:groupCounter | select-object -Unique
     $global:userCounter = $global:userCounter | select-object -Unique
     $global:contactCounter = $global:contactCounter | select-object -Unique
     $global:dynamicGroupCounter = $global:dynamicGroupCounter | select-object -Unique
 
-    out-logfile -string "Generate HTML File..."
+    if ($enableHTMLOutput -eq $TRUE)
+    {
+        out-logfile -string "Generate HTML File..."
 
-    start-HTMLOutput -node $tree -outputType $LDAPType -groupObjectID $groupObjectID
+        start-HTMLOutput -node $tree -outputType $LDAPType -groupObjectID $groupObjectID
+    }
+    else 
+    {
+        out-logfile -string "HTML file generation is disabled."
+    }
+    
 
     $totalObjectsProcessed = $global:groupCounter.count + $global:contactCounter.count + $global:userCounter.count +$global:dynamicGroupCounter.count
 
