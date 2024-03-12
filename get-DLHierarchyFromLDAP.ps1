@@ -187,7 +187,12 @@ Function get-DLHierarchyFromLDAP
 
     if ($activeDirectoryCredential.UserName -eq $NULL)
     {
+        out-logfile -string "Active directory credential no specified."
         $activeDirectoryCredential = Get-Credential
+    }
+    else 
+    {
+        out-logfile -string "Active directory credential specified."
     }
 
     out-logfile -string "Ensure that all strings specified have no leading or trailing spaces."
