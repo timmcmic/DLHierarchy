@@ -255,7 +255,6 @@ Function get-DLHierarchyFromLDAP
         out-logfile -string "HTML file generation is disabled."
     }
     
-
     $totalObjectsProcessed = $global:groupCounter.count + $global:contactCounter.count + $global:userCounter.count +$global:dynamicGroupCounter.count
 
     Out-logfile -string ("Groups Processed: "+$global:groupCounter.count)
