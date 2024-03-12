@@ -114,7 +114,11 @@ Function get-DLHierarchyFromGraph
         [Parameter(Mandatory =$FALSE)]
         [boolean]$expandGroupMembership=$TRUE,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$expandDynamicGroupMembership=$TRUE
+        [boolean]$expandDynamicGroupMembership=$false,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$enableTextOutput=$TRUE,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$enableHTMLOutput=$TRUE
     )
 
     #Define script based variables.
@@ -299,15 +303,22 @@ Function get-DLHierarchyFromGraph
 
     $global:outputFile += "Group Hierarchy for Group ID: "+$groupObjectID+"`n"
 
-    out-logfile -string "Print hierarchy to log file."
+    if ($enableTextOutput -eq $TRUE)
+    {
+        out-logfile -string "Print hierarchy to log file."
 
-    out-logfile -string $global:outputFile
-
-    print-tree -node $tree -indent $defaultIndent -outputType $msGraphType
-
-    out-logfile -string "Export hierarchy to file."
-
-    out-HierarchyFile -outputFileName  ("Hierarchy-"+$logFileName) -logFolderPath $global:logFolderPath
+        out-logfile -string $global:outputFile
+    
+        print-tree -node $tree -indent $defaultIndent -outputType $msGraphType
+    
+        out-logfile -string "Export hierarchy to file."
+    
+        out-HierarchyFile -outputFileName  ("Hierarchy-"+$logFileName) -logFolderPath $global:logFolderPath
+    }
+    else {
+        out-logfile -string "Text output is disabled."
+    }
+   
 
     $global:msGraphGroupCount = $global:msGraphGroupCount | Sort-Object -Unique
     $global:msGraphContactCount = $global:msGraphContactCount | Sort-Object -Unique
@@ -316,9 +327,16 @@ Function get-DLHierarchyFromGraph
 
     $totalObjectsProcessed = $global:msGraphGroupCount.count + $global:msGraphContactCount.count + $global:msGraphUserCount.count + $global:msGraphGroupDynamicCount.count
 
-    out-logfile -string "Generate HTML File..."
+    if ($enableHTMLOutput -eq $TRUE)
+    {
+        out-logfile -string "Generate HTML File..."
 
-    start-HTMLOutput -node $tree -outputType $msGraphType -groupObjectID $groupObjectID
+        start-HTMLOutput -node $tree -outputType $msGraphType -groupObjectID $groupObjectID
+    }
+    else 
+    {
+        out-logfile -string "HTML output is disabled."
+    }
 
     out-logfile -string ("Graph group count: "+$global:msGraphGroupCount.count)
     out-logfile -string ("Graph contact count: "+$global:msGraphContactCount.count)

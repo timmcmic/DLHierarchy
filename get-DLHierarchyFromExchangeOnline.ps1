@@ -120,7 +120,11 @@ Function get-DLHierarchyFromExchangeOnline
         [Parameter(Mandatory =$FALSE)]
         [boolean]$expandGroupMembership=$TRUE,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$expandDynamicGroupMembership=$TRUE
+        [boolean]$expandDynamicGroupMembership=$TRUE,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$enableTextOutput=$TRUE,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$enableHTMLOutput=$TRUE
     )
 
     #Define script based variables.
@@ -298,17 +302,24 @@ Function get-DLHierarchyFromExchangeOnline
 
     $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $exchangeOnlineGroupType -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
 
-    out-logfile -string "Set header in output file to group name."
+    if ($enableTextOutput -eq $TRUE)
+    {
+        out-logfile -string "Set header in output file to group name."
 
-    $global:outputFile += "Group Hierarchy for Group ID: "+$groupObjectID+"`n"
-
-    out-logfile -string "Print hierarchy to log file."
-
-    print-tree -node $tree -indent $defaultIndent -outputType $exchangeOnlineType
-
-    out-logfile -string "Export hierarchy to file."
-
-    out-HierarchyFile -outputFileName  ("Hierarchy-"+$logFileName) -logFolderPath $global:logFolderPath
+        $global:outputFile += "Group Hierarchy for Group ID: "+$groupObjectID+"`n"
+    
+        out-logfile -string "Print hierarchy to log file."
+    
+        print-tree -node $tree -indent $defaultIndent -outputType $exchangeOnlineType
+    
+        out-logfile -string "Export hierarchy to file."
+    
+        out-HierarchyFile -outputFileName  ("Hierarchy-"+$logFileName) -logFolderPath $global:logFolderPath
+    }
+    else 
+    {
+        out-logfile -string "Text based output disabled."
+    }
 
     out-logfile -string "Generate HTML File..."
 
@@ -327,7 +338,15 @@ Function get-DLHierarchyFromExchangeOnline
     $global:sharedMailboxCounter = $global:sharedMailboxCounter | Sort-Object -Unique
     $global:roomMailboxCounter = $global:roomMailboxCounter | Sort-Object -Unique
 
-    start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID
+    if ($enableHTMLOutput -eq $TRUE)
+    {
+        start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID
+    }
+    else 
+    {
+        out-logfile -string "HTML output disabled."
+    }
+
 
     out-logfile -string ("Total groups processed: "+$global:groupCounter.count)
     out-logfile -string ("Total mail security groups processed: "+$global:mailUniversalSecurityGroupCounter.count)
