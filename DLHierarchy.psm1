@@ -164,7 +164,7 @@ Function get-DLHierarchyFromGraph
 
     #Define windows title.
 
-    $windowTitle = ("Start-DistributionListMigration "+$groupSMTPAddress)
+    $windowTitle = ("get-DLHierarchyFromGraph "+$groupSMTPAddress)
     $host.ui.RawUI.WindowTitle = $windowTitle
 
     #Define variables utilized in the core function that are not defined by parameters.
