@@ -15,7 +15,7 @@
 #############################################################################################
 
 
-Function get-DLHierachyFromLDAP
+Function get-DLHierarchyFromLDAP
 {
     <#
     .SYNOPSIS
@@ -111,7 +111,7 @@ Function get-DLHierachyFromLDAP
 
     #Create telemetry values.
 
-    $telemetryDLHierachyVersion = $NULL
+    $telemetryDLHierarchyVersion = $NULL
     $telemetryActiveDirectoryVersion = $NULL
     $telemetryOSVersion = (Get-CimInstance Win32_OperatingSystem).version
     $telemetryStartTime = get-universalDateTime
@@ -210,7 +210,7 @@ Function get-DLHierachyFromLDAP
 
     out-logfile -string "Calling Test-PowershellModule to validate the DL Conversion Module version installed."
 
-    $telemetryDLHierachyVersion = Test-PowershellModule -powershellModuleName $corevariables.DLHierarchy.value -powershellVersionTest:$TRUE
+    $telemetryDLHierarchyVersion = Test-PowershellModule -powershellModuleName $corevariables.DLHierarchy.value -powershellVersionTest:$TRUE
 
     out-logfile -string "Start building tree from group..."
 
@@ -218,7 +218,7 @@ Function get-DLHierachyFromLDAP
 
     out-logfile -string "Set header in output file to group name."
 
-    $global:outputFile += "Group Hierachy for Group ID: "+$groupObjectID+"`n"
+    $global:outputFile += "Group Hierarchy for Group ID: "+$groupObjectID+"`n"
 
     out-logfile -string "Print hierarchy to log file."
 
@@ -250,7 +250,7 @@ Function get-DLHierachyFromLDAP
 
     $telemetryEventProperties = @{
         DLConversionV2Command = $telemetryEventName
-        DLHierarchyVersion = $telemetryDLHierachyVersion
+        DLHierarchyVersion = $telemetryDLHierarchyVersion
         ActiveDirectoryVersion = $telemetryActiveDirectoryVersion
         OSVersion = $telemetryOSVersion
         MigrationStartTimeUTC = $telemetryStartTime

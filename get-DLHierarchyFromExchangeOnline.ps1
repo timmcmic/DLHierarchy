@@ -139,7 +139,7 @@ Function get-DLHierarchyFromExchangeOnline
 
     #Create telemetry values.
 
-    $telemetryDLHierachyVersion = $NULL
+    $telemetryDLHierarchyVersion = $NULL
     $telemetryExchangeOnlineVersion = $NULL
     $telemetryOSVersion = (Get-CimInstance Win32_OperatingSystem).version
     $telemetryStartTime = get-universalDateTime
@@ -261,7 +261,7 @@ Function get-DLHierarchyFromExchangeOnline
 
     out-logfile -string "Calling Test-PowershellModule to validate the DL Conversion Module version installed."
 
-    $telemetryDLHierachyVersion = Test-PowershellModule -powershellModuleName $corevariables.DLHierarchy.value -powershellVersionTest:$TRUE
+    $telemetryDLHierarchyVersion = Test-PowershellModule -powershellModuleName $corevariables.DLHierarchy.value -powershellVersionTest:$TRUE
 
     Out-LogFile -string "Calling Test-PowerShellModule to validate the Exchange Module is installed."
 
@@ -300,7 +300,7 @@ Function get-DLHierarchyFromExchangeOnline
 
     out-logfile -string "Set header in output file to group name."
 
-    $global:outputFile += "Group Hierachy for Group ID: "+$groupObjectID+"`n"
+    $global:outputFile += "Group Hierarchy for Group ID: "+$groupObjectID+"`n"
 
     out-logfile -string "Print hierarchy to log file."
 
@@ -353,7 +353,7 @@ Function get-DLHierarchyFromExchangeOnline
 
     $telemetryEventProperties = @{
         DLConversionV2Command = $telemetryEventName
-        DLHierarchyVersion = $telemetryDLHierachyVersion
+        DLHierarchyVersion = $telemetryDLHierarchyVersion
         ExchangeOnline = $telemetryExchangeOnlineVersion
         OSVersion = $telemetryOSVersion
         MigrationStartTimeUTC = $telemetryStartTime

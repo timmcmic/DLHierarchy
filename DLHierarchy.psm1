@@ -15,7 +15,7 @@
 #############################################################################################
 
 
-Function get-DLHierachyFromGraph
+Function get-DLHierarchyFromGraph
 {
     <#
     .SYNOPSIS
@@ -134,7 +134,7 @@ Function get-DLHierachyFromGraph
 
     #Create telemetry values.
 
-    $telemetryDLHierachyVersion = $NULL
+    $telemetryDLHierarchyVersion = $NULL
     $telemetryMSGraphAuthentication = $NULL
     $telemetryMSGraphUsers = $NULL
     $telemetryMSGraphGroups = $NULL
@@ -247,7 +247,7 @@ Function get-DLHierachyFromGraph
 
     out-logfile -string "Calling Test-PowershellModule to validate the DL Conversion Module version installed."
 
-    $telemetryDLHierachyVersion = Test-PowershellModule -powershellModuleName $corevariables.DLHierarchy.value -powershellVersionTest:$TRUE
+    $telemetryDLHierarchyVersion = Test-PowershellModule -powershellModuleName $corevariables.DLHierarchy.value -powershellVersionTest:$TRUE
 
     out-logfile -string "Calling Test-PowershellModule to validate the Microsoft Graph Authentication versions installed."
 
@@ -297,7 +297,7 @@ Function get-DLHierachyFromGraph
 
     out-logfile -string "Set header in output file to group name."
 
-    $global:outputFile += "Group Hierachy for Group ID: "+$groupObjectID+"`n"
+    $global:outputFile += "Group Hierarchy for Group ID: "+$groupObjectID+"`n"
 
     out-logfile -string "Print hierarchy to log file."
 
@@ -331,7 +331,7 @@ Function get-DLHierachyFromGraph
 
     $telemetryEventProperties = @{
         DLConversionV2Command = $telemetryEventName
-        DLHierarchyVersion = $telemetryDLHierachyVersion
+        DLHierarchyVersion = $telemetryDLHierarchyVersion
         MSGraphAuthentication = $telemetryMSGraphAuthentication
         MSGraphUsers = $telemetryMSGraphUsers
         MSGraphGroups = $telemetryMSGraphGroups
