@@ -118,9 +118,7 @@ Function get-DLHierarchyFromGraph
         [Parameter(Mandatory =$FALSE)]
         [boolean]$enableTextOutput=$TRUE,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$enableHTMLOutput=$TRUE,
-        [Parameter(Mandatory =$FALSE)]
-        [boolean]$reverseHierarchy=$FALSE
+        [boolean]$enableHTMLOutput=$TRUE
     )
 
     #Define script based variables.
