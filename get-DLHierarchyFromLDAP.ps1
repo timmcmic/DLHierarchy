@@ -230,7 +230,7 @@ Function get-DLHierarchyFromLDAP
     
         out-logfile -string "Print hierarchy to log file."
     
-        print-tree -node $tree -indent $defaultIndent -outputType $LDAPType
+        print-tree -node $tree -indent $defaultIndent -outputType $LDAPType -reverseHierarchy $reverseHierarchy
     
         out-logfile -string "Export hierarchy to file."
     

@@ -7,12 +7,27 @@ Function Print-Tree()
         [Parameter(Mandatory = $true)]
         $indent,
         [Parameter(Mandatory = $true)]
-        $outputType
+        $outputType,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$reverseHierarchy=$FALSE
     )
 
     $functionMSGraphType = "MSGraph"
     $functionExchangeOnlineType = "ExchangeOnline"
     $functionLDAPType = "LDAP"
+    $upChar = "<"
+    $downChar = ">"
+
+    if ($reverseHierarchy -eq $TRUE)
+    {
+        $Prearrow = $upChar
+        $PostArrow = ""
+    }
+    else 
+    {
+        $PostArrow = $downChar
+        $PreArrow = ""
+    }
 
     if ($outputType -eq $functionMSGraphType)
     {
@@ -63,9 +78,9 @@ Function Print-Tree()
     {
         $string = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+")"
         
-        out-logfile -string  (("-" * $indent) + $string)
+        out-logfile -string  ($preArrow + ("-" * $indent) + $postArrow + $string)
 
-        $global:outputFile += (("-" * $indent) + $string +"`n")
+        $global:outputFile += ($preArrow + ("-" * $indent) + $postArrow + $string +"`n")
 
         $sorted = New-Object System.Collections.Generic.List[pscustomobject]
         $node.Children | % { $sorted.Add($_) }
@@ -75,7 +90,7 @@ Function Print-Tree()
 
         foreach ($child in $sorted)
         {
-            Print-Tree -node $child -indent ($indent + 2) -outputType $functionLDAPType
+            Print-Tree -node $child -indent ($indent + 2) -outputType $functionLDAPType -reverseHierarchy $reverseHierarchy
         }
     }
 }
