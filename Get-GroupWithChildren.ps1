@@ -877,7 +877,7 @@ Function Get-GroupWithChildren()
         }
         catch {
             out-logfile -string $_
-            out-logfile -string "Unablet obtain the ad object by ID." -isError:$TRUE
+            out-logfile -string "Unable to obtain the ad object by ID." -isError:$TRUE
         }
 
         if (($functionObject.objectClass -ne $functionLDAPDynamicGroup) -and ($functionObject.objectClass -ne $functionLDAPGroup) -and ($firstLDAPQuery -eq $TRUE))
@@ -948,28 +948,64 @@ Function Get-GroupWithChildren()
 
                 if ($expandGroupMembership -eq $TRUE)
                 {
-                    out-logfile -string "Expand full group membership eanbled."
+                    if ($reverseHierarchy -eq $FALSE)
+                    {
+                        out-logfile -string "Expand full group membership enabled."
+                        out-logfile -string "Reverse hierarchy not in use."
 
-                    $children = $functionObject.member
+                        $children = $functionObject.member
+                    }
+                    else 
+                    {
+                        out-logfile -string "Expand full group membership enabled."
+                        out-logfile -string "Reverse hierarchy in use."
+
+                        $children = $functionObject.memberof
+                    }
                 }
                 else
                 {
-                    out-logfile -string "Expand full group membership disabled."
+                    if ($reverseHierarchy -eq $FALSE)
+                    {
+                        out-logfile -string "Expand full group membership disabled."
+                        out-logfile -string "Reverse hierarchy not in use."
 
-                    out-logfile -string "Construct LDAP Filter"
+                        out-logfile -string "Construct LDAP Filter"
 
                         $groupLdapFilter = "(&(objectCategory=Group)(memberof="+$functionObject.distinguishedName+"))"
                         
                         out-logfile -string $groupLDAPFilter
 
-                    try 
-                    {
-                        $children = get-adGroup -ldapFilter $groupLDAPFilter -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+                        try 
+                        {
+                            $children = get-adGroup -ldapFilter $groupLDAPFilter -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+                        }
+                        catch 
+                        {
+                            out-logfile -string $_
+                            out-logfile "Unable to obtain group membership filtered by groups only." -isError:$TRUE
+                        }
                     }
-                    catch 
+                    else 
                     {
-                        out-logfile -string $_
-                        out-logfile "Unable to obtain group membership filtered by groups only." -isError:$TRUE
+                        out-logfile -string "Expand full group membership disabled."
+                        out-logfile -string "Reverse hierarchy in use."
+
+                        out-logfile -string "Construct LDAP Filter"
+
+                        $groupLdapFilter = "(&(objectCategory=Group)(member="+$functionObject.distinguishedName+"))"
+                        
+                        out-logfile -string $groupLDAPFilter
+
+                        try 
+                        {
+                            $children = get-adGroup -ldapFilter $groupLDAPFilter -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+                        }
+                        catch 
+                        {
+                            out-logfile -string $_
+                            out-logfile "Unable to obtain group membership filtered by groups only." -isError:$TRUE
+                        }
                     }
                 }
             }
