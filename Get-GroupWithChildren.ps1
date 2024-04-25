@@ -61,7 +61,9 @@ Function Get-GroupWithChildren()
         [Parameter(Mandatory =$FALSE)]
         [boolean]$expandGroupMembership=$TRUE,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$expandDynamicGroupMembership=$TRUE
+        [boolean]$expandDynamicGroupMembership=$TRUE,
+        [Parameter(Mandatory = $false,ParameterSetName = 'LDAP')]
+        [booler]$reverseHierarchy=$FALSE
     )
     
     out-logfile -string "***********************************************************"
