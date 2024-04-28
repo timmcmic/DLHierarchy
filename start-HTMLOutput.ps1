@@ -5,9 +5,7 @@ function get-NodeString
         [Parameter(Mandatory = $true)]
         $node,
         [Parameter(Mandatory = $true)]
-        $outputType,
-        [Parameter(Mandatory =$FALSE)]
-        [boolean]$reverseHierarchy=$FALSE
+        $outputType
     )
 
     $functionReturnString = ""
@@ -18,29 +16,14 @@ function get-NodeString
 
         if ($node.object.groupType -ne $null)
         {
-            if ($reverseHierarchy -eq $FALSE)
+            if ($node.object.IsMembershipDynamic -eq $true)
             {
-                if ($node.object.IsMembershipDynamic -eq $true)
-                {
-                    $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") (DynamicMembership)"
-    
-                }
-                else 
-                {
-                    $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
-                }
+                $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") (DynamicMembership)"
+
             }
             else 
             {
-                if ($node.object.IsMembershipDynamic -eq $true)
-                {
-                    $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") (DynamicMembership) (Parent Group)"
-    
-                }
-                else 
-                {
-                    $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") (Parent Group)"
-                }
+                $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
             }
         }
         else 
@@ -64,7 +47,22 @@ function get-NodeString
     elseif ($outputType -eq $functionLDAPType)
     {
         out-logfile -string "Calculating string for LDAP"
-        $functionReturnString = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+")"
+
+        if ($reverseHierarchy -eq $FALSE)
+        {
+            $functionReturnString = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+")"
+        }
+        else 
+        {
+            if ($node.object.objectClass -eq "Group")
+            {
+                $functionReturnString = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+") (Parent Group)"
+            }
+            else 
+            {
+                $functionReturnString = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+")"
+            }
+        }
     }
 
     out-logfile -string $functionReturnString
@@ -248,7 +246,7 @@ function start-HTMLOutput
     {
         out-logfile -string "Entering Exchange Online Type"
 
-        $string = get-nodeString -node $node -outputType $functionExchangeOnlineType -reverseHierarchy $reverseHierarchy
+        $string = get-nodeString -node $node -outputType $functionExchangeOnlineType
         out-logfile -string ("Prcessing HTML: "+$string)
 
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
