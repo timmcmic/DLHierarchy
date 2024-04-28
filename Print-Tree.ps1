@@ -72,7 +72,7 @@ Function Print-Tree()
         {
             if ($indent -gt 0)
             {
-                $outputString = (("-" * $indent) + $fowardChar + $string)
+                $outputString = (("-" * $indent) + $forwardChar + $string)
             }
             else
             {
