@@ -74,10 +74,12 @@ Function Print-Tree()
             {
                 $indent--
             }
-            
-            $outputString = (("-" * $indent) + $forwardChar + $string)
+
+            $outputString = (("-" * $indent) + $fowardChar + $string)
+
             out-logfile -string  $outputString
-            $global:outputFile += $outputString
+
+            $global:outputFile += ($outputString +"`n")
         }
         else 
         {
@@ -86,10 +88,16 @@ Function Print-Tree()
                 $indent--
             }
 
-            $outputString = ($forwardChar + ("-" * $indent) + $string)
+            $outputString = ($backwardChar + ("-" * $indent)  + $string)
+
             out-logfile -string  $outputString
-            $global:outputFile += $outputString
+
+            $global:outputFile += ($outputString +"`n")
         }
+        
+        out-logfile -string  (("-" * $indent) + $string)
+
+        $global:outputFile += (("-" * $indent) + $string +"`n")
 
         $sorted = New-Object System.Collections.Generic.List[pscustomobject]
         $node.Children | % { $sorted.Add($_) }
