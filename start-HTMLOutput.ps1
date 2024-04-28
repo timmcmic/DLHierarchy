@@ -56,7 +56,7 @@ function get-NodeString
         {
             if ($node.object.objectClass -eq "Group")
             {
-                $functionReturnString = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+") (Parent Group)"
+                $functionReturnString = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+") [Parent Group]"
             }
             else 
             {
