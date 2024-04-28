@@ -70,11 +70,6 @@ Function Print-Tree()
 
         if ($reverseHierarchy -eq $FALSE)
         {
-            if ($indent -gt 0)
-            {
-                $indent--
-            }
-
             $outputString = (("-" * $indent) + $fowardChar + $string)
 
             out-logfile -string  $outputString
@@ -83,11 +78,6 @@ Function Print-Tree()
         }
         else 
         {
-            if ($indent -gt 0)
-            {
-                $indent--
-            }
-
             $outputString = ($backwardChar + ("-" * $indent)  + $string)
 
             out-logfile -string  $outputString
