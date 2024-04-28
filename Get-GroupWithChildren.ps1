@@ -790,7 +790,7 @@ Function Get-GroupWithChildren()
 
                             $dn = $functionObject.distinguishedName
                             $functionCommand = "Get-o365DistributionGroup -Filter { $exchangeMembersAttribute -eq `"$dn`" } -errorAction 'STOP'"
-
+                            out-logfile -string $functionCommand
                             $scriptBlock=[scriptBlock]::create($functionCommand)
 
                             try {
