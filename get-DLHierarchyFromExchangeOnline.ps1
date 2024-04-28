@@ -312,7 +312,7 @@ Function get-DLHierarchyFromExchangeOnline
     
         out-logfile -string "Print hierarchy to log file."
     
-        print-tree -node $tree -indent $defaultIndent -outputType $exchangeOnlineType
+        print-tree -node $tree -indent $defaultIndent -outputType $exchangeOnlineType -reverseHierarchy $reverseHierarchy
     
         out-logfile -string "Export hierarchy to file."
     
@@ -342,7 +342,7 @@ Function get-DLHierarchyFromExchangeOnline
 
     if ($enableHTMLOutput -eq $TRUE)
     {
-        start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID
+        start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy
     }
     else 
     {
