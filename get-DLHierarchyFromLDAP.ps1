@@ -250,7 +250,7 @@ Function get-DLHierarchyFromLDAP
     {
         out-logfile -string "Generate HTML File..."
 
-        start-HTMLOutput -node $tree -outputType $LDAPType -groupObjectID $groupObjectID
+        start-HTMLOutput -node $tree -outputType $LDAPType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy
     }
     else 
     {
