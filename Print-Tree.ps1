@@ -84,10 +84,6 @@ Function Print-Tree()
 
             $global:outputFile += ($outputString +"`n")
         }
-        
-        out-logfile -string  (("-" * $indent) + $string)
-
-        $global:outputFile += (("-" * $indent) + $string +"`n")
 
         $sorted = New-Object System.Collections.Generic.List[pscustomobject]
         $node.Children | % { $sorted.Add($_) }
