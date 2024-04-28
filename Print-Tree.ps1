@@ -94,7 +94,7 @@ Function Print-Tree()
 
         foreach ($child in $sorted)
         {
-            Print-Tree -node $child -indent ($indent + 2) -outputType $functionExchangeOnlineType
+            Print-Tree -node $child -indent ($indent + 2) -outputType $functionExchangeOnlineType -reverseHierarchy $reverseHierarchy
         }
     }
     elseif ($outputType -eq $functionLDAPType)
