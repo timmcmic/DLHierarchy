@@ -42,7 +42,14 @@ Function Print-Tree()
     {
         if ($node.object.groupType -ne $NULL)
         {
-            $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
+            if ($reverseHierarchy -eq $FALSE)
+            {
+                $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
+            }
+            else 
+            {
+                $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") (Parent Group)"
+            }
         }
         else 
         {
