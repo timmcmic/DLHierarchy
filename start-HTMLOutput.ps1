@@ -16,14 +16,30 @@ function get-NodeString
 
         if ($node.object.groupType -ne $null)
         {
-            if ($node.object.IsMembershipDynamic -eq $true)
+            if ($reverseHierarchy -eq $FALSE)
             {
-                $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") (DynamicMembership)"
-
+                if ($node.object.IsMembershipDynamic -eq $true)
+                {
+                    $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") (DynamicMembership)"
+    
+                }
+                else 
+                {
+                    $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
+                }
             }
             else 
             {
-                $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
+                if ($node.object.IsMembershipDynamic -eq $true)
+                {
+                    $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") (DynamicMembership) (Parent Group)"
+    
+                }
+                else 
+                {
+                    $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") (Parent Group)"
+                }
+            }
             }
         }
         else 
@@ -206,7 +222,9 @@ function start-HTMLOutput
         [Parameter(Mandatory = $true)]
         $outputType,
         [Parameter(Mandatory = $true)]
-        $groupObjectID
+        $groupObjectID,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$reverseHierarchy=$FALSE
     )
 
     $functionMSGraphType = "MSGraph"
