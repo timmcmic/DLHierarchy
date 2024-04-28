@@ -56,10 +56,36 @@ Function Print-Tree()
             $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
         }
 
-        out-logfile -string  (("-" * $indent) + $string)
+        if ($reverseHierarchy -eq $FALSE)
+        {
+            if ($indent -gt 0)
+            {
+                $outputString = (("-" * $indent) + $forwardChar + $string)
+            }
+            else
+            {
+                $outputString = (("-" * $indent) +  $string)
+            }
+            
+            out-logfile -string  $outputString
 
-        $global:outputFile += (("-" * $indent) + $string +"`n")
+            $global:outputFile += ($outputString +"`n")
+        }
+        else 
+        {
+            if ($indent -gt 0)
+            {
+                $outputString = ($backwardChar + ("-" * $indent)  + $string)
+            }
+            else 
+            {
+                $outputString = (("-" * $indent)  + $string)
+            }
 
+            out-logfile -string  $outputString
+
+            $global:outputFile += ($outputString +"`n")
+        }
         $sorted = New-Object System.Collections.Generic.List[pscustomobject]
         $node.Children | % { $sorted.Add($_) }
      
