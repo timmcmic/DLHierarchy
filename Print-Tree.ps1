@@ -15,19 +15,9 @@ Function Print-Tree()
     $functionMSGraphType = "MSGraph"
     $functionExchangeOnlineType = "ExchangeOnline"
     $functionLDAPType = "LDAP"
-    $upChar = "<"
-    $downChar = ">"
 
-    if ($reverseHierarchy -eq $TRUE)
-    {
-        $Prearrow = $upChar
-        $PostArrow = ""
-    }
-    else 
-    {
-        $PostArrow = $downChar
-        $PreArrow = ""
-    }
+    $forwardChar = ">"
+    $backwardChar = "<"
 
     if ($outputType -eq $functionMSGraphType)
     {
@@ -77,10 +67,23 @@ Function Print-Tree()
     elseif ($outputType -eq $functionLDAPType)
     {
         $string = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+")"
-        
-        out-logfile -string  ($preArrow + ("-" * $indent) + $postArrow + $string)
 
-        $global:outputFile += ($preArrow + ("-" * $indent) + $postArrow + $string +"`n")
+        if ($reverseHierarchy -eq $FALSE)
+        {
+            $indent--
+
+            $outputString = ($forwardChar + ("-" * $indent) + $string)
+            out-logfile -string  $outputString
+            $global:outputFile += $outputString
+        }
+        else 
+        {
+            $indent--
+
+            $outputString = (("-" * $indent) + $backwardChar + $string)
+            out-logfile -string  $outputString
+            $global:outputFile += $outputString
+        }
 
         $sorted = New-Object System.Collections.Generic.List[pscustomobject]
         $node.Children | % { $sorted.Add($_) }
