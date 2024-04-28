@@ -48,7 +48,7 @@ Function Get-GroupWithChildren()
         [string]$objectType,
         [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
         [boolean]$queryMethodGraph=$false,
-        [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
+
         [boolean]$queryMethodExchangeOnline=$false,
         [Parameter(Mandatory = $true,ParameterSetName = 'LDAP')]
         [boolean]$queryMethodLDAP=$false,
@@ -63,6 +63,7 @@ Function Get-GroupWithChildren()
         [Parameter(Mandatory =$FALSE)]
         [boolean]$expandDynamicGroupMembership=$TRUE,
         [Parameter(Mandatory = $false,ParameterSetName = 'LDAP')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
         [boolean]$reverseHierarchy=$FALSE
     )
     
