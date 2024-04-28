@@ -124,7 +124,9 @@ Function get-DLHierarchyFromExchangeOnline
         [Parameter(Mandatory =$FALSE)]
         [boolean]$enableTextOutput=$TRUE,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$enableHTMLOutput=$TRUE
+        [boolean]$enableHTMLOutput=$TRUE,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$reverseHierarchy=$FALSE
     )
 
     #Define script based variables.
@@ -300,7 +302,7 @@ Function get-DLHierarchyFromExchangeOnline
 
     out-logfile -string "Start building tree from group..."
 
-    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $exchangeOnlineGroupType -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
+    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $exchangeOnlineGroupType -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -reverseHierarchy $reverseHierarchy
 
     if ($enableTextOutput -eq $TRUE)
     {
