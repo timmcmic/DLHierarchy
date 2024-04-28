@@ -40,7 +40,6 @@ function get-NodeString
                     $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") (Parent Group)"
                 }
             }
-            }
         }
         else 
         {
