@@ -5,7 +5,9 @@ function get-NodeString
         [Parameter(Mandatory = $true)]
         $node,
         [Parameter(Mandatory = $true)]
-        $outputType
+        $outputType,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$reverseHierarchy=$FALSE
     )
 
     $functionReturnString = ""
@@ -246,7 +248,7 @@ function start-HTMLOutput
     {
         out-logfile -string "Entering Exchange Online Type"
 
-        $string = get-nodeString -node $node -outputType $functionExchangeOnlineType
+        $string = get-nodeString -node $node -outputType $functionExchangeOnlineType -reverseHierarchy $reverseHierarchy
         out-logfile -string ("Prcessing HTML: "+$string)
 
         New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
