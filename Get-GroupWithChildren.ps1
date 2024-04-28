@@ -788,6 +788,7 @@ Function Get-GroupWithChildren()
                         {
                             out-logfile -string "Full group membership expansion is enabled - reverse."
 
+                            $dn = $functionObject.distinguishedName
                             $functionCommand = "Get-o365DistributionGroup -Filter { $exchangeMembersAttribute -eq `"$dn`" } -errorAction 'STOP'"
 
                             $scriptBlock=[scriptBlock]::create($functionCommand)
