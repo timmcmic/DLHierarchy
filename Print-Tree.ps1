@@ -70,15 +70,29 @@ Function Print-Tree()
 
         if ($reverseHierarchy -eq $FALSE)
         {
-            $outputString = (("-" * $indent) + $fowardChar + $string)
-
+            if ($indent -gt 0)
+            {
+                $outputString = (("-" * $indent) + $fowardChar + $string)
+            }
+            else
+            {
+                $outputString = (("-" * $indent) +  $string)
+            }
+            
             out-logfile -string  $outputString
 
             $global:outputFile += ($outputString +"`n")
         }
         else 
         {
-            $outputString = ($backwardChar + ("-" * $indent)  + $string)
+            if ($indent -gt 0)
+            {
+                $outputString = ($backwardChar + ("-" * $indent)  + $string)
+            }
+            else 
+            {
+                $outputString = (("-" * $indent)  + $string)
+            }
 
             out-logfile -string  $outputString
 
