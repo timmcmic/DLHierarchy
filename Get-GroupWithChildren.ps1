@@ -578,26 +578,55 @@ Function Get-GroupWithChildren()
 
                 if ($expandGroupMembership -eq $TRUE)
                 {
-                    out-logfile -string "Full group membership expansion is enabled."
+                    if ($reverseHierarchy -eq $FALSE)
+                    {
+                        out-logfile -string "Full group membership expansion is enabled."
 
-                    try {
-                        $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP
+                        try {
+                            $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP
+                        }
+                        catch {
+                            out-logfile -string $_
+                            out-logfile -string "Error obtaining group membership." -isError:$TRUE
+                        }
                     }
-                    catch {
+                    else 
+                    {
+                        out-logfile -string "Full group membership expansion is enabled - reverse"
+
+                       try {
+                         $children = Get-MGGroupMemberOf -groupID $funcionObject.id -all -errorAction STOP
+                       }
+                       catch {
                         out-logfile -string $_
-                        out-logfile -string "Error obtaining group membership." -isError:$TRUE
+                        out-logfile -string "Error obtaining parent group membership." -isError:$TRUE
+                       }
                     }
                 }
                 else 
                 {
-                    out-logfile -string "Full group membership expansion disabled."
+                    if ($reverseHierarchy -eq $FALSE)
+                    {
+                        out-logfile -string "Full group membership expansion disabled."
 
-                    try {
-                        $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP | where {$_.AdditionalProperties.'@odata.type' -eq $functionGraphGroup}
+                        try {
+                            $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP | where {$_.AdditionalProperties.'@odata.type' -eq $functionGraphGroup}
+                        }
+                        catch {
+                            out-logfile -string $_
+                            out-logfile -string "Error obtaining group membership." -isError:$TRUE
+                        }
                     }
-                    catch {
-                        out-logfile -string $_
-                        out-logfile -string "Error obtaining group membership." -isError:$TRUE
+                    else {
+                        out-logfile -string "Full group membership expansion disabled - reverse."
+
+                        try {
+                            $children = Get-MGGroupMemberOf -groupID $funcionObject.id -all -errorAction STOP
+                          }
+                          catch {
+                           out-logfile -string $_
+                           out-logfile -string "Error obtaining parent group membership." -isError:$TRUE
+                          }
                     }
                 }
             }
