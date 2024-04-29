@@ -333,7 +333,7 @@ Function get-DLHierarchyFromGraph
     {
         out-logfile -string "Generate HTML File..."
 
-        start-HTMLOutput -node $tree -outputType $msGraphType -groupObjectID $groupObjectID
+        start-HTMLOutput -node $tree -outputType $msGraphType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy
     }
     else 
     {
