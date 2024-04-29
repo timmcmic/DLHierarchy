@@ -18,12 +18,25 @@ function get-NodeString
         {
             if ($node.object.IsMembershipDynamic -eq $true)
             {
-                $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") (DynamicMembership)"
-
+                if ($reverseHierarchy -eq $FALSE)
+                {
+                    $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") (DynamicMembership)"
+                }
+                else 
+                {
+                    $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") (DynamicMembership) [Parent Group]"
+                }
             }
             else 
             {
-                $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
+                if ($reverseHierarchy -eq $FALSE)
+                {
+                    $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
+                }
+                else 
+                {
+                    $functionReturnString = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") [Parent Group]"
+                }
             }
         }
         else 
@@ -37,17 +50,52 @@ function get-NodeString
 
         if ($node.object.groupTypes -ne $NULL)
         {
-            $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+") ("+$node.object.groupTypes+")"
+            out-logfile -string "Group type is not NULL - calculate string for group"
+
+            if ($reverseHierarchy -eq $FALSE)
+            {
+                out-logfile -string "Reverse hierarchy is set to false."
+
+                $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+") ("+$node.object.groupTypes+")"
+            }
+            else 
+            {
+                out-logfile -string "Reverse hierarchy is set to true."
+
+                $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+") ("+$node.object.groupTypes+") [Parent Group]"
+            }
         }
         else 
         {
-            $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
+            if ($reverseHierarchy -eq $FALSE)
+            {
+                $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
+            }
+            else 
+            {
+                $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+") [Parent Group]"
+            }
         }
     }
     elseif ($outputType -eq $functionLDAPType)
     {
         out-logfile -string "Calculating string for LDAP"
-        $functionReturnString = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+")"
+
+        if ($reverseHierarchy -eq $FALSE)
+        {
+            $functionReturnString = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+")"
+        }
+        else 
+        {
+            if ($node.object.objectClass -eq "Group")
+            {
+                $functionReturnString = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+") [Parent Group]"
+            }
+            else 
+            {
+                $functionReturnString = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+")"
+            }
+        }
     }
 
     out-logfile -string $functionReturnString
@@ -206,7 +254,9 @@ function start-HTMLOutput
         [Parameter(Mandatory = $true)]
         $outputType,
         [Parameter(Mandatory = $true)]
-        $groupObjectID
+        $groupObjectID,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$reverseHierarchy=$FALSE
     )
 
     $functionMSGraphType = "MSGraph"

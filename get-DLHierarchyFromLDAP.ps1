@@ -96,7 +96,9 @@ Function get-DLHierarchyFromLDAP
         [Parameter(Mandatory =$FALSE)]
         [boolean]$enableTextOutput=$TRUE,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$enableHTMLOutput=$TRUE
+        [boolean]$enableHTMLOutput=$TRUE,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$reverseHierarchy=$FALSE
     )
 
     #Define script based variables.
@@ -218,7 +220,7 @@ Function get-DLHierarchyFromLDAP
 
     out-logfile -string "Start building tree from group..."
 
-    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $LDAPGroupType -queryMethodLDAP:$TRUE -globalCatalogServer $coreVariables.globalCatalogWithPort.Value -activeDirectoryCredential $activeDirectoryCredential -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLdapQuery $TRUE
+    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $LDAPGroupType -queryMethodLDAP:$TRUE -globalCatalogServer $coreVariables.globalCatalogWithPort.Value -activeDirectoryCredential $activeDirectoryCredential -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLdapQuery $TRUE -reverseHierarchy $reverseHierarchy
 
     if ($enableTextOutput -eq $TRUE)
     {
@@ -228,7 +230,7 @@ Function get-DLHierarchyFromLDAP
     
         out-logfile -string "Print hierarchy to log file."
     
-        print-tree -node $tree -indent $defaultIndent -outputType $LDAPType
+        print-tree -node $tree -indent $defaultIndent -outputType $LDAPType -reverseHierarchy $reverseHierarchy
     
         out-logfile -string "Export hierarchy to file."
     
@@ -248,7 +250,7 @@ Function get-DLHierarchyFromLDAP
     {
         out-logfile -string "Generate HTML File..."
 
-        start-HTMLOutput -node $tree -outputType $LDAPType -groupObjectID $groupObjectID
+        start-HTMLOutput -node $tree -outputType $LDAPType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy
     }
     else 
     {

@@ -118,7 +118,9 @@ Function get-DLHierarchyFromGraph
         [Parameter(Mandatory =$FALSE)]
         [boolean]$enableTextOutput=$TRUE,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$enableHTMLOutput=$TRUE
+        [boolean]$enableHTMLOutput=$TRUE,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$reverseHierarchy=$FALSE
     )
 
     #Define script based variables.
@@ -297,7 +299,7 @@ Function get-DLHierarchyFromGraph
 
     out-logfile -string "Start building tree from group..."
 
-    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $msGraphGroupType -queryMethodGraph:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
+    $tree = Get-GroupWithChildren -objectID $groupObjectID -processedGroupIds $processedGroupIds -objectType $msGraphGroupType -queryMethodGraph:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -reverseHierarchy $reverseHierarchy
 
     out-logfile -string "Set header in output file to group name."
 
@@ -331,7 +333,7 @@ Function get-DLHierarchyFromGraph
     {
         out-logfile -string "Generate HTML File..."
 
-        start-HTMLOutput -node $tree -outputType $msGraphType -groupObjectID $groupObjectID
+        start-HTMLOutput -node $tree -outputType $msGraphType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy
     }
     else 
     {

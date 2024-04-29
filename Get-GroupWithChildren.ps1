@@ -61,7 +61,11 @@ Function Get-GroupWithChildren()
         [Parameter(Mandatory =$FALSE)]
         [boolean]$expandGroupMembership=$TRUE,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$expandDynamicGroupMembership=$TRUE
+        [boolean]$expandDynamicGroupMembership=$TRUE,
+        [Parameter(Mandatory = $false,ParameterSetName = 'LDAP')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
+        [boolean]$reverseHierarchy=$FALSE
     )
     
     out-logfile -string "***********************************************************"
@@ -103,6 +107,8 @@ Function Get-GroupWithChildren()
     $functionLDAPUser = "User"
     $functionLDAPContact = "Contact"
     $functionLDAPDynamicGroup = "msExchDynamicDistributionList"
+
+    $exchangeMembersAttribute = "Members"
 
     out-logfile -string ("Parameter Set Name: "+$functionParamterSetName)
     out-logfile -string ("Processing group ID: "+$objectID)
@@ -493,6 +499,49 @@ Function Get-GroupWithChildren()
         return $returnObject
     }
 
+    function get-GraphGroupMemberOf
+    {
+        Param
+        (
+            [Parameter(Mandatory = $true)]
+            $objectID
+        )
+
+        $returnObjects = Get-MGGroupMemberOf -groupID $objectID -all -errorAction STOP
+
+        return $returnObjects
+    }
+
+    function get-ExchangeGroupMemberOf
+    {
+        Param
+        (
+            [Parameter(Mandatory = $true)]
+            $distinguishedName
+        )
+
+        $returnObjects = @()
+
+        out-logfile -string "Entering get-ExchangeGroupMemberOF"
+
+        $functionCommand = "Get-o365DistributionGroup -Filter { $exchangeMembersAttribute -eq `"$distinguishedName`" } -errorAction 'STOP'"
+
+        out-logfile -string $functionCommand
+
+        $scriptBlock=[scriptBlock]::create($functionCommand)
+
+        try {
+            $returnObjects += invoke-command -scriptBlock $scriptBlock
+        }
+        catch {
+            out-logfile $_
+            out-logfile -string "Unable to obtain distribution group membership." -isError:$TRUE
+        }
+
+        return $returnObjects
+    }
+
+
     #===============================================================================
     #Graph Code
     #===============================================================================
@@ -573,26 +622,55 @@ Function Get-GroupWithChildren()
 
                 if ($expandGroupMembership -eq $TRUE)
                 {
-                    out-logfile -string "Full group membership expansion is enabled."
+                    if ($reverseHierarchy -eq $FALSE)
+                    {
+                        out-logfile -string "Full group membership expansion is enabled."
 
-                    try {
-                        $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP
+                        try {
+                            $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP
+                        }
+                        catch {
+                            out-logfile -string $_
+                            out-logfile -string "Error obtaining group membership." -isError:$TRUE
+                        }
                     }
-                    catch {
+                    else 
+                    {
+                        out-logfile -string "Full group membership expansion is enabled - reverse"
+
+                       try {
+                         $children = get-GraphGroupMemberOf -objectID $functionObject.id
+                       }
+                       catch {
                         out-logfile -string $_
-                        out-logfile -string "Error obtaining group membership." -isError:$TRUE
+                        out-logfile -string "Error obtaining parent group membership." -isError:$TRUE
+                       }
                     }
                 }
                 else 
                 {
-                    out-logfile -string "Full group membership expansion disabled."
+                    if ($reverseHierarchy -eq $FALSE)
+                    {
+                        out-logfile -string "Full group membership expansion disabled."
 
-                    try {
-                        $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP | where {$_.AdditionalProperties.'@odata.type' -eq $functionGraphGroup}
+                        try {
+                            $children = Get-MgGroupMember -GroupId $functionObject.Id -all -errorAction STOP | where {$_.AdditionalProperties.'@odata.type' -eq $functionGraphGroup}
+                        }
+                        catch {
+                            out-logfile -string $_
+                            out-logfile -string "Error obtaining group membership." -isError:$TRUE
+                        }
                     }
-                    catch {
-                        out-logfile -string $_
-                        out-logfile -string "Error obtaining group membership." -isError:$TRUE
+                    else {
+                        out-logfile -string "Full group membership expansion disabled - reverse."
+
+                        try {
+                            $children = get-GraphGroupMemberOf -objectID $functionObject.id
+                          }
+                          catch {
+                           out-logfile -string $_
+                           out-logfile -string "Error obtaining parent group membership." -isError:$TRUE
+                          }
                     }
                 }
             }
@@ -609,7 +687,7 @@ Function Get-GroupWithChildren()
                 $global:childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
                 $global:childCounter++
                 out-logfile -string $childCounter.tostring()
-                $childNode = Get-GroupWithChildren -objectID $child.id -processedGroupIds $childGroupIDs -objectType $child.additionalProperties["@odata.type"] -queryMethodGraph:$true -expandGroupMembership $expandGroupMembership
+                $childNode = Get-GroupWithChildren -objectID $child.id -processedGroupIds $childGroupIDs -objectType $child.additionalProperties["@odata.type"] -queryMethodGraph:$true -expandGroupMembership $expandGroupMembership -reverseHierarchy $reverseHierarchy
                 $childNodes += $childNode
                 $global:childCounter--
                 out-logfile -string $global:childCounter.tostring()
@@ -744,22 +822,31 @@ Function Get-GroupWithChildren()
                 {
                     out-logfile -string "Group is a dynamic group - children determined by recipient filter."
 
-                    if ($expandDynamicGroupMembership -eq $TRUE)
+                    if ($reverseHierarchy -eq $false)
                     {
-                        out-logfile -string "Dynamic group membership expansion enabled."
-
-                        try {
-                            $children = get-o365Recipient -RecipientPreviewFilter $functionObject.RecipientFilter -resultsize unlimited -errorAction STOP
+                        if ($expandDynamicGroupMembership -eq $TRUE)
+                        {
+                            out-logfile -string "Dynamic group membership expansion enabled."
+    
+                            try {
+                                $children = get-o365Recipient -RecipientPreviewFilter $functionObject.RecipientFilter -resultsize unlimited -errorAction STOP
+                            }
+                            catch {
+                                out-logfile $_
+                                out-logfile -string "Unable to obtain dynamic DL members by recipient filter preview." -isError:$TRUE
+                            }
                         }
-                        catch {
-                            out-logfile $_
-                            out-logfile -string "Unable to obtain dynamic DL members by recipient filter preview." -isError:$TRUE
+                        else 
+                        {
+                            out-logfile -string "Dynamic group membership expansion is disabled."
+                            $childern=@()
                         }
                     }
                     else 
                     {
-                        out-logfile -string "Dynamic group membership expansion is disabled."
-                        $childern=@()
+                        out-logfile -string "Full group membership expansion is enabled - reverse."
+
+                        $children = get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
                     }
                 }
                 elseif ($functionObject.recipientTypeDetails -ne $functionExchangeGroupMailbox)
@@ -768,49 +855,76 @@ Function Get-GroupWithChildren()
 
                     if ($expandGroupMembership -eq $TRUE)
                     {
-                        out-logfile -string "Full group membership expansion is enabled."
-                        try {
-                            $children = Get-o365distributionGroupMember -Identity $functionObject.ExchangeObjectID -resultSize unlimited -errorAction STOP
+                        if ($reverseHierarchy -eq $FALSE)
+                        {
+                            out-logfile -string "Full group membership expansion is enabled."
+                            try {
+                                $children = Get-o365distributionGroupMember -Identity $functionObject.ExchangeObjectID -resultSize unlimited -errorAction STOP
+                            }
+                            catch {
+                                out-logfile $_
+                                out-logfile -string "Unable to obtain distribution group membership." -isError:$TRUE
+                            }
                         }
-                        catch {
-                            out-logfile $_
-                            out-logfile -string "Unable to obtain distribution group membership." -isError:$TRUE
+                        else 
+                        {
+                            out-logfile -string "Full group membership expansion is enabled - reverse."
+
+                            $children = get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
                         }
                     }
                     else 
                     {
                         out-logfile -string "Full group membership expansion is disabled."
 
-                        try {
-                            $children = Get-o365distributionGroupMember -Identity $functionObject.ExchangeObjectID -resultSize unlimited -errorAction STOP | where {($_.recipientTypeDetails -eq $functionExchangeMailUniversalSecurityGroup) -or ($_.recipientTypeDetails -eq $functionExchangeMailUniversalDistributionGroup) -or ($_.recipientTypeDetails -eq $functionExchangeGroupMailbox) -or ($_.recipientTypeDetails -eq $functionExchangeDynamicGroup)}
+                        if ($reverseHierarchy -eq $FALSE)
+                        {
+                            try {
+                                $children = Get-o365distributionGroupMember -Identity $functionObject.ExchangeObjectID -resultSize unlimited -errorAction STOP | where {($_.recipientTypeDetails -eq $functionExchangeMailUniversalSecurityGroup) -or ($_.recipientTypeDetails -eq $functionExchangeMailUniversalDistributionGroup) -or ($_.recipientTypeDetails -eq $functionExchangeGroupMailbox) -or ($_.recipientTypeDetails -eq $functionExchangeDynamicGroup)}
+                            }
+                            catch {
+                                out-logfile $_
+                                out-logfile -string "Unable to obtain distribution group membership." -isError:$TRUE
+                            }
                         }
-                        catch {
-                            out-logfile $_
-                            out-logfile -string "Unable to obtain distribution group membership." -isError:$TRUE
-                        }
+                        else
+                        {
+                            out-logfile -string "Full group membership expansion is enabled - reverse."
+
+                            $children = get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
+                        }                      
                     }
                 }
                 else 
                 {
                     out-logfile -string "Group is a unified group - perform link member query."
-                    
-                    if ($expandGroupMembership -eq $TRUE)
-                    {
-                        out-logfile -string "Full group membership expansion is enabled."
 
-                        try {
-                            $children = get-o365UnifiedGroupLinks -identity $functionObject.ExchangeObjectID -linkType Member -resultSize unlimited -errorAction STOP
+                    if ($reverseHierarchy -eq $FALSE)
+                    {
+                        if ($expandGroupMembership -eq $TRUE)
+                        {
+                            out-logfile -string "Full group membership expansion is enabled."
+    
+                            try {
+                                $children = get-o365UnifiedGroupLinks -identity $functionObject.ExchangeObjectID -linkType Member -resultSize unlimited -errorAction STOP
+                            }
+                            catch {
+                                out-logfile $_
+                                out-logfile -string "Unable to obtain unified group membership." -isError:$TRUE
+                            }
                         }
-                        catch {
-                            out-logfile $_
-                            out-logfile -string "Unable to obtain unified group membership." -isError:$TRUE
+                        else 
+                        {
+                            out-logfile -string "Full group membership expansion is disabled."
+    
+                            $children=@()
                         }
                     }
                     else 
                     {
-                        out-logfile -string "Full group membership expansion is disabled."
+                        out-logfile -string "Full group membership expansion is enabled - reverse."
 
-                        $children=@()
+                        $children = get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
                     }
                 }
             }
@@ -825,7 +939,7 @@ Function Get-GroupWithChildren()
                 $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
                 $global:childCounter++
                 out-logfile -string $global:childCounter.tostring()
-                $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.RecipientTypeDetails -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership
+                $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.RecipientTypeDetails -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -reverseHierarchy $reverseHierarchy
                 $childNodes += $childNode
                 $global:childCounter--
                 out-logfile -string $global:childCounter.tostring()
@@ -875,7 +989,7 @@ Function Get-GroupWithChildren()
         }
         catch {
             out-logfile -string $_
-            out-logfile -string "Unablet obtain the ad object by ID." -isError:$TRUE
+            out-logfile -string "Unable to obtain the ad object by ID." -isError:$TRUE
         }
 
         if (($functionObject.objectClass -ne $functionLDAPDynamicGroup) -and ($functionObject.objectClass -ne $functionLDAPGroup) -and ($firstLDAPQuery -eq $TRUE))
@@ -921,18 +1035,28 @@ Function Get-GroupWithChildren()
                 {
                     out-logfile -string "Dynamic group membership expansion enabled."
 
-                    try {
-                        $children = Get-ADObject -LDAPFilter $functionObject.msExchDynamicDLFilter -SearchBase $functionObject.msExchDynamicDLBaseDN -Properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+                    if ($reverseHierarchy -eq $FALSE)
+                    {
+                        try {
+                            $children = Get-ADObject -LDAPFilter $functionObject.msExchDynamicDLFilter -SearchBase $functionObject.msExchDynamicDLBaseDN -Properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+                        }
+                        catch {
+                            out-logfile $_
+                            out-logfile -string "Unable to obtain dynamic group membership via LDAP call."
+                        }
+    
+                        out-logfile -string "Filter children to only contain users, groups, or contacts since LDAP query inclues all object classes."
+                        out-logfile -string $children.Count.tostring()
+                        $children = $children | where {($_.objectClass -eq $functionLDAPuser) -or ($_.objectClass -eq $functionLDAPGroup) -or ($_.objectClass -eq $functionLDAPContact) -or ($_.objectClass -eq $functionLDAPDynamicGroup)}
+                        out-logfile -string $children.Count.tostring()
                     }
-                    catch {
-                        out-logfile $_
-                        out-logfile -string "Unable to obtain dynamic group membership via LDAP call."
-                    }
+                    else 
+                    {
+                        out-logfile -string "Expand full group membership enabled."
+                        out-logfile -string "Reverse hierarchy in use."
 
-                    out-logfile -string "Filter children to only contain users, groups, or contacts since LDAP query inclues all object classes."
-                    out-logfile -string $children.Count.tostring()
-                    $children = $children | where {($_.objectClass -eq $functionLDAPuser) -or ($_.objectClass -eq $functionLDAPGroup) -or ($_.objectClass -eq $functionLDAPContact) -or ($_.objectClass -eq $functionLDAPDynamicGroup)}
-                    out-logfile -string $children.Count.tostring()
+                        $children = $functionObject.memberof
+                    }
                 }
                 else 
                 {
@@ -946,28 +1070,64 @@ Function Get-GroupWithChildren()
 
                 if ($expandGroupMembership -eq $TRUE)
                 {
-                    out-logfile -string "Expand full group membership eanbled."
+                    if ($reverseHierarchy -eq $FALSE)
+                    {
+                        out-logfile -string "Expand full group membership enabled."
+                        out-logfile -string "Reverse hierarchy not in use."
 
-                    $children = $functionObject.member
+                        $children = $functionObject.member
+                    }
+                    else 
+                    {
+                        out-logfile -string "Expand full group membership enabled."
+                        out-logfile -string "Reverse hierarchy in use."
+
+                        $children = $functionObject.memberof
+                    }
                 }
                 else
                 {
-                    out-logfile -string "Expand full group membership disabled."
+                    if ($reverseHierarchy -eq $FALSE)
+                    {
+                        out-logfile -string "Expand full group membership disabled."
+                        out-logfile -string "Reverse hierarchy not in use."
 
-                    out-logfile -string "Construct LDAP Filter"
+                        out-logfile -string "Construct LDAP Filter"
 
                         $groupLdapFilter = "(&(objectCategory=Group)(memberof="+$functionObject.distinguishedName+"))"
                         
                         out-logfile -string $groupLDAPFilter
 
-                    try 
-                    {
-                        $children = get-adGroup -ldapFilter $groupLDAPFilter -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+                        try 
+                        {
+                            $children = get-adGroup -ldapFilter $groupLDAPFilter -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+                        }
+                        catch 
+                        {
+                            out-logfile -string $_
+                            out-logfile "Unable to obtain group membership filtered by groups only." -isError:$TRUE
+                        }
                     }
-                    catch 
+                    else 
                     {
-                        out-logfile -string $_
-                        out-logfile "Unable to obtain group membership filtered by groups only." -isError:$TRUE
+                        out-logfile -string "Expand full group membership disabled."
+                        out-logfile -string "Reverse hierarchy in use."
+
+                        out-logfile -string "Construct LDAP Filter"
+
+                        $groupLdapFilter = "(&(objectCategory=Group)(member="+$functionObject.distinguishedName+"))"
+                        
+                        out-logfile -string $groupLDAPFilter
+
+                        try 
+                        {
+                            $children = get-adGroup -ldapFilter $groupLDAPFilter -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+                        }
+                        catch 
+                        {
+                            out-logfile -string $_
+                            out-logfile "Unable to obtain group membership filtered by groups only." -isError:$TRUE
+                        }
                     }
                 }
             }
@@ -978,11 +1138,22 @@ Function Get-GroupWithChildren()
 
             foreach ($child in $children)
             {
-                write-host "ChildID"
-                write-host $child
-                $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-                $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false
-                $childNodes += $childNode
+                if ($reverseHierarchy -eq $FALSE)
+                {
+                    write-host "ChildID"
+                    write-host $child
+                    $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
+                    $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false
+                    $childNodes += $childNode
+                }
+                else 
+                {
+                    write-host "ChildID"
+                    write-host $child
+                    $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
+                    $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false -reverseHierarchy:$TRUE
+                    $childNodes += $childNode
+                }  
             }
         }
         else 

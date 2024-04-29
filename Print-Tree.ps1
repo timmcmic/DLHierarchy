@@ -7,20 +7,52 @@ Function Print-Tree()
         [Parameter(Mandatory = $true)]
         $indent,
         [Parameter(Mandatory = $true)]
-        $outputType
+        $outputType,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$reverseHierarchy=$FALSE
     )
 
     $functionMSGraphType = "MSGraph"
     $functionExchangeOnlineType = "ExchangeOnline"
     $functionLDAPType = "LDAP"
 
+    $forwardChar = ">"
+    $backwardChar = "<"
+
     if ($outputType -eq $functionMSGraphType)
     {
         $string = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
 
-        out-logfile -string  (("-" * $indent) + $string)
+        if ($reverseHierarchy -eq $FALSE)
+        {
+            if ($indent -gt 0)
+            {
+                $outputString = (("-" * $indent) + $forwardChar + $string)
+            }
+            else
+            {
+                $outputString = (("-" * $indent) +  $string)
+            }
+            
+            out-logfile -string  $outputString
 
-        $global:outputFile += (("-" * $indent) + $string +"`n")
+            $global:outputFile += ($outputString +"`n")
+        }
+        else 
+        {
+            if ($indent -gt 0)
+            {
+                $outputString = ($backwardChar + ("-" * $indent)  + $string)
+            }
+            else 
+            {
+                $outputString = (("-" * $indent)  + $string)
+            }
+
+            out-logfile -string  $outputString
+
+            $global:outputFile += ($outputString +"`n")
+        }
 
         $sorted = New-Object System.Collections.Generic.List[pscustomobject]
         $node.Children | % { $sorted.Add($_) }
@@ -30,24 +62,57 @@ Function Print-Tree()
 
         foreach ($child in $sorted)
         {
-            Print-Tree -node $child -indent ($indent + 2) -outputType $functionMSGraphType
+            Print-Tree -node $child -indent ($indent + 2) -outputType $functionMSGraphType -reverseHierarchy $reverseHierarchy
         }
     }
     elseif ($outputType -eq $functionExchangeOnlineType)
     {
         if ($node.object.groupType -ne $NULL)
         {
-            $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
+            if ($reverseHierarchy -eq $FALSE)
+            {
+                $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+")"
+            }
+            else 
+            {
+                $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+"/"+$node.object.GroupType+") [Parent Group]"
+            }
         }
         else 
         {
             $string = $node.object.displayName +" (ExchangeObjectID: "+$node.object.ExchangeObjectID+") ("+$node.object.recipientType+"/"+$node.object.recipientTypeDetails+")"
         }
 
-        out-logfile -string  (("-" * $indent) + $string)
+        if ($reverseHierarchy -eq $FALSE)
+        {
+            if ($indent -gt 0)
+            {
+                $outputString = (("-" * $indent) + $forwardChar + $string)
+            }
+            else
+            {
+                $outputString = (("-" * $indent) +  $string)
+            }
+            
+            out-logfile -string  $outputString
 
-        $global:outputFile += (("-" * $indent) + $string +"`n")
+            $global:outputFile += ($outputString +"`n")
+        }
+        else 
+        {
+            if ($indent -gt 0)
+            {
+                $outputString = ($backwardChar + ("-" * $indent)  + $string)
+            }
+            else 
+            {
+                $outputString = (("-" * $indent)  + $string)
+            }
 
+            out-logfile -string  $outputString
+
+            $global:outputFile += ($outputString +"`n")
+        }
         $sorted = New-Object System.Collections.Generic.List[pscustomobject]
         $node.Children | % { $sorted.Add($_) }
      
@@ -56,16 +121,43 @@ Function Print-Tree()
 
         foreach ($child in $sorted)
         {
-            Print-Tree -node $child -indent ($indent + 2) -outputType $functionExchangeOnlineType
+            Print-Tree -node $child -indent ($indent + 2) -outputType $functionExchangeOnlineType -reverseHierarchy $reverseHierarchy
         }
     }
     elseif ($outputType -eq $functionLDAPType)
     {
         $string = $node.object.DisplayName +" (ObjectGUID:"+$node.object.objectGUID+") ("+$node.object.objectClass+")"
-        
-        out-logfile -string  (("-" * $indent) + $string)
 
-        $global:outputFile += (("-" * $indent) + $string +"`n")
+        if ($reverseHierarchy -eq $FALSE)
+        {
+            if ($indent -gt 0)
+            {
+                $outputString = (("-" * $indent) + $forwardChar + $string)
+            }
+            else
+            {
+                $outputString = (("-" * $indent) +  $string)
+            }
+            
+            out-logfile -string  $outputString
+
+            $global:outputFile += ($outputString +"`n")
+        }
+        else 
+        {
+            if ($indent -gt 0)
+            {
+                $outputString = ($backwardChar + ("-" * $indent)  + $string)
+            }
+            else 
+            {
+                $outputString = (("-" * $indent)  + $string)
+            }
+
+            out-logfile -string  $outputString
+
+            $global:outputFile += ($outputString +"`n")
+        }
 
         $sorted = New-Object System.Collections.Generic.List[pscustomobject]
         $node.Children | % { $sorted.Add($_) }
@@ -75,7 +167,7 @@ Function Print-Tree()
 
         foreach ($child in $sorted)
         {
-            Print-Tree -node $child -indent ($indent + 2) -outputType $functionLDAPType
+            Print-Tree -node $child -indent ($indent + 2) -outputType $functionLDAPType -reverseHierarchy $reverseHierarchy
         }
     }
 }
