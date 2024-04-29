@@ -193,6 +193,11 @@ Function get-DLHierarchyFromLDAP
 
     out-logfile -string "Ensure that all strings specified have no leading or trailing spaces."
 
+    out-logfile -string "If reverse hiearchy is enabled - disable group expansion."
+
+    $expandGroupMembership = $FALSE
+    $expandDynamicGroupMembership = $FALSE
+
     #Perform cleanup of any strings so that no spaces existin trailing or leading.
 
     $groupObjectID = remove-stringSpace -stringToFix $groupObjectID
