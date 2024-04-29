@@ -499,6 +499,43 @@ Function Get-GroupWithChildren()
         return $returnObject
     }
 
+    function get-GraphGroupMemberOf
+    {
+        Param
+        (
+            [Parameter(Mandatory = $true)]
+            $objectID
+        )
+
+        $returnObjects = Get-MGGroupMemberOf -groupID $objectID -all -errorAction STOP
+
+        return $returnObjects
+    }
+
+    function get-ExchangeGroupMemberOf
+    {
+        Param
+        (
+            [Parameter(Mandatory = $true)]
+            $distinguishedName
+        )
+
+        $functionCommand = "Get-o365DistributionGroup -Filter { $exchangeMembersAttribute -eq `"$distinguishedNmae`" } -errorAction 'STOP'"
+
+        $scriptBlock=[scriptBlock]::create($functionCommand)
+
+        try {
+            $returnObjects += invoke-command -scriptBlock $scriptBlock
+        }
+        catch {
+            out-logfile $_
+            out-logfile -string "Unable to obtain distribution group membership." -isError:$TRUE
+        }
+
+        return $returnObjects
+    }
+
+
     #===============================================================================
     #Graph Code
     #===============================================================================
@@ -596,7 +633,7 @@ Function Get-GroupWithChildren()
                         out-logfile -string "Full group membership expansion is enabled - reverse"
 
                        try {
-                         $children = Get-MGGroupMemberOf -groupID $functionObject.Id -all -errorAction STOP
+                         $children = get-GraphGroupMemberOf -objectID $functionObject.id
                        }
                        catch {
                         out-logfile -string $_
@@ -622,7 +659,7 @@ Function Get-GroupWithChildren()
                         out-logfile -string "Full group membership expansion disabled - reverse."
 
                         try {
-                            $children = Get-MGGroupMemberOf -groupID $functionObject.Id -all -errorAction STOP
+                            $children = get-GraphGroupMemberOf -objectID $functionObject.id
                           }
                           catch {
                            out-logfile -string $_
@@ -803,19 +840,7 @@ Function Get-GroupWithChildren()
                     {
                         out-logfile -string "Full group membership expansion is enabled - reverse."
 
-                        $dn = $functionObject.distinguishedName
-
-                        $functionCommand = "Get-o365DistributionGroup -Filter { $exchangeMembersAttribute -eq `"$dn`" } -errorAction 'STOP'"
-
-                        $scriptBlock=[scriptBlock]::create($functionCommand)
-
-                        try {
-                            $children += invoke-command -scriptBlock $scriptBlock
-                        }
-                        catch {
-                            out-logfile $_
-                            out-logfile -string "Unable to obtain distribution group membership." -isError:$TRUE
-                        }
+                        get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
                     }
                 }
                 elseif ($functionObject.recipientTypeDetails -ne $functionExchangeGroupMailbox)
@@ -839,18 +864,7 @@ Function Get-GroupWithChildren()
                         {
                             out-logfile -string "Full group membership expansion is enabled - reverse."
 
-                            $dn = $functionObject.distinguishedName
-                            $functionCommand = "Get-o365DistributionGroup -Filter { $exchangeMembersAttribute -eq `"$dn`" } -errorAction 'STOP'"
-                            out-logfile -string $functionCommand
-                            $scriptBlock=[scriptBlock]::create($functionCommand)
-
-                            try {
-                                $children += invoke-command -scriptBlock $scriptBlock
-                            }
-                            catch {
-                                out-logfile $_
-                                out-logfile -string "Unable to obtain distribution group membership." -isError:$TRUE
-                            }
+                            get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
                         }
                     }
                     else 
@@ -871,19 +885,7 @@ Function Get-GroupWithChildren()
                         {
                             out-logfile -string "Full group membership expansion is enabled - reverse."
 
-                            $dn = $functionObject.distinguishedName
-
-                            $functionCommand = "Get-o365DistributionGroup -Filter { $exchangeMembersAttribute -eq `"$dn`" } -errorAction 'STOP'"
-
-                            $scriptBlock=[scriptBlock]::create($functionCommand)
-
-                            try {
-                                $children += invoke-command -scriptBlock $scriptBlock
-                            }
-                            catch {
-                                out-logfile $_
-                                out-logfile -string "Unable to obtain distribution group membership." -isError:$TRUE
-                            }
+                            get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
                         }                      
                     }
                 }
@@ -916,21 +918,7 @@ Function Get-GroupWithChildren()
                     {
                         out-logfile -string "Full group membership expansion is enabled - reverse."
 
-                        $dn = $functionObject.distinguishedName
-
-                        $functionCommand = "Get-o365DistributionGroup -Filter { $exchangeMembersAttribute -eq `"$dn`" } -errorAction 'STOP'"
-
-                        out-logfile -string $functionCommand
-
-                        $scriptBlock=[scriptBlock]::create($functionCommand)
-
-                        try {
-                            $children += invoke-command -scriptBlock $scriptBlock
-                        }
-                        catch {
-                            out-logfile $_
-                            out-logfile -string "Unable to obtain distribution group membership." -isError:$TRUE
-                        }
+                        get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
                     }
                 }
             }
