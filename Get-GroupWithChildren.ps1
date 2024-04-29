@@ -520,6 +520,8 @@ Function Get-GroupWithChildren()
             $distinguishedName
         )
 
+        $returnObjects = @()
+
         out-logfile -string "Entering get-ExchangeGroupMemberOF"
 
         $functionCommand = "Get-o365DistributionGroup -Filter { $exchangeMembersAttribute -eq `"$distinguishedName`" } -errorAction 'STOP'"
