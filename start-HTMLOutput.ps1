@@ -50,12 +50,18 @@ function get-NodeString
 
         if ($node.object.groupTypes -ne $NULL)
         {
+            out-logfile -string "Group type is not NULL - calculate string for group"
+
             if ($reverseHierarchy -eq $FALSE)
             {
+                out-logfile -string "Reverse hierarchy is set to false."
+
                 $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+") ("+$node.object.groupTypes+")"
             }
             else 
             {
+                out-logfile -string "Reverse hierarchy is set to true."
+                
                 $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+") ("+$node.object.groupTypes+") [Parent Group]"
             }
         }
