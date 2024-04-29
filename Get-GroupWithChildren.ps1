@@ -596,7 +596,7 @@ Function Get-GroupWithChildren()
                         out-logfile -string "Full group membership expansion is enabled - reverse"
 
                        try {
-                         $children = Get-MGGroupMemberOf -groupID $funcionObject.id -all -errorAction STOP
+                         $children = Get-MGGroupMemberOf -groupID $functionObject.Id -all -errorAction STOP
                        }
                        catch {
                         out-logfile -string $_
