@@ -779,22 +779,41 @@ Function Get-GroupWithChildren()
                 {
                     out-logfile -string "Group is a dynamic group - children determined by recipient filter."
 
-                    if ($expandDynamicGroupMembership -eq $TRUE)
+                    if ($reverseHierarchy -eq $false)
                     {
-                        out-logfile -string "Dynamic group membership expansion enabled."
-
-                        try {
-                            $children = get-o365Recipient -RecipientPreviewFilter $functionObject.RecipientFilter -resultsize unlimited -errorAction STOP
+                        if ($expandDynamicGroupMembership -eq $TRUE)
+                        {
+                            out-logfile -string "Dynamic group membership expansion enabled."
+    
+                            try {
+                                $children = get-o365Recipient -RecipientPreviewFilter $functionObject.RecipientFilter -resultsize unlimited -errorAction STOP
+                            }
+                            catch {
+                                out-logfile $_
+                                out-logfile -string "Unable to obtain dynamic DL members by recipient filter preview." -isError:$TRUE
+                            }
                         }
-                        catch {
-                            out-logfile $_
-                            out-logfile -string "Unable to obtain dynamic DL members by recipient filter preview." -isError:$TRUE
+                        else 
+                        {
+                            out-logfile -string "Dynamic group membership expansion is disabled."
+                            $childern=@()
                         }
                     }
                     else 
                     {
-                        out-logfile -string "Dynamic group membership expansion is disabled."
-                        $childern=@()
+                        out-logfile -string "Full group membership expansion is enabled - reverse."
+
+                        $functionCommand = "Get-o365DistributionGroup -Filter { $exchangeMembersAttribute -eq `"$dn`" } -errorAction 'STOP'"
+
+                        $scriptBlock=[scriptBlock]::create($functionCommand)
+
+                        try {
+                            $children += invoke-command -scriptBlock $scriptBlock
+                        }
+                        catch {
+                            out-logfile $_
+                            out-logfile -string "Unable to obtain distribution group membership." -isError:$TRUE
+                        }
                     }
                 }
                 elseif ($functionObject.recipientTypeDetails -ne $functionExchangeGroupMailbox)
@@ -867,24 +886,43 @@ Function Get-GroupWithChildren()
                 else 
                 {
                     out-logfile -string "Group is a unified group - perform link member query."
-                    
-                    if ($expandGroupMembership -eq $TRUE)
-                    {
-                        out-logfile -string "Full group membership expansion is enabled."
 
-                        try {
-                            $children = get-o365UnifiedGroupLinks -identity $functionObject.ExchangeObjectID -linkType Member -resultSize unlimited -errorAction STOP
+                    if ($reverseHierarchy -eq $FALSE)
+                    {
+                        if ($expandGroupMembership -eq $TRUE)
+                        {
+                            out-logfile -string "Full group membership expansion is enabled."
+    
+                            try {
+                                $children = get-o365UnifiedGroupLinks -identity $functionObject.ExchangeObjectID -linkType Member -resultSize unlimited -errorAction STOP
+                            }
+                            catch {
+                                out-logfile $_
+                                out-logfile -string "Unable to obtain unified group membership." -isError:$TRUE
+                            }
                         }
-                        catch {
-                            out-logfile $_
-                            out-logfile -string "Unable to obtain unified group membership." -isError:$TRUE
+                        else 
+                        {
+                            out-logfile -string "Full group membership expansion is disabled."
+    
+                            $children=@()
                         }
                     }
                     else 
                     {
-                        out-logfile -string "Full group membership expansion is disabled."
+                        out-logfile -string "Full group membership expansion is enabled - reverse."
 
-                        $children=@()
+                        $functionCommand = "Get-o365DistributionGroup -Filter { $exchangeMembersAttribute -eq `"$dn`" } -errorAction 'STOP'"
+
+                        $scriptBlock=[scriptBlock]::create($functionCommand)
+
+                        try {
+                            $children += invoke-command -scriptBlock $scriptBlock
+                        }
+                        catch {
+                            out-logfile $_
+                            out-logfile -string "Unable to obtain distribution group membership." -isError:$TRUE
+                        }
                     }
                 }
             }
