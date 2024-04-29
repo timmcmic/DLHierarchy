@@ -64,6 +64,7 @@ Function Get-GroupWithChildren()
         [boolean]$expandDynamicGroupMembership=$TRUE,
         [Parameter(Mandatory = $false,ParameterSetName = 'LDAP')]
         [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
         [boolean]$reverseHierarchy=$FALSE
     )
     
