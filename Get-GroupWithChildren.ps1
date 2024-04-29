@@ -846,7 +846,7 @@ Function Get-GroupWithChildren()
                     {
                         out-logfile -string "Full group membership expansion is enabled - reverse."
 
-                        get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
+                        $children = get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
                     }
                 }
                 elseif ($functionObject.recipientTypeDetails -ne $functionExchangeGroupMailbox)
@@ -870,7 +870,7 @@ Function Get-GroupWithChildren()
                         {
                             out-logfile -string "Full group membership expansion is enabled - reverse."
 
-                            get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
+                            $children = get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
                         }
                     }
                     else 
@@ -891,7 +891,7 @@ Function Get-GroupWithChildren()
                         {
                             out-logfile -string "Full group membership expansion is enabled - reverse."
 
-                            get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
+                            $children = get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
                         }                      
                     }
                 }
@@ -924,7 +924,7 @@ Function Get-GroupWithChildren()
                     {
                         out-logfile -string "Full group membership expansion is enabled - reverse."
 
-                        get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
+                        $children = get-ExchangeGroupMemberOf -distinguishedName $functionObject.distinguishedName
                     }
                 }
             }
