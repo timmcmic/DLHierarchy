@@ -520,7 +520,11 @@ Function Get-GroupWithChildren()
             $distinguishedName
         )
 
+        out-logfile -string "Entering get-ExchangeGroupMemberOF"
+
         $functionCommand = "Get-o365DistributionGroup -Filter { $exchangeMembersAttribute -eq `"$distinguishedName`" } -errorAction 'STOP'"
+
+        out-logfile -string $RfunctionCommand
 
         $scriptBlock=[scriptBlock]::create($functionCommand)
 
