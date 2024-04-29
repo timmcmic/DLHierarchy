@@ -196,7 +196,6 @@ Function get-DLHierarchyFromLDAP
     out-logfile -string "If reverse hiearchy is enabled - disable group expansion."
 
     $expandGroupMembership = $FALSE
-    $expandDynamicGroupMembership = $FALSE
 
     #Perform cleanup of any strings so that no spaces existin trailing or leading.
 
