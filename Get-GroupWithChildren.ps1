@@ -526,7 +526,7 @@ Function Get-GroupWithChildren()
 
         $functionCommand = "Get-o365DistributionGroup -Filter { $exchangeMembersAttribute -eq `"$distinguishedName`" } -errorAction 'STOP'"
 
-        out-logfile -string $RfunctionCommand
+        out-logfile -string $functionCommand
 
         $scriptBlock=[scriptBlock]::create($functionCommand)
 
