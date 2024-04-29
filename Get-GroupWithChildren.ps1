@@ -643,7 +643,7 @@ Function Get-GroupWithChildren()
                 $global:childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
                 $global:childCounter++
                 out-logfile -string $childCounter.tostring()
-                $childNode = Get-GroupWithChildren -objectID $child.id -processedGroupIds $childGroupIDs -objectType $child.additionalProperties["@odata.type"] -queryMethodGraph:$true -expandGroupMembership $expandGroupMembership
+                $childNode = Get-GroupWithChildren -objectID $child.id -processedGroupIds $childGroupIDs -objectType $child.additionalProperties["@odata.type"] -queryMethodGraph:$true -expandGroupMembership $expandGroupMembership -reverseHierarchy $reverseHierarchy
                 $childNodes += $childNode
                 $global:childCounter--
                 out-logfile -string $global:childCounter.tostring()
