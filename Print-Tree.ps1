@@ -23,9 +23,36 @@ Function Print-Tree()
     {
         $string = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
 
-        out-logfile -string  (("-" * $indent) + $string)
+        if ($reverseHierarchy -eq $FALSE)
+        {
+            if ($indent -gt 0)
+            {
+                $outputString = (("-" * $indent) + $forwardChar + $string)
+            }
+            else
+            {
+                $outputString = (("-" * $indent) +  $string)
+            }
+            
+            out-logfile -string  $outputString
 
-        $global:outputFile += (("-" * $indent) + $string +"`n")
+            $global:outputFile += ($outputString +"`n")
+        }
+        else 
+        {
+            if ($indent -gt 0)
+            {
+                $outputString = ($backwardChar + ("-" * $indent)  + $string)
+            }
+            else 
+            {
+                $outputString = (("-" * $indent)  + $string)
+            }
+
+            out-logfile -string  $outputString
+
+            $global:outputFile += ($outputString +"`n")
+        }
 
         $sorted = New-Object System.Collections.Generic.List[pscustomobject]
         $node.Children | % { $sorted.Add($_) }
@@ -35,7 +62,7 @@ Function Print-Tree()
 
         foreach ($child in $sorted)
         {
-            Print-Tree -node $child -indent ($indent + 2) -outputType $functionMSGraphType
+            Print-Tree -node $child -indent ($indent + 2) -outputType $functionMSGraphType -reverseHierarchy $reverseHierarchy
         }
     }
     elseif ($outputType -eq $functionExchangeOnlineType)

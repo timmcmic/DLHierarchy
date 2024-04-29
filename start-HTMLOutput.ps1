@@ -50,7 +50,14 @@ function get-NodeString
 
         if ($node.object.groupTypes -ne $NULL)
         {
-            $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+") ("+$node.object.groupTypes+")"
+            if ($reverseHierarchy -eq $FALSE)
+            {
+                $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+") ("+$node.object.groupTypes+")"
+            }
+            else 
+            {
+                $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+") ("+$node.object.groupTypes+") [Parent Group]"
+            }
         }
         else 
         {
