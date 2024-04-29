@@ -520,7 +520,7 @@ Function Get-GroupWithChildren()
             $distinguishedName
         )
 
-        $functionCommand = "Get-o365DistributionGroup -Filter { $exchangeMembersAttribute -eq `"$distinguishedNmae`" } -errorAction 'STOP'"
+        $functionCommand = "Get-o365DistributionGroup -Filter { $exchangeMembersAttribute -eq `"$distinguishedName`" } -errorAction 'STOP'"
 
         $scriptBlock=[scriptBlock]::create($functionCommand)
 
