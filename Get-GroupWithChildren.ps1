@@ -995,18 +995,28 @@ Function Get-GroupWithChildren()
                 {
                     out-logfile -string "Dynamic group membership expansion enabled."
 
-                    try {
-                        $children = Get-ADObject -LDAPFilter $functionObject.msExchDynamicDLFilter -SearchBase $functionObject.msExchDynamicDLBaseDN -Properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+                    if ($reverseHierarchy -eq $FALSE)
+                    {
+                        try {
+                            $children = Get-ADObject -LDAPFilter $functionObject.msExchDynamicDLFilter -SearchBase $functionObject.msExchDynamicDLBaseDN -Properties * -server $globalCatalogServer -Credential $activeDirectoryCredential -ErrorAction STOP
+                        }
+                        catch {
+                            out-logfile $_
+                            out-logfile -string "Unable to obtain dynamic group membership via LDAP call."
+                        }
+    
+                        out-logfile -string "Filter children to only contain users, groups, or contacts since LDAP query inclues all object classes."
+                        out-logfile -string $children.Count.tostring()
+                        $children = $children | where {($_.objectClass -eq $functionLDAPuser) -or ($_.objectClass -eq $functionLDAPGroup) -or ($_.objectClass -eq $functionLDAPContact) -or ($_.objectClass -eq $functionLDAPDynamicGroup)}
+                        out-logfile -string $children.Count.tostring()
                     }
-                    catch {
-                        out-logfile $_
-                        out-logfile -string "Unable to obtain dynamic group membership via LDAP call."
-                    }
+                    else 
+                    {
+                        out-logfile -string "Expand full group membership enabled."
+                        out-logfile -string "Reverse hierarchy in use."
 
-                    out-logfile -string "Filter children to only contain users, groups, or contacts since LDAP query inclues all object classes."
-                    out-logfile -string $children.Count.tostring()
-                    $children = $children | where {($_.objectClass -eq $functionLDAPuser) -or ($_.objectClass -eq $functionLDAPGroup) -or ($_.objectClass -eq $functionLDAPContact) -or ($_.objectClass -eq $functionLDAPDynamicGroup)}
-                    out-logfile -string $children.Count.tostring()
+                        $children = $functionObject.memberof
+                    }
                 }
                 else 
                 {
