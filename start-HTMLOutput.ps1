@@ -73,7 +73,7 @@ function get-NodeString
             }
             else 
             {
-                $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+") ("+$node.object.groupTypes+") [Parent Group]"
+                $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+") [Parent Group]"
             }
         }
     }
