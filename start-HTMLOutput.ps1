@@ -67,8 +67,14 @@ function get-NodeString
         }
         else 
         {
-            out-logfile -string "Object is not a group - calrculate string."
-            $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
+            if ($reverseHierarchy -eq $FALSE)
+            {
+                $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+")"
+            }
+            else 
+            {
+                $functionReturnString = $node.object.displayName +" (ObjectID: "+$node.object.id+") ("+$node.object.getType().name+") ("+$node.object.groupTypes+") [Parent Group]"
+            }
         }
     }
     elseif ($outputType -eq $functionLDAPType)

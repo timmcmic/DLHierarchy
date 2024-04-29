@@ -507,7 +507,7 @@ Function Get-GroupWithChildren()
             $objectID
         )
 
-        $returnObjects = Get-MGGroupMemberOfAsGroup -groupID $objectID -all -errorAction STOP
+        $returnObjects = Get-MGGroupMemberOf -groupID $objectID -all -errorAction STOP
 
         return $returnObjects
     }
