@@ -269,10 +269,10 @@ function start-HTMLOutput
 
 
     $functionHTMLSuffix = "html"
-    $functionHTMLFile = $global:LogFile.replace("log","$functionHTMLSuffix")
+    $global:functionHTMLFile = $global:LogFile.replace("log","$functionHTMLSuffix")
 
 
-    out-logfile -string $functionHTMLFile
+    out-logfile -string $global:functionHTMLFile
     out-logfile -string $outputType
 
     if ($outputType -eq $functionExchangeOnlineType)
@@ -282,7 +282,7 @@ function start-HTMLOutput
         $string = get-nodeString -node $node -outputType $functionExchangeOnlineType
         out-logfile -string ("Prcessing HTML: "+$string)
 
-        New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
+        New-HTML -TitleText $groupObjectID -FilePath $global:functionHTMLFile {
             New-HTMLTableOption -DataStore JavaScript
             new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
                 New-HTMLTree -Checkbox none {
@@ -345,7 +345,7 @@ function start-HTMLOutput
         $string = get-nodeString -node $node -outputType $functionMSGraphType
         out-logfile -string ("Prcessing HTML: "+$string)
 
-        New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
+        New-HTML -TitleText $groupObjectID -FilePath $global:functionHTMLFile {
             New-HTMLTableOption -DataStore JavaScript
             new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
                 New-HTMLTree -Checkbox none {
@@ -389,7 +389,7 @@ function start-HTMLOutput
         $string = get-nodeString -node $node -outputType $functionLDAPType
         out-logfile -string ("Prcessing HTML: "+$string)
 
-        New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
+        New-HTML -TitleText $groupObjectID -FilePath $global:functionHTMLFile {
             New-HTMLTableOption -DataStore JavaScript
             new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
                 New-HTMLTree -Checkbox none {
