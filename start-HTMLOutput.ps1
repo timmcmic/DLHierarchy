@@ -493,7 +493,7 @@ function start-HTMLOutput
                         }
                     }
                 } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
-            } -Online -ShowHTML
+            }
         }
         elseif ($outputType -eq $functionMSGraphType)
         {
@@ -537,7 +537,7 @@ function start-HTMLOutput
                         }
                     }
                 } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
-            } -Online -ShowHTML
+            }
         }
         elseif ($outputType -eq $functionLDAPType)
         {
