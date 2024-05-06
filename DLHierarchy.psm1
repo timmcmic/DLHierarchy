@@ -316,7 +316,7 @@ Function get-DLHierarchyFromGraph
 
         out-logfile -string $global:outputFile
     
-        print-tree -node $tree -indent $defaultIndent -outputType $msGraphType
+        print-tree -node $tree -indent $defaultIndent -outputType $msGraphType -reverseHierarchy $reverseHierarchy
     
         out-logfile -string "Export hierarchy to file."
     
