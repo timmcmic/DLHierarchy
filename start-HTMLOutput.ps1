@@ -277,7 +277,7 @@ function start-HTMLOutput
     out-logfile -string $global:functionHTMLFile
     out-logfile -string $outputType
 
-    if (isHealthCheck -eq $FALSE)
+    if ($isHealthCheck -eq $FALSE)
     {
         if ($outputType -eq $functionExchangeOnlineType)
         {
