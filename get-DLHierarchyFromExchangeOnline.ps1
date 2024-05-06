@@ -126,9 +126,7 @@ Function get-DLHierarchyFromExchangeOnline
         [Parameter(Mandatory =$FALSE)]
         [boolean]$enableHTMLOutput=$TRUE,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$reverseHierarchy=$FALSE,
-        [Parameter(Mandatory =$FALSE)]
-        [boolean]$isHealthCheck=$FALSE
+        [boolean]$reverseHierarchy=$FALSE
     )
 
     #Define script based variables.
@@ -203,10 +201,7 @@ Function get-DLHierarchyFromExchangeOnline
 
     #Create the log file.
 
-    if ($isHealthCheck -eq $FALSE)
-    {
-        new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
-    }
+    new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
 
     out-logfile -string "***********************************************************"
     out-logfile -string "Starting get-DLHierarchyFromExchangeOnline"
@@ -347,7 +342,7 @@ Function get-DLHierarchyFromExchangeOnline
 
     if ($enableHTMLOutput -eq $TRUE)
     {
-        start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy -isHealthCheck $isHealthCheck
+        start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy
     }
     else 
     {
@@ -420,9 +415,4 @@ Function get-DLHierarchyFromExchangeOnline
     }
 
     disable-allPowerShellSessions
-
-    if ($isHealthCheck -eq $TRUE)
-    {
-        return $global:functionHTMLFile
-    }
 }

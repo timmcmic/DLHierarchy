@@ -120,9 +120,7 @@ Function get-DLHierarchyFromGraph
         [Parameter(Mandatory =$FALSE)]
         [boolean]$enableHTMLOutput=$TRUE,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$reverseHierarchy=$FALSE,
-        [Parameter(Mandatory =$FALSE)]
-        [boolean]$isHealthCheck=$FALSE
+        [boolean]$reverseHierarchy=$FALSE
     )
 
     #Define script based variables.
@@ -189,10 +187,7 @@ Function get-DLHierarchyFromGraph
 
     #Create the log file.
 
-    if ($isHealthCheck -eq $FALSE)
-    {
-        new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
-    }
+    new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
 
     out-logfile -string "***********************************************************"
     out-logfile -string "Starting get-DLHierarchyFromGraph"
@@ -316,7 +311,7 @@ Function get-DLHierarchyFromGraph
 
         out-logfile -string $global:outputFile
     
-        print-tree -node $tree -indent $defaultIndent -outputType $msGraphType -reverseHierarchy $reverseHierarchy
+        print-tree -node $tree -indent $defaultIndent -outputType $msGraphType
     
         out-logfile -string "Export hierarchy to file."
     
@@ -338,7 +333,7 @@ Function get-DLHierarchyFromGraph
     {
         out-logfile -string "Generate HTML File..."
 
-        start-HTMLOutput -node $tree -outputType $msGraphType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchyn -isHealthCheck $isHealthCheck
+        start-HTMLOutput -node $tree -outputType $msGraphType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy
     }
     else 
     {
@@ -390,9 +385,4 @@ Function get-DLHierarchyFromGraph
     }
 
     disable-allPowerShellSessions
-
-    if ($isHealthCheck -eq $TRUE)
-    {
-        return $global:functionHTMLFile
-    }
 }
