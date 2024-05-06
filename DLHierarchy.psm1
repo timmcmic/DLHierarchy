@@ -387,4 +387,9 @@ Function get-DLHierarchyFromGraph
     }
 
     disable-allPowerShellSessions
+
+    if ($isHealthCheck -eq $TRUE)
+    {
+        return $global:functionHTMLFile
+    }
 }

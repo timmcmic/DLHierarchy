@@ -417,4 +417,9 @@ Function get-DLHierarchyFromExchangeOnline
     }
 
     disable-allPowerShellSessions
+
+    if ($isHealthCheck -eq $TRUE)
+    {
+        return $global:functionHTMLFile
+    }
 }
