@@ -344,7 +344,7 @@ Function get-DLHierarchyFromExchangeOnline
 
     if ($enableHTMLOutput -eq $TRUE)
     {
-        start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy
+        start-HTMLOutput -node $tree -outputType $exchangeOnlineType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy -isHealthCheck $isHealthCheck
     }
     else 
     {

@@ -259,7 +259,7 @@ Function get-DLHierarchyFromLDAP
     {
         out-logfile -string "Generate HTML File..."
 
-        start-HTMLOutput -node $tree -outputType $LDAPType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy
+        start-HTMLOutput -node $tree -outputType $LDAPType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy -isHealthCheck $isHealthCheck
     }
     else 
     {
