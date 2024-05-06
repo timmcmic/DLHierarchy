@@ -98,7 +98,9 @@ Function get-DLHierarchyFromLDAP
         [Parameter(Mandatory =$FALSE)]
         [boolean]$enableHTMLOutput=$TRUE,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$reverseHierarchy=$FALSE
+        [boolean]$reverseHierarchy=$FALSE,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$isHealthCheck=$FALSE
     )
 
     #Define script based variables.
@@ -257,7 +259,7 @@ Function get-DLHierarchyFromLDAP
     {
         out-logfile -string "Generate HTML File..."
 
-        start-HTMLOutput -node $tree -outputType $LDAPType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy
+        start-HTMLOutput -node $tree -outputType $LDAPType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy -isHealthCheck $isHealthCheck
     }
     else 
     {
@@ -305,5 +307,10 @@ Function get-DLHierarchyFromLDAP
         out-logfile -string "Telemetry4"
         out-logfile -string $telemetryEventProperties
         send-TelemetryEvent -traceModuleName $traceModuleName -eventName $telemetryEventName -eventMetrics $telemetryEventMetrics -eventProperties $telemetryEventProperties
+    }
+
+    if ($isHealthCheck -eq $TRUE)
+    {
+        return $global:functionHTMLFile
     }
 }

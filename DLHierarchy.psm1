@@ -120,7 +120,9 @@ Function get-DLHierarchyFromGraph
         [Parameter(Mandatory =$FALSE)]
         [boolean]$enableHTMLOutput=$TRUE,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$reverseHierarchy=$FALSE
+        [boolean]$reverseHierarchy=$FALSE,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$isHealthCheck=$FALSE
     )
 
     #Define script based variables.
@@ -333,7 +335,7 @@ Function get-DLHierarchyFromGraph
     {
         out-logfile -string "Generate HTML File..."
 
-        start-HTMLOutput -node $tree -outputType $msGraphType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy
+        start-HTMLOutput -node $tree -outputType $msGraphType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchyn -isHealthCheck $isHealthCheck
     }
     else 
     {
@@ -385,4 +387,9 @@ Function get-DLHierarchyFromGraph
     }
 
     disable-allPowerShellSessions
+
+    if ($isHealthCheck -eq $TRUE)
+    {
+        return $global:functionHTMLFile
+    }
 }
