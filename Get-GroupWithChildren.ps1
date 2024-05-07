@@ -1080,7 +1080,7 @@ Function Get-GroupWithChildren()
         {
             out-logfile -string "Object has not been previously processed..."
 
-            $NULL = $processedGroupIds.add($functionObject.distinguishedName)
+            $NULL = $processedGroupIds.add(functionObject.distinguishedName)
 
             if ($functionObject.objectClass -eq $functionLDAPDynamicGroup)
             {
@@ -1198,7 +1198,7 @@ Function Get-GroupWithChildren()
                     write-host "ChildID"
                     write-host $child
                     $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-                    $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false -parentObjectID $functionObject.ID
+                    $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false -parentObjectID $functionObject.distinguishedName
                     $childNodes += $childNode
                 }
                 else 
@@ -1206,7 +1206,7 @@ Function Get-GroupWithChildren()
                     write-host "ChildID"
                     write-host $child
                     $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-                    $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false -reverseHierarchy:$TRUE -parentObjectID $functionObject.ID
+                    $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false -reverseHierarchy:$TRUE -parentObjectID $functionObject.distinguishedName
                     $childNodes += $childNode
                 }  
             }
