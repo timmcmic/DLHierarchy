@@ -149,6 +149,8 @@ Function get-DLHierarchyFromLDAP
     $windowTitle = ("Get-DLHierarchyFromLDAP "+$groupObjectID)
     $host.ui.RawUI.WindowTitle = $windowTitle
 
+    [array]$global:groupTracking=@()
+
     #Define variables utilized in the core function that are not defined by parameters.
 
     $coreVariables = @{ 
@@ -165,6 +167,9 @@ Function get-DLHierarchyFromLDAP
     if ($isHealthCheck -eq $FALSE)
     {
         new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
+
+        $functionCSVSuffix = "csv"
+        $global:$outputCSV = $global:LogFile.replace("log","$functionCSVSuffix")
     }
     
 
@@ -312,4 +317,6 @@ Function get-DLHierarchyFromLDAP
         out-logfile -string $telemetryEventProperties
         send-TelemetryEvent -traceModuleName $traceModuleName -eventName $telemetryEventName -eventMetrics $telemetryEventMetrics -eventProperties $telemetryEventProperties
     }
+
+    $global:groupTracking | export-csv -path $global:outputCSV
 }

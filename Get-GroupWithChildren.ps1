@@ -1019,6 +1019,11 @@ Function Get-GroupWithChildren()
         elseif ($functionObject.objectClass -eq $functionLDAPGroup)
         {
             $global:groupCounter+=$functionObject.objectGUID
+            
+            if ($functionObject.mail -ne "")
+            {
+                $global:groupTracking+=$functionObject.mail
+            }
         }
 
         if (!$processedGroupIds.Contains($functionObject.distinguishedName))
