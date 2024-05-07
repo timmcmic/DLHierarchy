@@ -1021,14 +1021,21 @@ Function Get-GroupWithChildren()
             $global:groupCounter+=$functionObject.objectGUID
             
             if ($functionObject.mail -ne $NULL)
-            {
-                $global:groupTracking+=($functionObject | select-object Mail,CN)
+            {   
+                $outputObject = New-Object PSObject -Property @{
+                    CN = $functionObject.cn
+                    Mail = $functionObject.Mail
+                    NestingLevel = $global:childCounter.tostring
+                }
+
+                $global:groupTracking+=$outputObject
             }
             else 
             {
                 $outputObject = New-Object PSObject -Property @{
                     CN = $functionObject.cn
                     Mail = "CAUTION:  Group in hierarchy with no mail address."
+                    NestingLevel = $global:childCounter.tostring
                 }
 
                 $global:groupTracking+=$outputObject
