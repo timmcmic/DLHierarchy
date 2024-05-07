@@ -964,7 +964,7 @@ Function Get-GroupWithChildren()
                 {
                     $global:childCounter--
                 }
-                
+
                 out-logfile -string $global:childCounter.tostring()
                 $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.RecipientTypeDetails -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -reverseHierarchy $reverseHierarchy
                 $childNodes += $childNode
@@ -1050,6 +1050,7 @@ Function Get-GroupWithChildren()
             if ($functionObject.mail -ne $NULL)
             {   
                 $outputObject = New-Object PSObject -Property @{
+                    ParentObjectID = $objectID
                     CN = $functionObject.cn
                     Mail = $functionObject.Mail
                     NestingLevel = $global:childCounter.tostring()
@@ -1060,6 +1061,7 @@ Function Get-GroupWithChildren()
             else 
             {
                 $outputObject = New-Object PSObject -Property @{
+                    ParentObjectID = $objectID
                     CN = $functionObject.cn
                     Mail = "CAUTION:  Group in hierarchy with no mail address."
                     NestingLevel = $global:childCounter.tostring()
