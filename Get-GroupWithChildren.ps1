@@ -1024,6 +1024,10 @@ Function Get-GroupWithChildren()
             {
                 $global:groupTracking+=$functionObject.mail
             }
+            else 
+            {
+                $globalGroup:groupTracking+=("WARNING - non mail enabled group found in hierarchy: "+$functionObject.cn)
+            }
         }
 
         if (!$processedGroupIds.Contains($functionObject.distinguishedName))
