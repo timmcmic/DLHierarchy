@@ -549,7 +549,7 @@ function start-HTMLOutput
                 New-HTMLFooter {
                     New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
                 }
-            }
+            }-Online
         }
         elseif ($outputType -eq $functionMSGraphType)
         {
@@ -601,7 +601,7 @@ function start-HTMLOutput
                 New-HTMLFooter {
                     New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
                 }
-            }
+            }-Online
         }
         elseif ($outputType -eq $functionLDAPType)
         {
@@ -652,7 +652,7 @@ function start-HTMLOutput
                 New-HTMLFooter {
                     New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
                 }
-            }
+            }-Online
         }
     }
 }
