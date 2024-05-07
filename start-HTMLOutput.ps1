@@ -273,15 +273,30 @@ function start-HTMLOutput
     $functionHTMLSuffix = "html"
     $global:functionHTMLFile = $global:LogFile.replace("log","$functionHTMLSuffix")
 
-    if ($reverseHierarchy -ne $TRUE)
+    if (($reverseHierarchy -eq $true) -and ($outputType -eq $functionExchangeOnlineType))
     {
-        $headerString = ("***Group Hierarchy for: "+$groupObjectID+"***")
+        $headerString = ("***Exchange Based Group Hierarchy in REVERSE for: "+$groupObjectID+"***")
     }
-    else 
+    elseif (($reverseHierarchy -eq $true) -and ($outputType -eq $functionMSGraphType))
     {
-        $headerString = ("***Group Hierarchy in REVERSE for: "+$groupObjectID+"***")
+        $headerString = ("***Graph Based Group Hierarchy in REVERSE for: "+$groupObjectID+"***")
     }
-
+    elseif (($reverseHierarchy -eq $true) -and ($outputType -eq $functionLDAPType))
+    {
+        $headerString = ("***LDAP Based Group Hierarchy in REVERSE for: "+$groupObjectID+"***")
+    }
+    elseif ($outputType -eq $functionExchangeOnlineType)
+    {
+        $headerString = ("***Exchange Based Group Hierarchy for: "+$groupObjectID+"***")
+    }
+    elseif ($outputType -eq $functionMSGraphType)
+    {
+        $headerString = ("***Graph Based Group Hierarchy for: "+$groupObjectID+"***")
+    }
+    elseif ($outputType -eq $functionLDAPType)
+    {
+        $headerString = ("***LDAP Based Group Hierarchy for: "+$groupObjectID+"***")
+    }
 
     out-logfile -string $global:functionHTMLFile
     out-logfile -string $outputType
