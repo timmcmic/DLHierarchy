@@ -256,7 +256,9 @@ function start-HTMLOutput
         [Parameter(Mandatory = $true)]
         $groupObjectID,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$reverseHierarchy=$FALSE
+        [boolean]$reverseHierarchy=$FALSE,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$isHealthCheck=$FALSE
     )
 
     $functionMSGraphType = "MSGraph"
@@ -269,7 +271,7 @@ function start-HTMLOutput
 
 
     $functionHTMLSuffix = "html"
-    $functionHTMLFile = $global:LogFile.replace("log","$functionHTMLSuffix")
+    $global:functionHTMLFile = $global:LogFile.replace("log","$functionHTMLSuffix")
 
     if ($reverseHierarchy -ne $TRUE)
     {
@@ -281,7 +283,7 @@ function start-HTMLOutput
     }
 
 
-    out-logfile -string $functionHTMLFile
+    out-logfile -string $global:functionHTMLFile
     out-logfile -string $outputType
 
     if ($outputType -eq $functionExchangeOnlineType)
@@ -291,7 +293,7 @@ function start-HTMLOutput
         $string = get-nodeString -node $node -outputType $functionExchangeOnlineType
         out-logfile -string ("Prcessing HTML: "+$string)
 
-        New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
+        New-HTML -TitleText $groupObjectID -FilePath $global:functionHTMLFile {
             New-HTMLHeader{
                 New-HTMLText -Text $headerString -FontSize 24 -Color White -BackGroundColor Black -Alignment center
             }
@@ -362,7 +364,7 @@ function start-HTMLOutput
         $string = get-nodeString -node $node -outputType $functionMSGraphType
         out-logfile -string ("Prcessing HTML: "+$string)
 
-        New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
+        New-HTML -TitleText $groupObjectID -FilePath $global:functionHTMLFile {
             New-HTMLHeader{
                 New-HTMLText -Text $headerString -FontSize 24 -Color White -BackGroundColor Black -Alignment center
             }
@@ -414,7 +416,7 @@ function start-HTMLOutput
         $string = get-nodeString -node $node -outputType $functionLDAPType
         out-logfile -string ("Prcessing HTML: "+$string)
 
-        New-HTML -TitleText $groupObjectID -FilePath $functionHTMLFile {
+        New-HTML -TitleText $groupObjectID -FilePath $global:functionHTMLFile {
             New-HTMLHeader{
                 New-HTMLText -Text $headerString -FontSize 24 -Color White -BackGroundColor Black -Alignment center
             }

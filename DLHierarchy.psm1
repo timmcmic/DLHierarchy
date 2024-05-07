@@ -193,7 +193,7 @@ Function get-DLHierarchyFromGraph
     {
         new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
     }
-    
+
     out-logfile -string "***********************************************************"
     out-logfile -string "Starting get-DLHierarchyFromGraph"
     out-logfile -string "***********************************************************"
@@ -338,7 +338,7 @@ Function get-DLHierarchyFromGraph
     {
         out-logfile -string "Generate HTML File..."
 
-        start-HTMLOutput -node $tree -outputType $msGraphType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy
+        start-HTMLOutput -node $tree -outputType $msGraphType -groupObjectID $groupObjectID -reverseHierarchy $reverseHierarchy 
     }
     else 
     {
