@@ -77,18 +77,6 @@ Function Get-GroupWithChildren()
     out-logfile -string "Entering Get-GroupWithChildren"
     out-logfile -string "***********************************************************"
 
-    if ($reverseHierarchy -eq $FALSE)
-    {
-        $global:childCounter++
-        out-logfile -string ("Recursion Counter: "+$global:childCounter.tostring())
-    }
-    else 
-    {
-        $global:childCounter--
-        out-logfile -string ("Recursion Counter: "+$global:childCounter.tostring())
-    }
-   
-
     $functionObject = $NULL
     $childNodes = @()
     $children=@()
@@ -1051,6 +1039,18 @@ Function Get-GroupWithChildren()
                 $global:groupTracking+=$outputObject
             }
         }
+
+        if ($reverseHierarchy -eq $FALSE)
+        {
+            $global:childCounter++
+            out-logfile -string ("Recursion Counter: "+$global:childCounter.tostring())
+        }
+        else 
+        {
+            $global:childCounter--
+            out-logfile -string ("Recursion Counter: "+$global:childCounter.tostring())
+        }
+       
 
         if (!$processedGroupIds.Contains($functionObject.distinguishedName))
         {
