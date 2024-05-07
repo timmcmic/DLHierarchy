@@ -65,7 +65,12 @@ Function Get-GroupWithChildren()
         [Parameter(Mandatory = $false,ParameterSetName = 'LDAP')]
         [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
         [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
-        [boolean]$reverseHierarchy=$FALSE
+        [boolean]$reverseHierarchy=$FALSE,
+        [Parameter(Mandatory = $false,ParameterSetName = 'LDAP')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
+        [string]$parentObjectID="N/A"
+
     )
     
     out-logfile -string "***********************************************************"
@@ -1050,7 +1055,7 @@ Function Get-GroupWithChildren()
             if ($functionObject.mail -ne $NULL)
             {   
                 $outputObject = New-Object PSObject -Property @{
-                    ParentObjectID = $objectID
+                    ParentObjectID = $parentObjectID
                     CN = $functionObject.cn
                     Mail = $functionObject.Mail
                     NestingLevel = $global:childCounter.tostring()
@@ -1193,7 +1198,7 @@ Function Get-GroupWithChildren()
                     write-host "ChildID"
                     write-host $child
                     $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-                    $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false
+                    $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false -parentObjectID $functionObject.ID
                     $childNodes += $childNode
                 }
                 else 
@@ -1201,7 +1206,7 @@ Function Get-GroupWithChildren()
                     write-host "ChildID"
                     write-host $child
                     $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-                    $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false -reverseHierarchy:$TRUE
+                    $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false -reverseHierarchy:$TRUE -parentObjectID $functionObject.ID
                     $childNodes += $childNode
                 }  
             }
