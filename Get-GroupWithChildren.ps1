@@ -1080,7 +1080,7 @@ Function Get-GroupWithChildren()
         {
             out-logfile -string "Object has not been previously processed..."
 
-            $NULL = $processedGroupIds.add(functionObject.distinguishedName)
+            $NULL = $processedGroupIds.add($functionObject.distinguishedName)
 
             if ($functionObject.objectClass -eq $functionLDAPDynamicGroup)
             {
