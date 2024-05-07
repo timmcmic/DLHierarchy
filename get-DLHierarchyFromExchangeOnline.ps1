@@ -126,7 +126,9 @@ Function get-DLHierarchyFromExchangeOnline
         [Parameter(Mandatory =$FALSE)]
         [boolean]$enableHTMLOutput=$TRUE,
         [Parameter(Mandatory =$FALSE)]
-        [boolean]$reverseHierarchy=$FALSE
+        [boolean]$reverseHierarchy=$FALSE,
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$isHealthCheck=$FALSE
     )
 
     #Define script based variables.
@@ -201,7 +203,10 @@ Function get-DLHierarchyFromExchangeOnline
 
     #Create the log file.
 
-    new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
+    if ($isHealthCheck -eq $FALSE)
+    {
+        new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
+    }
 
     out-logfile -string "***********************************************************"
     out-logfile -string "Starting get-DLHierarchyFromExchangeOnline"
