@@ -72,8 +72,17 @@ Function Get-GroupWithChildren()
     out-logfile -string "Entering Get-GroupWithChildren"
     out-logfile -string "***********************************************************"
 
-    $global:childCounter++
-    out-logfile -string ("Recursion Counter: "+$global:childCounter.tostring())
+    if ($reverseHierarchy -eq $FALSE)
+    {
+        $global:childCounter++
+        out-logfile -string ("Recursion Counter: "+$global:childCounter.tostring())
+    }
+    else 
+    {
+        $global:childCounter--
+        out-logfile -string ("Recursion Counter: "+$global:childCounter.tostring())
+    }
+   
 
     $functionObject = $NULL
     $childNodes = @()
@@ -685,7 +694,16 @@ Function Get-GroupWithChildren()
                 out-logfile -string "Processing child..."
                 out-logfile -string $child.id
                 $global:childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-                $global:childCounter++
+
+                if ($reverseHierarchy -eq $FALSE)
+                {
+                    $global:childCounter++
+                }
+                else 
+                {
+                    $global:childCounter--
+                }
+                
                 out-logfile -string $childCounter.tostring()
                 $childNode = Get-GroupWithChildren -objectID $child.id -processedGroupIds $childGroupIDs -objectType $child.additionalProperties["@odata.type"] -queryMethodGraph:$true -expandGroupMembership $expandGroupMembership -reverseHierarchy $reverseHierarchy
                 $childNodes += $childNode
@@ -937,7 +955,16 @@ Function Get-GroupWithChildren()
                 out-logfile -string "Processing child..."
                 out-logfile -string $child.ExchangeObjectID
                 $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-                $global:childCounter++
+
+                if ($reverseHierarchy -eq $FALSE)
+                {
+                    $global:childCounter++
+                }
+                else 
+                {
+                    $global:childCounter--
+                }
+                
                 out-logfile -string $global:childCounter.tostring()
                 $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.RecipientTypeDetails -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -reverseHierarchy $reverseHierarchy
                 $childNodes += $childNode
