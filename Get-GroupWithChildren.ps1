@@ -1035,7 +1035,7 @@ Function Get-GroupWithChildren()
                 $outputObject = New-Object PSObject -Property @{
                     CN = $functionObject.cn
                     Mail = "CAUTION:  Group in hierarchy with no mail address."
-                    NestingLevel = $$global:childCounter.tostring()
+                    NestingLevel = $global:childCounter.tostring()
                 }
 
                 $global:groupTracking+=$outputObject
