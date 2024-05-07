@@ -1022,11 +1022,7 @@ Function Get-GroupWithChildren()
             
             if ($functionObject.mail -ne "")
             {
-                $global:groupTracking+=$functionObject.mail
-            }
-            else 
-            {
-                $globalGroup:groupTracking+=("WARNING - non mail enabled group found in hierarchy: "+$functionObject.cn)
+                $global:groupTracking+=($functionObject | select-object Mail,CN)
             }
         }
 
