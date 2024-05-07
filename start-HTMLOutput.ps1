@@ -286,178 +286,358 @@ function start-HTMLOutput
     out-logfile -string $global:functionHTMLFile
     out-logfile -string $outputType
 
-    if ($outputType -eq $functionExchangeOnlineType)
+    if ($isHealthCheck -eq $FALSE)
     {
-        out-logfile -string "Entering Exchange Online Type"
+        if ($outputType -eq $functionExchangeOnlineType)
+        {
+            out-logfile -string "Entering Exchange Online Type"
 
-        $string = get-nodeString -node $node -outputType $functionExchangeOnlineType
-        out-logfile -string ("Prcessing HTML: "+$string)
+            $string = get-nodeString -node $node -outputType $functionExchangeOnlineType
+            out-logfile -string ("Prcessing HTML: "+$string)
 
-        New-HTML -TitleText $groupObjectID -FilePath $global:functionHTMLFile {
-            New-HTMLHeader{
-                New-HTMLText -Text $headerString -FontSize 24 -Color White -BackGroundColor Black -Alignment center
-            }
-            new-htmlMain{
-                New-HTMLTableOption -DataStore JavaScript
-                new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
-                    New-HTMLTree -Checkbox none {
-                        New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-                        New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
-                    } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
-                }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
-                new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
-                    new-htmlTable -DataTable ($global:exchangeObjects | select-object DisplayName,Alias,ExternalDirectoryObjectId,ExchangeObjectId,Identity,ID,Name,PrimarySmtpAddress,EmailAddresses,LegacyExchangeDN,externalEmailAddress,RecipientType,RecipientTypeDetails,GroupType,IsDirSynced | sort-object exchangeObjectID -Unique) -Filtering {
-                    } -AutoSize
-                } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
-                new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
-                    New-HTMLPanel {
-                        New-HTMLChart -Gradient {
-                            New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
-                            New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
-                            new-ChartDonut -Name 'MailSecurityGroups' -value $global:mailUniversalSecurityGroupCounter.count
-                            new-chartDonut -name 'MailDistributionGroups' -value $global:mailUniversalDistributionGroupCounter.count
-                            new-chartDonut -name 'UnifiedGroups' -value $global:groupMailboxCounter.count
-                            new-chartDonut -name 'UnifiedGroups-Dynamic' -value $global:groupMailboxDyanmicCounter.count
+            New-HTML -TitleText $groupObjectID -FilePath $global:functionHTMLFile {
+                New-HTMLHeader{
+                    New-HTMLText -Text $headerString -FontSize 24 -Color White -BackGroundColor Black -Alignment center
+                }
+                new-htmlMain{
+                    New-HTMLTableOption -DataStore JavaScript
+                    new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
+                        New-HTMLTree -Checkbox none {
+                            New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+                            New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
+                        } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
+                    }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
+                        new-htmlTable -DataTable ($global:exchangeObjects | select-object DisplayName,Alias,ExternalDirectoryObjectId,ExchangeObjectId,Identity,ID,Name,PrimarySmtpAddress,EmailAddresses,LegacyExchangeDN,externalEmailAddress,RecipientType,RecipientTypeDetails,GroupType,IsDirSynced | sort-object exchangeObjectID -Unique) -Filtering {
+                        } -AutoSize
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
+                                New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
+                                new-ChartDonut -Name 'MailSecurityGroups' -value $global:mailUniversalSecurityGroupCounter.count
+                                new-chartDonut -name 'MailDistributionGroups' -value $global:mailUniversalDistributionGroupCounter.count
+                                new-chartDonut -name 'UnifiedGroups' -value $global:groupMailboxCounter.count
+                                new-chartDonut -name 'UnifiedGroups-Dynamic' -value $global:groupMailboxDyanmicCounter.count
+                            }
                         }
-                    }
-                    New-HTMLPanel {
-                        New-HTMLChart -Gradient {
-                            New-ChartDonut -Name 'Users' -Value $global:userCounter.count
-                            New-ChartDonut -Name 'MailContacts' -Value $global:mailContactCounter.count
-                            New-ChartDonut -Name 'GuestMailUsers' -Value $global:guestMailUserCounter.count
-                            New-ChartDonut -Name 'MailUsers' -Value $global:mailUserCounter.count
-                            New-ChartDonut -Name 'UserMailbox' -Value $global:userMailboxCounter.count
-                            New-ChartDonut -Name 'RoomMailbox' -Value $global:roomMailboxCounter.count
-                            New-ChartDonut -Name 'EqipmentMailbox' -Value $global:equipmentMailboxCounter.count
-                            New-ChartDonut -Name 'SharedMailbox' -Value $global:sharedMailboxCounter.count
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Users' -Value $global:userCounter.count
+                                New-ChartDonut -Name 'MailContacts' -Value $global:mailContactCounter.count
+                                New-ChartDonut -Name 'GuestMailUsers' -Value $global:guestMailUserCounter.count
+                                New-ChartDonut -Name 'MailUsers' -Value $global:mailUserCounter.count
+                                New-ChartDonut -Name 'UserMailbox' -Value $global:userMailboxCounter.count
+                                New-ChartDonut -Name 'RoomMailbox' -Value $global:roomMailboxCounter.count
+                                New-ChartDonut -Name 'EqipmentMailbox' -Value $global:equipmentMailboxCounter.count
+                                New-ChartDonut -Name 'SharedMailbox' -Value $global:sharedMailboxCounter.count
+                            }
                         }
-                    }
-                    New-HTMLPanel {
-                        New-HTMLChart -Gradient {
-                            New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
-                            New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
-                            new-ChartDonut -Name 'MailSecurityGroups' -value $global:mailUniversalSecurityGroupCounter.count
-                            new-chartDonut -name 'MailDistributionGroups' -value $global:mailUniversalDistributionGroupCounter.count
-                            new-chartDonut -name 'UnifiedGroups' -value $global:groupMailboxCounter.count
-                            new-chartDonut -name 'UnifiedGroups-Dynamic' -value $global:groupMailboxDyanmicCounter.count
-                            New-ChartDonut -Name 'Users' -Value $global:userCounter.count
-                            New-ChartDonut -Name 'MailContacts' -Value $global:mailContactCounter.count
-                            New-ChartDonut -Name 'GuestMailUsers' -Value $global:guestMailUserCounter.count
-                            New-ChartDonut -Name 'MailUsers' -Value $global:mailUserCounter.count
-                            New-ChartDonut -Name 'UserMailbox' -Value $global:userMailboxCounter.count
-                            New-ChartDonut -Name 'RoomMailbox' -Value $global:roomMailboxCounter.count
-                            New-ChartDonut -Name 'EqipmentMailbox' -Value $global:equipmentMailboxCounter.count
-                            New-ChartDonut -Name 'SharedMailbox' -Value $global:sharedMailboxCounter.count
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
+                                New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
+                                new-ChartDonut -Name 'MailSecurityGroups' -value $global:mailUniversalSecurityGroupCounter.count
+                                new-chartDonut -name 'MailDistributionGroups' -value $global:mailUniversalDistributionGroupCounter.count
+                                new-chartDonut -name 'UnifiedGroups' -value $global:groupMailboxCounter.count
+                                new-chartDonut -name 'UnifiedGroups-Dynamic' -value $global:groupMailboxDyanmicCounter.count
+                                New-ChartDonut -Name 'Users' -Value $global:userCounter.count
+                                New-ChartDonut -Name 'MailContacts' -Value $global:mailContactCounter.count
+                                New-ChartDonut -Name 'GuestMailUsers' -Value $global:guestMailUserCounter.count
+                                New-ChartDonut -Name 'MailUsers' -Value $global:mailUserCounter.count
+                                New-ChartDonut -Name 'UserMailbox' -Value $global:userMailboxCounter.count
+                                New-ChartDonut -Name 'RoomMailbox' -Value $global:roomMailboxCounter.count
+                                New-ChartDonut -Name 'EqipmentMailbox' -Value $global:equipmentMailboxCounter.count
+                                New-ChartDonut -Name 'SharedMailbox' -Value $global:sharedMailboxCounter.count
+                            }
                         }
-                    }
-                } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
-            } 
-            New-HTMLFooter {
-                New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
-            }
-        } -Online -ShowHTML
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                } 
+                New-HTMLFooter {
+                    New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
+                }
+            } -Online -ShowHTML
+        }
+        elseif ($outputType -eq $functionMSGraphType)
+        {
+            out-logfile -string "Entering MS Graph Type"
+
+            $string = get-nodeString -node $node -outputType $functionMSGraphType
+            out-logfile -string ("Prcessing HTML: "+$string)
+
+            New-HTML -TitleText $groupObjectID -FilePath $global:functionHTMLFile {
+                New-HTMLHeader{
+                    New-HTMLText -Text $headerString -FontSize 24 -Color White -BackGroundColor Black -Alignment center
+                }
+                New-HTMLMain{
+                    New-HTMLTableOption -DataStore JavaScript
+                    new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
+                        New-HTMLTree -Checkbox none {
+                            New-HTMLHeading -HeadingText ('Group Expansion for: '+$groupObjectID) -Heading h1
+                            New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+                            New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType} -icon $functionGroupPNGHTML
+                        } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
+                    }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
+                        new-htmlTable -DataTable ($global:msGraphObjects | select-object DisplayName,Id,Mail,MailEnabled,MailNickname,ProxyAddresses,GroupTypes,SecurityEnabled,MembershipRule | sort-object ID -Unique) -Filtering {
+                        } -AutoSize
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Groups' -Value $global:msGraphGroupCount.count
+                                New-ChartDonut -name 'DynamnicGroups' -value $global:msGraphGroupDynamicCount.Count
+                            }
+                        }
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Users' -Value $global:msGraphUserCount.count
+                                new-ChartDonut -Name 'Contacts' -value $global:msGraphContactCount.count
+                            }
+                        }
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Groups' -Value $global:msGraphGroupCount.count
+                                New-ChartDonut -name 'DynamnicGroups' -value $global:msGraphGroupDynamicCount.Count
+                                New-ChartDonut -Name 'Users' -Value $global:msGraphUserCount.count
+                                new-ChartDonut -Name 'Contacts' -value $global:msGraphContactCount.count
+                            }
+                        }
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                }
+                New-HTMLFooter {
+                    New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
+                }
+            } -Online -ShowHTML
+        }
+        elseif ($outputType -eq $functionLDAPType)
+        {
+            out-logfile -string "Entering LDAP Type"
+
+            $string = get-nodeString -node $node -outputType $functionLDAPType
+            out-logfile -string ("Prcessing HTML: "+$string)
+
+            New-HTML -TitleText $groupObjectID -FilePath $global:functionHTMLFile {
+                New-HTMLHeader{
+                    New-HTMLText -Text $headerString -FontSize 24 -Color White -BackGroundColor Black -Alignment center
+                }
+                new-htmlMain{
+                    New-HTMLTableOption -DataStore JavaScript
+                    new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
+                        New-HTMLTree -Checkbox none {
+                            New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+                            New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionLDAPType} -icon $functionGroupPNGHTML
+                        } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
+                        new-htmlTable -DataTable (($global:ldapObjects | select-object DistinguishedName,CanonicalName,objectGUID,Name,DisplayName,groupType,mail,mailnickanme,proxyAddresses,targetAddress,legacyExchangeDN,'mS-DS-ConsistencyGuid','msDS-ExternalDirectoryObjectId',msExchRecipientDisplayType,msExchRecipientTypeDetails,msExchRemoteRecipientType,msExchMailboxGuid,msExchArchiveGUID) | sort-object distinguishedName -Unique) -Filtering {
+                        } -AutoSize
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
+                                New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
+                            }
+                        }
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Users' -Value $global:userCounter.count
+                                New-ChartDonut -Name 'Contacts' -Value $global:contactCounter.count
+                            }
+                        }
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Users' -Value $global:userCounter.count
+                                New-ChartDonut -Name 'Contacts' -Value $global:contactCounter.count
+                                New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
+                                New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
+                            }
+                        }
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                }
+                New-HTMLFooter {
+                    New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
+                }
+            } -Online -ShowHTML 
+        }
     }
-    elseif ($outputType -eq $functionMSGraphType)
+    else 
     {
-        out-logfile -string "Entering MS Graph Type"
+        if ($outputType -eq $functionExchangeOnlineType)
+        {
+            out-logfile -string "Entering Exchange Online Type"
 
-        $string = get-nodeString -node $node -outputType $functionMSGraphType
-        out-logfile -string ("Prcessing HTML: "+$string)
+            $string = get-nodeString -node $node -outputType $functionExchangeOnlineType
+            out-logfile -string ("Prcessing HTML: "+$string)
 
-        New-HTML -TitleText $groupObjectID -FilePath $global:functionHTMLFile {
-            New-HTMLHeader{
-                New-HTMLText -Text $headerString -FontSize 24 -Color White -BackGroundColor Black -Alignment center
-            }
-            New-HTMLMain{
-                New-HTMLTableOption -DataStore JavaScript
-                new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
-                    New-HTMLTree -Checkbox none {
-                        New-HTMLHeading -HeadingText ('Group Expansion for: '+$groupObjectID) -Heading h1
-                        New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-                        New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType} -icon $functionGroupPNGHTML
-                    } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
-                }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
-                new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
-                    new-htmlTable -DataTable ($global:msGraphObjects | select-object DisplayName,Id,Mail,MailEnabled,MailNickname,ProxyAddresses,GroupTypes,SecurityEnabled,MembershipRule | sort-object ID -Unique) -Filtering {
-                    } -AutoSize
-                } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
-                new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
-                    New-HTMLPanel {
-                        New-HTMLChart -Gradient {
-                            New-ChartDonut -Name 'Groups' -Value $global:msGraphGroupCount.count
-                            New-ChartDonut -name 'DynamnicGroups' -value $global:msGraphGroupDynamicCount.Count
+            New-HTML -TitleText $groupObjectID -FilePath $global:functionHTMLFile {
+                New-HTMLHeader{
+                    New-HTMLText -Text $headerString -FontSize 24 -Color White -BackGroundColor Black -Alignment center
+                }
+                new-htmlMain{
+                    New-HTMLTableOption -DataStore JavaScript
+                    new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
+                        New-HTMLTree -Checkbox none {
+                            New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+                            New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
+                        } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
+                    }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
+                        new-htmlTable -DataTable ($global:exchangeObjects | select-object DisplayName,Alias,ExternalDirectoryObjectId,ExchangeObjectId,Identity,ID,Name,PrimarySmtpAddress,EmailAddresses,LegacyExchangeDN,externalEmailAddress,RecipientType,RecipientTypeDetails,GroupType,IsDirSynced | sort-object exchangeObjectID -Unique) -Filtering {
+                        } -AutoSize
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
+                                New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
+                                new-ChartDonut -Name 'MailSecurityGroups' -value $global:mailUniversalSecurityGroupCounter.count
+                                new-chartDonut -name 'MailDistributionGroups' -value $global:mailUniversalDistributionGroupCounter.count
+                                new-chartDonut -name 'UnifiedGroups' -value $global:groupMailboxCounter.count
+                                new-chartDonut -name 'UnifiedGroups-Dynamic' -value $global:groupMailboxDyanmicCounter.count
+                            }
                         }
-                    }
-                    New-HTMLPanel {
-                        New-HTMLChart -Gradient {
-                            New-ChartDonut -Name 'Users' -Value $global:msGraphUserCount.count
-                            new-ChartDonut -Name 'Contacts' -value $global:msGraphContactCount.count
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Users' -Value $global:userCounter.count
+                                New-ChartDonut -Name 'MailContacts' -Value $global:mailContactCounter.count
+                                New-ChartDonut -Name 'GuestMailUsers' -Value $global:guestMailUserCounter.count
+                                New-ChartDonut -Name 'MailUsers' -Value $global:mailUserCounter.count
+                                New-ChartDonut -Name 'UserMailbox' -Value $global:userMailboxCounter.count
+                                New-ChartDonut -Name 'RoomMailbox' -Value $global:roomMailboxCounter.count
+                                New-ChartDonut -Name 'EqipmentMailbox' -Value $global:equipmentMailboxCounter.count
+                                New-ChartDonut -Name 'SharedMailbox' -Value $global:sharedMailboxCounter.count
+                            }
                         }
-                    }
-                    New-HTMLPanel {
-                        New-HTMLChart -Gradient {
-                            New-ChartDonut -Name 'Groups' -Value $global:msGraphGroupCount.count
-                            New-ChartDonut -name 'DynamnicGroups' -value $global:msGraphGroupDynamicCount.Count
-                            New-ChartDonut -Name 'Users' -Value $global:msGraphUserCount.count
-                            new-ChartDonut -Name 'Contacts' -value $global:msGraphContactCount.count
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
+                                New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
+                                new-ChartDonut -Name 'MailSecurityGroups' -value $global:mailUniversalSecurityGroupCounter.count
+                                new-chartDonut -name 'MailDistributionGroups' -value $global:mailUniversalDistributionGroupCounter.count
+                                new-chartDonut -name 'UnifiedGroups' -value $global:groupMailboxCounter.count
+                                new-chartDonut -name 'UnifiedGroups-Dynamic' -value $global:groupMailboxDyanmicCounter.count
+                                New-ChartDonut -Name 'Users' -Value $global:userCounter.count
+                                New-ChartDonut -Name 'MailContacts' -Value $global:mailContactCounter.count
+                                New-ChartDonut -Name 'GuestMailUsers' -Value $global:guestMailUserCounter.count
+                                New-ChartDonut -Name 'MailUsers' -Value $global:mailUserCounter.count
+                                New-ChartDonut -Name 'UserMailbox' -Value $global:userMailboxCounter.count
+                                New-ChartDonut -Name 'RoomMailbox' -Value $global:roomMailboxCounter.count
+                                New-ChartDonut -Name 'EqipmentMailbox' -Value $global:equipmentMailboxCounter.count
+                                New-ChartDonut -Name 'SharedMailbox' -Value $global:sharedMailboxCounter.count
+                            }
                         }
-                    }
-                } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                } 
+                New-HTMLFooter {
+                    New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
+                }
             }
-            New-HTMLFooter {
-                New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
-            }
-        } -Online -ShowHTML
-    }
-    elseif ($outputType -eq $functionLDAPType)
-    {
-        out-logfile -string "Entering LDAP Type"
+        }
+        elseif ($outputType -eq $functionMSGraphType)
+        {
+            out-logfile -string "Entering MS Graph Type"
 
-        $string = get-nodeString -node $node -outputType $functionLDAPType
-        out-logfile -string ("Prcessing HTML: "+$string)
+            $string = get-nodeString -node $node -outputType $functionMSGraphType
+            out-logfile -string ("Prcessing HTML: "+$string)
 
-        New-HTML -TitleText $groupObjectID -FilePath $global:functionHTMLFile {
-            New-HTMLHeader{
-                New-HTMLText -Text $headerString -FontSize 24 -Color White -BackGroundColor Black -Alignment center
-            }
-            new-htmlMain{
-                New-HTMLTableOption -DataStore JavaScript
-                new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
-                    New-HTMLTree -Checkbox none {
-                        New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
-                        New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionLDAPType} -icon $functionGroupPNGHTML
-                    } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
-                } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
-                new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
-                    new-htmlTable -DataTable (($global:ldapObjects | select-object DistinguishedName,CanonicalName,objectGUID,Name,DisplayName,groupType,mail,mailnickanme,proxyAddresses,targetAddress,legacyExchangeDN,'mS-DS-ConsistencyGuid','msDS-ExternalDirectoryObjectId',msExchRecipientDisplayType,msExchRecipientTypeDetails,msExchRemoteRecipientType,msExchMailboxGuid,msExchArchiveGUID) | sort-object distinguishedName -Unique) -Filtering {
-                    } -AutoSize
-                } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
-                new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
-                    New-HTMLPanel {
-                        New-HTMLChart -Gradient {
-                            New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
-                            New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
+            New-HTML -TitleText $groupObjectID -FilePath $global:functionHTMLFile {
+                New-HTMLHeader{
+                    New-HTMLText -Text $headerString -FontSize 24 -Color White -BackGroundColor Black -Alignment center
+                }
+                New-HTMLMain{
+                    New-HTMLTableOption -DataStore JavaScript
+                    new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
+                        New-HTMLTree -Checkbox none {
+                            New-HTMLHeading -HeadingText ('Group Expansion for: '+$groupObjectID) -Heading h1
+                            New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+                            New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType} -icon $functionGroupPNGHTML
+                        } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
+                    }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
+                        new-htmlTable -DataTable ($global:msGraphObjects | select-object DisplayName,Id,Mail,MailEnabled,MailNickname,ProxyAddresses,GroupTypes,SecurityEnabled,MembershipRule | sort-object ID -Unique) -Filtering {
+                        } -AutoSize
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Groups' -Value $global:msGraphGroupCount.count
+                                New-ChartDonut -name 'DynamnicGroups' -value $global:msGraphGroupDynamicCount.Count
+                            }
                         }
-                    }
-                    New-HTMLPanel {
-                        New-HTMLChart -Gradient {
-                            New-ChartDonut -Name 'Users' -Value $global:userCounter.count
-                            New-ChartDonut -Name 'Contacts' -Value $global:contactCounter.count
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Users' -Value $global:msGraphUserCount.count
+                                new-ChartDonut -Name 'Contacts' -value $global:msGraphContactCount.count
+                            }
                         }
-                    }
-                    New-HTMLPanel {
-                        New-HTMLChart -Gradient {
-                            New-ChartDonut -Name 'Users' -Value $global:userCounter.count
-                            New-ChartDonut -Name 'Contacts' -Value $global:contactCounter.count
-                            New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
-                            New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Groups' -Value $global:msGraphGroupCount.count
+                                New-ChartDonut -name 'DynamnicGroups' -value $global:msGraphGroupDynamicCount.Count
+                                New-ChartDonut -Name 'Users' -Value $global:msGraphUserCount.count
+                                new-ChartDonut -Name 'Contacts' -value $global:msGraphContactCount.count
+                            }
                         }
-                    }
-                } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                }
+                New-HTMLFooter {
+                    New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
+                }
             }
-            New-HTMLFooter {
-                New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
+        }
+        elseif ($outputType -eq $functionLDAPType)
+        {
+            out-logfile -string "Entering LDAP Type"
+
+            $string = get-nodeString -node $node -outputType $functionLDAPType
+            out-logfile -string ("Prcessing HTML: "+$string)
+
+            New-HTML -TitleText $groupObjectID -FilePath $global:functionHTMLFile {
+                New-HTMLHeader{
+                    New-HTMLText -Text $headerString -FontSize 24 -Color White -BackGroundColor Black -Alignment center
+                }
+                new-htmlMain{
+                    New-HTMLTableOption -DataStore JavaScript
+                    new-htmlSection -HeaderText ("Group membership hierarchy for group object id: "+$groupObjectID){
+                        New-HTMLTree -Checkbox none {
+                            New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
+                            New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionLDAPType} -icon $functionGroupPNGHTML
+                        } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
+                        new-htmlTable -DataTable (($global:ldapObjects | select-object DistinguishedName,CanonicalName,objectGUID,Name,DisplayName,groupType,mail,mailnickanme,proxyAddresses,targetAddress,legacyExchangeDN,'mS-DS-ConsistencyGuid','msDS-ExternalDirectoryObjectId',msExchRecipientDisplayType,msExchRecipientTypeDetails,msExchRemoteRecipientType,msExchMailboxGuid,msExchArchiveGUID) | sort-object distinguishedName -Unique) -Filtering {
+                        } -AutoSize
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
+                                New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
+                            }
+                        }
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Users' -Value $global:userCounter.count
+                                New-ChartDonut -Name 'Contacts' -Value $global:contactCounter.count
+                            }
+                        }
+                        New-HTMLPanel {
+                            New-HTMLChart -Gradient {
+                                New-ChartDonut -Name 'Users' -Value $global:userCounter.count
+                                New-ChartDonut -Name 'Contacts' -Value $global:contactCounter.count
+                                New-ChartDonut -Name 'Groups' -Value $global:groupCounter.count
+                                New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
+                            }
+                        }
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                }
+                New-HTMLFooter {
+                    New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
+                }
             }
-        } -Online -ShowHTML 
+        }
     }
 }
