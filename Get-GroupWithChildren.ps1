@@ -1019,6 +1019,20 @@ Function Get-GroupWithChildren()
         elseif ($functionObject.objectClass -eq $functionLDAPGroup)
         {
             $global:groupCounter+=$functionObject.objectGUID
+            
+            if ($functionObject.mail -ne $NULL)
+            {
+                $global:groupTracking+=($functionObject | select-object Mail,CN)
+            }
+            else 
+            {
+                $outputObject = New-Object PSObject -Property @{
+                    CN = $functionObject.cn
+                    Mail = "CAUTION:  Group in hierarchy with no mail address."
+                }
+
+                $global:groupTracking+=$outputObject
+            }
         }
 
         if (!$processedGroupIds.Contains($functionObject.distinguishedName))
@@ -1067,11 +1081,6 @@ Function Get-GroupWithChildren()
             elseif ($functionObject.objectClass -eq $functionLDAPGroup )
             {
                 out-logfile -string "Object class id group - members determiend by member attribute on group."
-
-                if ($functionObject.mail -ne $NULL)
-                {
-                    $global:groupTracking+= ($functionObject | Select-Object Mail,CN)
-                }
 
                 if ($expandGroupMembership -eq $TRUE)
                 {
