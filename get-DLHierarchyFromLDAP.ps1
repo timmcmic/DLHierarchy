@@ -318,5 +318,8 @@ Function get-DLHierarchyFromLDAP
         send-TelemetryEvent -traceModuleName $traceModuleName -eventName $telemetryEventName -eventMetrics $telemetryEventMetrics -eventProperties $telemetryEventProperties
     }
 
-    $global:groupTracking | export-csv -path $global:outputCSV
+    if ($isHealthCheck -eq $FALSE)
+    {
+        $global:groupTracking | export-csv -path $global:outputCSV
+    }
 }
