@@ -65,15 +65,17 @@ Function Get-GroupWithChildren()
         [Parameter(Mandatory = $false,ParameterSetName = 'LDAP')]
         [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
         [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
-        [boolean]$reverseHierarchy=$FALSE
+        [boolean]$reverseHierarchy=$FALSE,
+        [Parameter(Mandatory = $false,ParameterSetName = 'LDAP')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
+        [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
+        [string]$parentObjectID="N/A"
+
     )
     
     out-logfile -string "***********************************************************"
     out-logfile -string "Entering Get-GroupWithChildren"
     out-logfile -string "***********************************************************"
-
-    $global:childCounter++
-    out-logfile -string ("Recursion Counter: "+$global:childCounter.tostring())
 
     $functionObject = $NULL
     $childNodes = @()
@@ -684,13 +686,9 @@ Function Get-GroupWithChildren()
             {
                 out-logfile -string "Processing child..."
                 out-logfile -string $child.id
-                $global:childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-                $global:childCounter++
-                out-logfile -string $childCounter.tostring()
+                $global:childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds              
                 $childNode = Get-GroupWithChildren -objectID $child.id -processedGroupIds $childGroupIDs -objectType $child.additionalProperties["@odata.type"] -queryMethodGraph:$true -expandGroupMembership $expandGroupMembership -reverseHierarchy $reverseHierarchy
                 $childNodes += $childNode
-                $global:childCounter--
-                out-logfile -string $global:childCounter.tostring()
             }
         }
         else 
@@ -937,12 +935,8 @@ Function Get-GroupWithChildren()
                 out-logfile -string "Processing child..."
                 out-logfile -string $child.ExchangeObjectID
                 $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-                $global:childCounter++
-                out-logfile -string $global:childCounter.tostring()
                 $childNode = Get-GroupWithChildren -objectID $child.ExchangeObjectID -processedGroupIds $childGroupIDs -objectType $child.RecipientTypeDetails -queryMethodExchangeOnline:$TRUE -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -reverseHierarchy $reverseHierarchy
                 $childNodes += $childNode
-                $global:childCounter--
-                out-logfile -string $global:childCounter.tostring()
             }
         }
         else 
@@ -1019,7 +1013,44 @@ Function Get-GroupWithChildren()
         elseif ($functionObject.objectClass -eq $functionLDAPGroup)
         {
             $global:groupCounter+=$functionObject.objectGUID
+            
+            if ($functionObject.mail -ne $NULL)
+            {   
+                $outputObject = New-Object PSObject -Property @{
+                    ParentObjectGUID = $parentObjectID
+                    ObjectGUID = $functionObject.objectGUID
+                    CN = $functionObject.cn
+                    Mail = $functionObject.Mail
+                    NestingLevel = $global:childCounter.tostring()
+                }
+
+                $global:groupTracking+=$outputObject
+            }
+            else 
+            {
+                $outputObject = New-Object PSObject -Property @{
+                    ParentObjectID = $objectID
+                    ObjectGUID = $functionObject.objectGUID
+                    CN = $functionObject.cn
+                    Mail = "CAUTION:  Group in hierarchy with no mail address."
+                    NestingLevel = $global:childCounter.tostring()
+                }
+
+                $global:groupTracking+=$outputObject
+            }
         }
+
+        if ($reverseHierarchy -eq $FALSE)
+        {
+            $global:childCounter++
+            out-logfile -string ("Recursion Counter: "+$global:childCounter.tostring())
+        }
+        else 
+        {
+            $global:childCounter--
+            out-logfile -string ("Recursion Counter: "+$global:childCounter.tostring())
+        }
+       
 
         if (!$processedGroupIds.Contains($functionObject.distinguishedName))
         {
@@ -1143,7 +1174,7 @@ Function Get-GroupWithChildren()
                     write-host "ChildID"
                     write-host $child
                     $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-                    $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false
+                    $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false -parentObjectID $functionObject.objectGUID
                     $childNodes += $childNode
                 }
                 else 
@@ -1151,7 +1182,7 @@ Function Get-GroupWithChildren()
                     write-host "ChildID"
                     write-host $child
                     $childGroupIDs = New-Object System.Collections.Generic.HashSet[string] $processedGroupIds
-                    $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false -reverseHierarchy:$TRUE
+                    $childNode = Get-GroupWithChildren -objectID $child -processedGroupIds $childGroupIDs -objectType "None" -globalCatalogServer $globalCatalogServer -activeDirectoryCredential $activeDirectoryCredential -queryMethodLDAP:$true -expandGroupMembership $expandGroupMembership -expandDynamicGroupMembership $expandDynamicGroupMembership -firstLDAPQuery $false -reverseHierarchy:$TRUE -parentObjectID $functionObject.objectGUID
                     $childNodes += $childNode
                 }  
             }
@@ -1184,7 +1215,15 @@ Function Get-GroupWithChildren()
         $node = New-TreeNode -object $functionObject -children $childNodes
     }
 
-    $global:childCounter--
+    if ($reverseHierarchy -eq $FALSE)
+    {
+        $global:childCounter--
+    }
+    else 
+    {
+        $global:childCounter++
+    }
+    
     out-logfile -string $global:childCounter.tostring()
 
     out-logfile -string "***********************************************************"
