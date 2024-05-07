@@ -471,7 +471,7 @@ function start-HTMLOutput
                             }
                         }
                     } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
-                    new-htmlSection -HeaderText ("Parents (Reverse) or Chilren (Normal) Simplied List"){
+                    new-htmlSection -HeaderText ("Parents (Reverse) or Chilren (Normal) Simplied Group List"){
                         new-htmlTable -DataTable $global:groupTracking -Filtering {
                         } -AutoSize
                     } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
