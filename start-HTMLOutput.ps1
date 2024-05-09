@@ -304,7 +304,7 @@ function start-HTMLOutput
     }
     else 
     {
-        $global:functionHTMLFile = $global:LogFile.replace("log","$functionHTMLSuffix")    
+        $global:functionHTMLFile = $global:LogFile.replace("log",$functionHTMLSuffix)    
     }
     
 
