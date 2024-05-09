@@ -67,8 +67,6 @@ Function Get-GroupWithChildren()
         [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
         [boolean]$reverseHierarchy=$FALSE,
         [Parameter(Mandatory = $false,ParameterSetName = 'LDAP')]
-        [Parameter(Mandatory = $true,ParameterSetName = 'ExchangeOnline')]
-        [Parameter(Mandatory = $true,ParameterSetName = 'MSGraph')]
         [string]$parentObjectID="N/A"
 
     )
