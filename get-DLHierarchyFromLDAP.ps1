@@ -167,10 +167,10 @@ Function get-DLHierarchyFromLDAP
     if ($isHealthCheck -eq $FALSE)
     {
         new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
-
-        $functionCSVSuffix = "csv"
-        $global:outputCSV = $global:LogFile.replace("log","$functionCSVSuffix")
     }
+
+    $functionCSVSuffix = "csv"
+    $global:outputCSV = $global:LogFile.replace("log","$functionCSVSuffix")
     
 
     out-logfile -string "***********************************************************"
