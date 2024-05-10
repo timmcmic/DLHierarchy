@@ -278,27 +278,27 @@ function start-HTMLOutput
     $functionExchangeSuffix  = "-Exchange.html"
     $functionExchangeReverseSuffix  = "-ExchangeReverse.html"
 
-    if ((isHealthCheck -eq $TRUE) -and ($reverseHierarchy -eq $FALSE) -and ($outputType -eq $functionLDAPType))
+    if (($isHealthCheck -eq $TRUE) -and ($reverseHierarchy -eq $FALSE) -and ($outputType -eq $functionLDAPType))
     {
         $global:functionHTMLFile = $global:LogFile.replace(".log",$functionHTMLLDAPSuffix)   
     }
-    elseif ((isHealthCheck -eq $TRUE) -and ($reverseHierarchy -eq $true) -and ($outputType -eq $functionLDAPType))
+    elseif (($isHealthCheck -eq $TRUE) -and ($reverseHierarchy -eq $true) -and ($outputType -eq $functionLDAPType))
     {
         $global:functionHTMLFile = $global:LogFile.replace(".log",$functionHTMLLDAPReverseSuffix)   
     }
-    elseif ((isHealthCheck -eq $TRUE) -and ($reverseHierarchy -eq $FALSE) -and ($outputType -eq $functionMSGraphType))
+    elseif (($isHealthCheck -eq $TRUE) -and ($reverseHierarchy -eq $FALSE) -and ($outputType -eq $functionMSGraphType))
     {
         $global:functionHTMLFile = $global:LogFile.replace(".log",$functionHTMLGraphSuffix)   
     }
-    elseif ((isHealthCheck -eq $TRUE) -and ($reverseHierarchy -eq $true) -and ($outputType -eq $functionMSGraphType))
+    elseif (($isHealthCheck -eq $TRUE) -and ($reverseHierarchy -eq $true) -and ($outputType -eq $functionMSGraphType))
     {
         $global:functionHTMLFile = $global:LogFile.replace(".log",$functionHTMLGraphReverseSuffix)   
     }
-    elseif ((isHealthCheck -eq $TRUE) -and ($reverseHierarchy -eq $FALSE) -and ($outputType -eq $functionExchangeOnlineType))
+    elseif (($isHealthCheck -eq $TRUE) -and ($reverseHierarchy -eq $FALSE) -and ($outputType -eq $functionExchangeOnlineType))
     {
         $global:functionHTMLFile = $global:LogFile.replace(".log",$functionExchangeSuffix)   
     }
-    elseif ((isHealthCheck -eq $TRUE) -and ($reverseHierarchy -eq $true) -and ($outputType -eq $functionExchangeOnlineType))
+    elseif (($isHealthCheck -eq $TRUE) -and ($reverseHierarchy -eq $true) -and ($outputType -eq $functionExchangeOnlineType))
     {
         $global:functionHTMLFile = $global:LogFile.replace(".log",$functionExchangeReverseSuffix)   
     }
