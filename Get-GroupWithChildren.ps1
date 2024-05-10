@@ -1010,6 +1010,7 @@ Function Get-GroupWithChildren()
         }
         elseif ($functionObject.objectClass -eq $functionLDAPGroup)
         {
+            out-logfile -string $functionObject.objectGUID
             $global:groupCounter+=$functionObject.objectGUID
             
             if ($functionObject.mail -ne $NULL)

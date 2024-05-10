@@ -318,5 +318,7 @@ Function get-DLHierarchyFromLDAP
         send-TelemetryEvent -traceModuleName $traceModuleName -eventName $telemetryEventName -eventMetrics $telemetryEventMetrics -eventProperties $telemetryEventProperties
     }
 
+    out-logfile -string "Output CSV File of nested groups."
+
     $global:groupTracking | export-csv -path $global:outputCSV
 }
