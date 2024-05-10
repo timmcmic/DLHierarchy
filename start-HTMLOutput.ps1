@@ -356,11 +356,11 @@ function start-HTMLOutput
                             New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                             New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
                         } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
-                    }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                     new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
                         new-htmlTable -DataTable ($global:exchangeObjects | select-object DisplayName,Alias,ExternalDirectoryObjectId,ExchangeObjectId,Identity,ID,Name,PrimarySmtpAddress,EmailAddresses,LegacyExchangeDN,externalEmailAddress,RecipientType,RecipientTypeDetails,GroupType,IsDirSynced | sort-object exchangeObjectID -Unique) -Filtering {
                         } -AutoSize
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                     new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
                         New-HTMLPanel {
                             New-HTMLChart -Gradient {
@@ -402,7 +402,7 @@ function start-HTMLOutput
                                 New-ChartDonut -Name 'SharedMailbox' -Value $global:sharedMailboxCounter.count
                             }
                         }
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                 } 
                 New-HTMLFooter {
                     New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
@@ -428,11 +428,11 @@ function start-HTMLOutput
                             New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                             New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType} -icon $functionGroupPNGHTML
                         } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
-                    }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                     new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
                         new-htmlTable -DataTable ($global:msGraphObjects | select-object DisplayName,Id,Mail,MailEnabled,MailNickname,ProxyAddresses,GroupTypes,SecurityEnabled,MembershipRule | sort-object ID -Unique) -Filtering {
                         } -AutoSize
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                     new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
                         New-HTMLPanel {
                             New-HTMLChart -Gradient {
@@ -454,7 +454,7 @@ function start-HTMLOutput
                                 new-ChartDonut -Name 'Contacts' -value $global:msGraphContactCount.count
                             }
                         }
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                 }
                 New-HTMLFooter {
                     New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
@@ -479,11 +479,11 @@ function start-HTMLOutput
                             New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                             New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionLDAPType} -icon $functionGroupPNGHTML
                         } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                     new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
                         new-htmlTable -DataTable (($global:ldapObjects | select-object DistinguishedName,CanonicalName,objectGUID,Name,DisplayName,groupType,mail,mailnickanme,proxyAddresses,targetAddress,legacyExchangeDN,'mS-DS-ConsistencyGuid','msDS-ExternalDirectoryObjectId',msExchRecipientDisplayType,msExchRecipientTypeDetails,msExchRemoteRecipientType,msExchMailboxGuid,msExchArchiveGUID) | sort-object distinguishedName -Unique) -Filtering {
                         } -AutoSize
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                     new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
                         New-HTMLPanel {
                             New-HTMLChart -Gradient {
@@ -505,11 +505,11 @@ function start-HTMLOutput
                                 New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
                             }
                         }
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                     new-htmlSection -HeaderText ("Parents (Reverse) or Chilren (Normal) Simplied Group List"){
                         new-htmlTable -DataTable $global:groupTracking -Filtering {
                         } -AutoSize
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                 }
                 New-HTMLFooter {
                     New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
@@ -537,11 +537,11 @@ function start-HTMLOutput
                             New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                             New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
                         } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
-                    }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                     new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
                         new-htmlTable -DataTable ($global:exchangeObjects | select-object DisplayName,Alias,ExternalDirectoryObjectId,ExchangeObjectId,Identity,ID,Name,PrimarySmtpAddress,EmailAddresses,LegacyExchangeDN,externalEmailAddress,RecipientType,RecipientTypeDetails,GroupType,IsDirSynced | sort-object exchangeObjectID -Unique) -Filtering {
                         } -AutoSize
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                     new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
                         New-HTMLPanel {
                             New-HTMLChart -Gradient {
@@ -583,7 +583,7 @@ function start-HTMLOutput
                                 New-ChartDonut -Name 'SharedMailbox' -Value $global:sharedMailboxCounter.count
                             }
                         }
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                 } 
                 New-HTMLFooter {
                     New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
@@ -609,11 +609,11 @@ function start-HTMLOutput
                             New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                             New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionMSGraphType} -icon $functionGroupPNGHTML
                         } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
-                    }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                     new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
                         new-htmlTable -DataTable ($global:msGraphObjects | select-object DisplayName,Id,Mail,MailEnabled,MailNickname,ProxyAddresses,GroupTypes,SecurityEnabled,MembershipRule | sort-object ID -Unique) -Filtering {
                         } -AutoSize
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                     new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
                         New-HTMLPanel {
                             New-HTMLChart -Gradient {
@@ -635,7 +635,7 @@ function start-HTMLOutput
                                 new-ChartDonut -Name 'Contacts' -value $global:msGraphContactCount.count
                             }
                         }
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                 }
                 New-HTMLFooter {
                     New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
@@ -660,11 +660,11 @@ function start-HTMLOutput
                             New-HTMLTreeChildCounter -Deep -HideZero -HideExpanded
                             New-HTMLTreeNode -title $string -children {New-HTMLTreeChildNodes -node $node -outputType $functionLDAPType} -icon $functionGroupPNGHTML
                         } -EnableChildCounter -AutoScroll -MinimumExpandLevel 1 -EnableQuickSearch
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                     new-htmlSection -HeaderText ("Group membership table for group object id: "+$groupObjectID){
                         new-htmlTable -DataTable (($global:ldapObjects | select-object DistinguishedName,CanonicalName,objectGUID,Name,DisplayName,groupType,mail,mailnickanme,proxyAddresses,targetAddress,legacyExchangeDN,'mS-DS-ConsistencyGuid','msDS-ExternalDirectoryObjectId',msExchRecipientDisplayType,msExchRecipientTypeDetails,msExchRemoteRecipientType,msExchMailboxGuid,msExchArchiveGUID) | sort-object distinguishedName -Unique) -Filtering {
                         } -AutoSize
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                     new-htmlSection -HeaderText ("Group membership breakdown for group object id: "+$groupObjectID){
                         New-HTMLPanel {
                             New-HTMLChart -Gradient {
@@ -686,11 +686,11 @@ function start-HTMLOutput
                                 New-ChartDonut -Name 'DynamicGroups' -Value $global:dynamicGroupCounter.count
                             }
                         }
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                     new-htmlSection -HeaderText ("Parents (Reverse) or Chilren (Normal) Simplied Group List"){
                         new-htmlTable -DataTable $global:groupTracking -Filtering {
                         } -AutoSize
-                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px
+                    } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                 }
                 New-HTMLFooter {
                     New-HTMLText -Text "Date of this report $(Get-Date)" -FontSize 16 -Color White -BackGroundColor Black -Alignment center
