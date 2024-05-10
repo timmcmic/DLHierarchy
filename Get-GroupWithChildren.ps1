@@ -1028,7 +1028,7 @@ Function Get-GroupWithChildren()
             else 
             {
                 $outputObject = New-Object PSObject -Property @{
-                    ParentObjectID = $objectID
+                    ParentObjectGUID = $objectID
                     ObjectGUID = $functionObject.objectGUID
                     CN = $functionObject.cn
                     Mail = "CAUTION:  Group in hierarchy with no mail address."
