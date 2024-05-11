@@ -320,9 +320,5 @@ Function get-DLHierarchyFromLDAP
 
     out-logfile -string "Output CSV File of nested groups."
 
-    if ($reverseHierarchy -eq $FALSE)
-    {
-        $global:groupTracking | export-csv -path $global:outputCSV
-
-    }
+    $global:groupTracking | export-csv -path $global:outputCSV
 }
