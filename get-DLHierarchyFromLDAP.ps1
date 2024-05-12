@@ -170,7 +170,16 @@ Function get-DLHierarchyFromLDAP
     }
 
     $functionCSVSuffix = "csv"
-    $global:outputCSV = $global:LogFile.replace("log","$functionCSVSuffix")
+    $functionCSVSuffix = "-Reverse.csv"
+
+    if ($reverseHierarchy -eq $FALSE)
+    {
+        $global:outputCSV = $global:LogFile.replace("log","$functionCSVSuffix")
+    }
+    else 
+    {
+        $global:outputCSV = $global:LogFile.replace(".log","$functionCSVSuffix")
+    }
     
 
     out-logfile -string "***********************************************************"
