@@ -72,7 +72,7 @@ Function get-DLHierarchyFromExchangeOnline
     .OUTPUTS
 
     Logs all activities and backs up all original data to the log folder directory.
-    Moves the distribution group from on premieses source of authority to office 365 source of authority.
+    Outputs a text and HTML based view of the distribution group hierarchy.
 
     .NOTES
 

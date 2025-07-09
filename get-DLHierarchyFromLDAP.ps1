@@ -55,7 +55,8 @@ Function get-DLHierarchyFromLDAP
 
     .OUTPUTS
 
-    Generates a tree view hiearchy file.
+    Logs all activities and backs up all original data to the log folder directory.
+    Outputs a text and HTML based view of the distribution group hierarchy.
 
     .NOTES
 
