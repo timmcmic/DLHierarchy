@@ -811,7 +811,7 @@ Function Get-GroupWithChildren()
                     ExternalEmailAddress = "Unknown"
                     RecipientType = $functionExchangeSecurityGroup
                     RecipientTypeDetails = $functionExchangeSecurityGroup
-                    GroupType = "Unknown"
+                    GroupType = $null
                     IsDirSynced = "Unknown"
                 }
                 $isExchangeGroupType=$FALSE 
