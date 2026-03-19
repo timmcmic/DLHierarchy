@@ -123,6 +123,7 @@ function New-HTMLTreeChildNodes
     $functionExchangeMailContact = "MailContact"
     $functionExchangeGroupMailbox = "GroupMailbox"
     $functionExchangeDynamicGroup = "DynamicDistributionGroup"
+    $functionExchangeSecurityGroup = "ExchangeSecurityGroup"
 
     $functionLDAPGroup = "Group"
     $functionLDAPUser = "User"
@@ -209,6 +210,10 @@ function New-HTMLTreeChildNodes
             elseif ($child.object.recipientType -eq $functionExchangeMailContact)
             {
                 New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionContactPNGHTML
+            }
+            elseif ($child.object.recipientType -eq $functionExchangeSecurityGroup)
+            {
+                New-HTMLTreeNode -Title $string -children {New-HTMLTreeChildNodes -node $child -outputType $functionExchangeOnlineType} -icon $functionGroupPNGHTML
             }
         }
     }
