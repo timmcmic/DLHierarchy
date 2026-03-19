@@ -100,6 +100,7 @@ Function Get-GroupWithChildren()
     $functionExchangeSharedMailbox = "SharedMailbox"
     $functionExchangeRoomMailbox = "RoomMailbox"
     $functionExchangeEquipmentMailbox = "EquipmentMailbox"
+    $functionExchangeSecurityGroup = "ExchangeSecurityGroup"
     $functionExchangeUser = "User"
     $isExchangeGroupType = $false
 
@@ -790,6 +791,30 @@ Function Get-GroupWithChildren()
                 out-logfile -string $functionExchangeDynamicGroup
                 $functionObject = get-ExchangeGroup -objectID $objectID -queryType $functionExchangeDynamicGroup
                 $isExchangeGroupType=$TRUE 
+                $global:exchangeObjects += $functionObject
+            }
+            $functionExchangeSecurityGroup
+            {
+                out-logfile -string $functionExchangeSecurityGroup
+
+                $functionObject = New-Object PSObject -Property @{
+                    DisplayName = "Unknown"
+                    Alias = "Unknown"
+                    ExternalDirectoryObjectID = "Unknown"
+                    ExchangeObjectID = $objectID
+                    Identity = "Unknown"
+                    ID = "Unknown"
+                    Name = "Unknown"
+                    PrimarySMTPAddress = "Unknown"
+                    EmailAddress = "Unknown"
+                    LegacyExchangeDN = "Unknown"
+                    ExternalEmailAddress = "Unknown"
+                    RecipientType = $functionExchangeSecurityGroup
+                    RecipientTypeDetails = $functionExchangeSecurityGroup
+                    GroupType = "Unknown"
+                    IsDirSynced = "Unknown"
+                }
+                $isExchangeGroupType=$FALSE 
                 $global:exchangeObjects += $functionObject
             }
             Default
